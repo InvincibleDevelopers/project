@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: bookpago
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url : ENC(vwbq49qSwwAfDE4Y8Hsnur2rqNEoL/rjfvSuhDVHR0bXXIHJaLscf6K4xsVVgKW3qKxhL/QNw10r26XMYTlkDVBiAlg8nTtMDUe8mD+vgdabpXG3YhbCJ43lTLyfJL2uXlSWKKq6QXbcr0Rr/Sp0tsjf1ceMP4sreNAJG8r1SsTVDu1vHvCbW7zoNTVbHqRR)
+    username: ENC(ApYTQ697hMbKF0+zSy0qow==)
+    password: ENC(HUoombkibCSFNBT027KD0i5BkNgezljb)
+  jpa:
+    show-sql: true
