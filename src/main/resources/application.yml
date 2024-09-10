@@ -1,3 +1,6 @@
+server:
+  port: 8088
+
 spring:
   application:
     name: bookpago
@@ -7,4 +10,16 @@ spring:
     username: ENC(ApYTQ697hMbKF0+zSy0qow==)
     password: ENC(HUoombkibCSFNBT027KD0i5BkNgezljb)
   jpa:
+    hibernate:
+      ddl-auto: update
     show-sql: true
+
+cloud:
+  aws:
+    credentials:
+      access-key: ENC(pQChlSEyi9PpLusA4JMyArNWOpVgG7dU/vyoSu4K0QY=)
+      secret-key: ENC(3Ii8mts5oejReAghbrb6aIsKiaj8PFnshF/VUVU31ZLJUEc0R2Or6WU4t9K9+rbYVrTL/dg62Ok=)
+    region:
+      static: us-east-1
+    s3:
+      bucket: invincibledevs
