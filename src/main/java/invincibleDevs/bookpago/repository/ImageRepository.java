@@ -3,6 +3,8 @@ package invincibleDevs.bookpago.repository;
 import invincibleDevs.bookpago.model.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ImageRepository extends JpaRepository<Image, Long> {
+import java.util.Optional;
 
+public interface ImageRepository extends JpaRepository<Image, Long> {
+    Optional<Image> findByImageKey(String fileKey);
 }

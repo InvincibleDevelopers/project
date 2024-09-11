@@ -24,7 +24,7 @@ public class S3Service {
 
     private String defaultUrl = "https://s3.amazonaws.com/";
 
-    public String uploadFile(MultipartFile file) throws IOException {
+    public String uploadFile(MultipartFile file) throws IOException { //
         String fileName = generateFileName(file);
         try {
             s3Client.putObject(bucketName, fileName, file.getInputStream(), getObjectMetadata(file));
@@ -34,12 +34,6 @@ public class S3Service {
         }
     }
 
-//    public String getFile(Long photoId) {
-
-
-
-//        return String.format("https://%s.s3.%s.amazonaws.com/%s", bucketName, s3Client.region().id(), photoId);
-//    }
 
     private ObjectMetadata getObjectMetadata(MultipartFile file) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -49,6 +43,7 @@ public class S3Service {
     }
 
     private String generateFileName(MultipartFile file) {
+
         return UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
     }
 
