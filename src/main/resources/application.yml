@@ -13,6 +13,8 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  jwt:
+    secret: "aldkjdqijvnbvnfivjmkgasdnbkdfngjfjcmdkfglvldabcascadasdasdas" # JWT 암호화 키
 
 cloud:
   aws:
