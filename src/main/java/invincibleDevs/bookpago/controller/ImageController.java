@@ -3,6 +3,7 @@ package invincibleDevs.bookpago.controller;
 import invincibleDevs.bookpago.model.Image;
 import invincibleDevs.bookpago.repository.ImageRepository;
 import io.swagger.annotations.ApiOperation;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -50,6 +51,11 @@ public class ImageController {
 
 
         return "success";
+    }
+
+    @GetMapping("/")
+    public String test() {
+        return "hello world";
     }
 
 
