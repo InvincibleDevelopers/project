@@ -34,9 +34,6 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: test
-      run: ./gradlew test -i
-
     - name: Build with Gradle Wrapper
       run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT }}
       
