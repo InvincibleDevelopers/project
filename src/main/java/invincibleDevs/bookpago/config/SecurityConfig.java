@@ -85,6 +85,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/", "/join").permitAll()
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger UI 및 OpenAPI 문서에 대한 접근 허용
+                        .requestMatchers("/**").permitAll() // 모든 경로에 대해 접근 허용
                         .anyRequest().authenticated());
 
         http

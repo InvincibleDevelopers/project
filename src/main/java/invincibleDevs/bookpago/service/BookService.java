@@ -23,10 +23,10 @@ public class BookService {
             bookDTO.setId(book.getId());
             bookDTO.setTitle(book.getTitle());
             bookDTO.setAuthor(book.getAuthor());
-            bookDTO.setGenre(book.getGenre());
-            bookDTO.setSummary(book.getSummary());
-            bookDTO.setImageURL(book.getBookImage());
-            bookDTO.setAverage_rating(book.getAverage_rating());
+//            bookDTO.setGenre(book.getGenre());
+//            bookDTO.setSummary(book.getSummary());
+//            bookDTO.setImageURL(book.getBookImage());
+//            bookDTO.setAverage_rating(book.getAverage_rating());
 
             return bookDTO;
         } catch(NoSuchElementException e) {

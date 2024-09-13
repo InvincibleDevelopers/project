@@ -18,13 +18,13 @@ public class Book {
 
     private String author;
 
-    private String genre;
-
-    private String summary;
-
-    private String bookImage; //url? 파일?
-
-    private Long average_rating;
+//    private String genre;
+//
+//    private String summary;
+//
+//    private String bookImage; //url? 파일?
+//
+//    private Long average_rating;
 
 
 }

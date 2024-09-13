@@ -9,8 +9,8 @@ public class BookDTO {
     private Long id;
     private String title;
     private String author;
-    private String genre;
-    private String summary;
-    private String imageURL;
-    private Long average_rating;
+//    private String genre;
+//    private String summary;
+//    private String imageURL;
+//    private Long average_rating;
 }

@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/book")
+@RequestMapping("/books")
 public class BookController {
     private final BookService bookService;
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<BookDTO> getBookInfo(@PathVariable Long bookId) {
+    public ResponseEntity<BookDTO> getBookInfo(@PathVariable("bookId") Long bookId) {
         try {
             // BookDTO 객체를 서비스에서 가져옴
             BookDTO bookDTO = bookService.getBookInfo(bookId);
@@ -34,6 +34,5 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
 }
