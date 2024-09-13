@@ -10,8 +10,6 @@ name: Deploy to EC2
 on:
   push:
     branches: [ "main" , "develop" ]
-  pull_request:
-    branches: [ "main" , "develop" ]
 
 jobs:
   build:
@@ -37,7 +35,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build -Dorg.gradle.jvmargs="-Djasypt.encryptor.password=${{ secrets.JASYPT }}"
+      run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT }}
       
     - name: Docker build
       run: |
