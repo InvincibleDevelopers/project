@@ -37,8 +37,8 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build -Djasypt.encryptor.password=secretkey
-
+      run: ./gradlew build -Dorg.gradle.jvmargs="-Djasypt.encryptor.password=${{ secrets.JASYPT }}"
+      
     - name: Docker build
       run: |
         docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
