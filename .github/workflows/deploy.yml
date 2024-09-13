@@ -35,7 +35,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: test
-      run: ./gradlew test -i -Djasypt.encryptor.password=${{ secrets.JASYPT }}
+      run: ./gradlew test -i
 
     - name: Build with Gradle Wrapper
       run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT }}
