@@ -14,7 +14,7 @@ spring:
       ddl-auto: update
     show-sql: true
   jwt:
-    secret: "aldkjdqijvnbvnfivjmkgasdnbkdfngjfjcmdkfglvldabcascadasdasdas" # JWT 암호화 키
+    secret: ENC(dfLHZN5KMae06rwSnGLM22Zm0ds1lfP569o9GK890egyywcYzbVutIfU1rIxZh3AgKHc7MOnNAytOS3bmyjWWNNOQZsoiyhi) # JWT 암호화 키
 
 cloud:
   aws:
