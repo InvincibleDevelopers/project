@@ -37,7 +37,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build -Djasypt.encryptor.password=secret
+      run: ./gradlew build -Djasypt.encryptor.password=secretkey
 
     - name: Docker build
       run: |
