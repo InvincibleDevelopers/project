@@ -35,7 +35,7 @@ jobs:
       run: chmod +x gradlew
 
     - name: Build with Gradle Wrapper
-      run: ./gradlew build -Djasypt.encryptor.password=${{ secrets.JASYPT }}
+      run: ./gradlew build
       
     - name: Docker build
       run: |
@@ -53,6 +53,6 @@ jobs:
         script: |
           docker pull ${{ secrets.DOCKER_USERNAME }}/project:latest
           docker stop $(docker ps -a -q)
-          docker run -d --log-driver=syslog -p 8088:8088 ${{ secrets.DOCKER_USERNAME }}/project:latest
+          docker run -d --log-driver=syslog -p 8088:8088 -e JAVAOPTS=${{ secrets.JASYPT }} ${{ secrets.DOCKER_USERNAME }}/project:latest
           docker rm $(docker ps --filter 'status=exited' -a -q)
           docker image prune -a -f
