@@ -1,5 +1,6 @@
 package invincibleDevs.bookpago.model;
 
+import invincibleDevs.bookpago.profile.Profile;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

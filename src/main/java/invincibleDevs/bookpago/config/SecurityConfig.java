@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -86,7 +87,15 @@ public class SecurityConfig {
                         .requestMatchers("/admin").hasRole("ADMIN")
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll() // Swagger UI 및 OpenAPI 문서에 대한 접근 허용
                         .requestMatchers("/**").permitAll() // 모든 경로에 대해 접근 허용
-                        .anyRequest().authenticated());
+
+                        .anyRequest().authenticated())
+                .oauth2Login(oauth2 -> oauth2 // OAuth2 설정
+                        .loginPage("/oauth2/authorization/kakao") // 사용자 정의 로그인 페이지
+                        .defaultSuccessUrl("/home") // 로그인 성공 후 리디렉션할 URL
+                        .failureUrl("/login?error") // 로그인 실패 시 리디렉션할 URL
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/")); // 로그아웃 성공 시 리디렉션할 URL
 
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);

@@ -26,7 +26,7 @@ public class BookController {
             if (bookDTO == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
             }
-
+            System.out.println(bookId);
             // 성공적으로 BookDTO를 가져온 경우 200 OK 반환
             return ResponseEntity.ok(bookDTO);
         } catch (Exception e) {

@@ -31,6 +31,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	// Spring Boot Web Starter (RestTemplate을 사용하기 위해 필요)
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	//Spring Security & JWT
 	implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -39,6 +41,9 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 	testImplementation 'org.springframework.security:spring-security-test'
+
+	//OAuth2 Client
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 	//git
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
@@ -49,6 +54,9 @@ dependencies {
 
 	//Swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+	implementation 'io.swagger:swagger-annotations:1.6.11'
+	implementation 'io.springfox:springfox-swagger2:3.0.0'
+
 
 	//S3
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'

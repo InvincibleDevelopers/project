@@ -20,8 +20,8 @@ public class Image {
     @Column(nullable = false)
     private String imageUrl;
 
-    @OneToOne
-    private Profile profileImage;
+//    @OneToOne
+//    private Profile profileImage;
 
 
 
