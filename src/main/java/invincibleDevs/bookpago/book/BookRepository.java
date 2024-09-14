@@ -1,6 +1,6 @@
-package invincibleDevs.bookpago.repository;
+package invincibleDevs.bookpago.book;
 
-import invincibleDevs.bookpago.model.Book;
+import invincibleDevs.bookpago.book.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BookRepository extends JpaRepository <Book, Long> {

@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.model;
+package invincibleDevs.bookpago.image;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;

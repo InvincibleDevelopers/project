@@ -1,6 +1,6 @@
-package invincibleDevs.bookpago.service;
+package invincibleDevs.bookpago.image;
 
-import invincibleDevs.bookpago.model.Image;
+import invincibleDevs.bookpago.image.Image;
 import invincibleDevs.bookpago.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

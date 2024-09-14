@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.jwt;
+package invincibleDevs.bookpago.common;
 
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Value;

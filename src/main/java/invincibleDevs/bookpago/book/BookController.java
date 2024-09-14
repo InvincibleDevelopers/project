@@ -1,7 +1,5 @@
-package invincibleDevs.bookpago.controller;
+package invincibleDevs.bookpago.book;
 
-import invincibleDevs.bookpago.dto.BookDTO;
-import invincibleDevs.bookpago.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

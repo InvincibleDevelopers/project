@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.dto;
+package invincibleDevs.bookpago.profile;
 
 import lombok.Data;
 

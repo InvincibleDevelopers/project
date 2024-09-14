@@ -1,6 +1,6 @@
-package invincibleDevs.bookpago.repository;
+package invincibleDevs.bookpago.Users;
 
-import invincibleDevs.bookpago.model.UserEntity;
+import invincibleDevs.bookpago.Users.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<UserEntity, Integer> {

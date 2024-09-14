@@ -1,7 +1,7 @@
 package invincibleDevs.bookpago.controller;
 
-import invincibleDevs.bookpago.service.ImageService;
-import invincibleDevs.bookpago.service.S3Service;
+import invincibleDevs.bookpago.image.ImageService;
+import invincibleDevs.bookpago.common.S3Service;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

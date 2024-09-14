@@ -1,17 +1,9 @@
 package invincibleDevs.bookpago.profile;
 
-import invincibleDevs.bookpago.model.FollowingMap;
-import invincibleDevs.bookpago.model.Review;
-import invincibleDevs.bookpago.model.UserEntity;
+import invincibleDevs.bookpago.Users.model.UserEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
-
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter

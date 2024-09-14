@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.service;
+package invincibleDevs.bookpago.common;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;

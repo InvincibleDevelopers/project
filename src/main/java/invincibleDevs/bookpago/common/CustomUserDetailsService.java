@@ -1,8 +1,7 @@
-package invincibleDevs.bookpago.service;
+package invincibleDevs.bookpago.common;
 
-import invincibleDevs.bookpago.dto.CustomUserDetails;
-import invincibleDevs.bookpago.model.UserEntity;
-import invincibleDevs.bookpago.repository.UserRepository;
+import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.Users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

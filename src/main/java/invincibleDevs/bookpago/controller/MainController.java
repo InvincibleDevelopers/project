@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.controller;
 
-import invincibleDevs.bookpago.Users.service.UsersService;
+import invincibleDevs.bookpago.Users.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,7 +15,7 @@ import java.util.Iterator;
 @ResponseBody
 @RequiredArgsConstructor
 public class MainController {
-    private final UsersService usersService;
+    private final UserEntityService userEntityService;
 //    @GetMapping("/")
 //    public String mainP() {
 //

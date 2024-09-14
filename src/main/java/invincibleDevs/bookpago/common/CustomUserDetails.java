@@ -1,6 +1,6 @@
-package invincibleDevs.bookpago.dto;
+package invincibleDevs.bookpago.common;
 
-import invincibleDevs.bookpago.model.UserEntity;
+import invincibleDevs.bookpago.Users.model.UserEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

@@ -1,11 +1,6 @@
-package invincibleDevs.bookpago.service;
+package invincibleDevs.bookpago.book;
 
-import com.amazonaws.services.kms.model.NotFoundException;
-import invincibleDevs.bookpago.dto.BookDTO;
-import invincibleDevs.bookpago.model.Book;
-import invincibleDevs.bookpago.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;

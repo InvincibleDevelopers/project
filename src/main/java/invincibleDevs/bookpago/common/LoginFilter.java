@@ -1,6 +1,5 @@
-package invincibleDevs.bookpago.jwt;
+package invincibleDevs.bookpago.common;
 
-import invincibleDevs.bookpago.dto.CustomUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

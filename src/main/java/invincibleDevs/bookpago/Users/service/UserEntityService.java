@@ -1,18 +1,13 @@
 package invincibleDevs.bookpago.Users.service;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
-import invincibleDevs.bookpago.Users.dto.KakaoUserDTO;
 import invincibleDevs.bookpago.Users.dto.request.SignInRequest;
 import invincibleDevs.bookpago.Users.dto.request.KakaoJoinRequest;
 import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;
-import invincibleDevs.bookpago.model.UserEntity;
-import invincibleDevs.bookpago.profile.Profile;
+import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.profile.ProfileRepository;
-import invincibleDevs.bookpago.repository.UserRepository;
+import invincibleDevs.bookpago.Users.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -25,7 +20,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UsersService {
+public class UserEntityService {
     private final UserRepository userRepository;
     private final ProfileRepository profileRepository;
     public boolean isUserExists(String username) {
@@ -90,8 +85,7 @@ public class UsersService {
                 String.class
         );
         System.out.println(response);
-//
-//        String responsebody = response.getBody();
+
         // JSON 문자열 파싱
         JsonObject rootObject = JsonParser.parseString(response.getBody()).getAsJsonObject();
 
@@ -100,19 +94,8 @@ public class UsersService {
         String username = Long.toString(id);
         String nickname = rootObject.get("properties").getAsJsonObject().get("nickname").getAsString();
 
-        System.out.println("ID: " + id);
-        System.out.println("Nickname: " + nickname);
-//response.getStatusCode() == HttpStatus.UNAUTHORIZED
         // 응답의 상태 코드 확인
         if (response.getStatusCode().is2xxSuccessful()) {
-            // 액세스 토큰이 유효하지 않음
-//            ObjectMapper objectMapper = new ObjectMapper();
-//            KakaoUserDTO kakaoUserDTO = new KakaoUserDTO();
-//            try { //parsing할때 오류 막기위해 try catch로 감싸야함.
-//                kakaoUserDTO = objectMapper.readValue(response.getBody(), KakaoUserDTO.class);
-//            } catch (JsonProcessingException e) {
-//                e.printStackTrace();
-//            }
             UserEntity userEntity = UserEntity.builder()
                     .username(username)
                     .nickname(kakaoJoinRequest.nickname())

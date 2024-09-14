@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.repository;
 
-import invincibleDevs.bookpago.model.Image;
+import invincibleDevs.bookpago.image.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

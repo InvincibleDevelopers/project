@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.dto;
+package invincibleDevs.bookpago.book;
 
 import lombok.Getter;
 import lombok.Setter;
