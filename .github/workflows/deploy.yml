@@ -44,7 +44,7 @@ jobs:
         docker tag app ${{ secrets.DOCKER_USERNAME }}/project:latest
         docker push ${{ secrets.DOCKER_USERNAME }}/project:latest
 
-    - name: Deploy
+    - name: Deplo
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
