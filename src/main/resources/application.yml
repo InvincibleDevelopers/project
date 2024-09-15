@@ -14,7 +14,8 @@ spring:
       ddl-auto: update
     show-sql: true
   jwt:
-    secret: "aldkjdqijvnbvnfivjmkgasdnbkdfngjfjcmdkfglvldabcascadasdasdas" # JWT 암호화 키
+    secret: ENC(dfLHZN5KMae06rwSnGLM22Zm0ds1lfP569o9GK890egyywcYzbVutIfU1rIxZh3AgKHc7MOnNAytOS3bmyjWWNNOQZsoiyhi) # JWT 암호화 키
+   # JWT 암호화 키
   security:
     oauth2:
       client:
@@ -34,7 +35,6 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
 
 cloud:
   aws:
