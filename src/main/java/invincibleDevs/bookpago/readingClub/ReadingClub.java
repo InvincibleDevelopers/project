@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.model;
+package invincibleDevs.bookpago.readingClub;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

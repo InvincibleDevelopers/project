@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.repository;
+package invincibleDevs.bookpago.image;
 
 import invincibleDevs.bookpago.image.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
