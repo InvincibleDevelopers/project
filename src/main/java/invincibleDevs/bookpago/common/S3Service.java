@@ -2,6 +2,7 @@ package invincibleDevs.bookpago.common;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,11 @@ public class S3Service {
         }
     }
 
+    public void deleteFile(String fileUrl) {
+        String deleteUrl = extractFileKeyFromUrl(fileUrl);
+        s3Client.deleteObject(new DeleteObjectRequest(bucketName, deleteUrl));
+    }
+
 
     private ObjectMetadata getObjectMetadata(MultipartFile file) {
         ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -45,6 +51,12 @@ public class S3Service {
     private String generateFileName(MultipartFile file) {
 
         return UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+    }
+
+    //URL에서 파일 키를 추출하는 메서드
+    private String extractFileKeyFromUrl(String fileUrl) {
+        String s3Prefix = "https://s3.amazonaws.com/";
+        return fileUrl.substring(s3Prefix.length());
     }
 
 }

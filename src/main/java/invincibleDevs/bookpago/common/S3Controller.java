@@ -24,10 +24,10 @@ public class S3Controller {
     public ResponseEntity<String> uploadtoS3(@RequestPart("file")MultipartFile file) throws IOException {
         try {
             String url = s3Service.uploadFile(file);
-            String fileKey = imageService.addImage(url);
-
-            String response = url + "|FileKey : " + fileKey;
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+////            String fileKey = imageService.addImage(url);
+//
+//            String response = url;
+            return ResponseEntity.status(HttpStatus.CREATED).body(url);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file: " + e.getMessage());
         }
@@ -37,9 +37,9 @@ public class S3Controller {
     @Operation(summary = "Get image by fileKey", description = "Retrieves the image URL from S3 using the provided fileKey")
     public ResponseEntity<String> getimage(@PathVariable("fileKey") String fileKey) {
         try {
-            String url = imageService.getImage(fileKey);
+//            String url = imageService.getImage(fileKey);
 
-            return ResponseEntity.status(HttpStatus.OK).body(url);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found for fileKey: " + fileKey);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Image not found for fileKey: " + fileKey);
         }

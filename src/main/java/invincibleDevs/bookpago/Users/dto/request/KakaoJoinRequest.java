@@ -12,7 +12,6 @@ public record KakaoJoinRequest( //카카오만해당?@ApiModelProperty(value = "
         @NotBlank
         String nickname,
 
-        String serverToken ,
         @ApiModelProperty(value = "카카오 액세스 토큰", required = true)
         @NotBlank
         String kakaoOauthToken,

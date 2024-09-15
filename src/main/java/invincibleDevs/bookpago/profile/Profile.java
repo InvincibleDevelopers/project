@@ -2,12 +2,18 @@ package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.UUID;
 
 @Entity
 @Getter
-@Builder
+@Builder(toBuilder = true)  // toBuilder = true 설정
+@NoArgsConstructor // 기본 생성자 추가
+@AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class Profile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +26,7 @@ public class Profile {
     private String profileImgUrl = "https://s3.amazonaws.com/e7c257aa-5b1d-48a1-aece-93eec0965365_profile_sample.png";
 
     @Builder.Default
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String nickName = "User";
 
     @Builder.Default
