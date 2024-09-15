@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.Users;
+package invincibleDevs.bookpago.Users.repository;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.config;
+package invincibleDevs.bookpago.common.config;
 
 import invincibleDevs.bookpago.common.JWTFilter;
 import invincibleDevs.bookpago.common.JWTUtil;

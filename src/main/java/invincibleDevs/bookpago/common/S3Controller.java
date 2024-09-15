@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.controller;
+package invincibleDevs.bookpago.common;
 
 import invincibleDevs.bookpago.image.ImageService;
 import invincibleDevs.bookpago.common.S3Service;
@@ -12,26 +12,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 @RestController
-@RequestMapping("/testupload")
 @RequiredArgsConstructor
-public class FileUploadController {
+@RequestMapping("/s3")
+
+public class S3Controller {
     private final S3Service s3Service;
     private final ImageService imageService;
-
-//    @PostMapping
-//    public String uploadtoS3(@RequestPart("file")MultipartFile file) throws IOException {
-//        String url  = s3Service.uploadFile(file);
-//        String fileKey = imageService.addImage(url);
-//
-//        return url + "|FileKey : " + fileKey;
-//    }
-//
-//    @GetMapping("/getimage/{fileKey}")
-//    public String getimage(@PathVariable("fileKey") String fileKey) {
-//        String url = imageService.getImage(fileKey);
-//
-//        return url;
-//    }
 
     @PostMapping("/upload")
     @Operation(summary = "Upload file to S3", description = "Uploads a file to S3 and returns the URL and FileKey")

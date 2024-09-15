@@ -1,6 +1,6 @@
 //package invincibleDevs.bookpago.service;
 //
-//import invincibleDevs.bookpago.Users.UserRepository;
+//import invincibleDevs.bookpago.Users.repository.UserRepository;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.stereotype.Service;

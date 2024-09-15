@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.config;
+package invincibleDevs.bookpago.common.config;
 
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

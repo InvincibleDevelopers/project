@@ -1,9 +1,16 @@
 package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.model.ReadingClub;
+import invincibleDevs.bookpago.model.Review;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -16,28 +23,27 @@ public class Profile {
     @OneToOne
     private UserEntity userEntity;
 
-//    @OneToOne(mappedBy = "profileImage", cascade = CascadeType.REMOVE)
-//    @Builder.Default
-//    private Image profileImage = "...";
+    @Builder.Default
+    private String profileImgUrl = "https://s3.amazonaws.com/e7c257aa-5b1d-48a1-aece-93eec0965365_profile_sample.png";
 
-//    @Column(unique = true, nullable = false)
-//    private String nickName;
-//
-//    @Builder.Default
-//    private String bio = "";
-//
-//    private LocalDateTime modifyDate;
-//
+    @Builder.Default
+    @Column(unique = true, nullable = false)
+    private String nickName = "User";
+
+    @Builder.Default
+    private String introduce = "";
+
 //    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE )
 //    private List<Review> reviewList;
 //
-//
+//    @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE)
+//    private List<ReadingClub> readingClubList;
 //
 //    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE )
 //    private Set<FollowingMap> followerMaps;
 //
 //    @OneToMany(mappedBy = "followee")
-//    private Set<FollowingMap> followeeMaps = new HashSet<>();
+//    private Set<FollowingMap> followeeMaps;
 
 
 //▼▼▼▼ DM기능 추가시 활성화 예정. 삭제 금지 ▼▼▼

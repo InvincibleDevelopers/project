@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.config;
+package invincibleDevs.bookpago.common.config;
 
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.Components;

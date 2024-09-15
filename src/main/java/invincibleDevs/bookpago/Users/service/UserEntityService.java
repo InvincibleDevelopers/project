@@ -6,8 +6,9 @@ import invincibleDevs.bookpago.Users.dto.request.KakaoJoinRequest;
 import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;
 import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.profile.ProfileRepository;
-import invincibleDevs.bookpago.Users.UserRepository;
+import invincibleDevs.bookpago.Users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -66,6 +67,10 @@ public class UserEntityService {
                 .created_at(LocalDateTime.now())
                 .build();
         userRepository.save(userEntity);
+        Profile profile = Profile.builder()
+                .userEntity(userEntity)
+                .build();
+        profileRepository.save(profile);
         return new SignUpResponse(userEntity.getUsername(), userEntity.getNickname());
     }
 
@@ -104,6 +109,10 @@ public class UserEntityService {
                     .created_at(LocalDateTime.now())
                     .build();
             userRepository.save(userEntity);
+            Profile profile = Profile.builder()
+                    .userEntity(userEntity)
+                    .build();
+            profileRepository.save(profile);
             return new SignUpResponse(userEntity.getUsername(), userEntity.getNickname());
         } else{
             throw new IllegalArgumentException("Invalid access token: " + response.getBody());

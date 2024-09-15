@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.controller;
+package invincibleDevs.bookpago.common;
 
 import invincibleDevs.bookpago.Users.service.UserEntityService;
 import lombok.RequiredArgsConstructor;

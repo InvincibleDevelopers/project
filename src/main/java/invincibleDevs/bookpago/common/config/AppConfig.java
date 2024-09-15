@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.config;
+package invincibleDevs.bookpago.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
