@@ -1,6 +1,7 @@
-package invincibleDevs.bookpago.readingClub;
+package invincibleDevs.bookpago.readingClub.repository;
 
 import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

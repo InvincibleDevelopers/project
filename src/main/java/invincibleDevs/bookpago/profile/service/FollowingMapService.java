@@ -3,6 +3,7 @@ package invincibleDevs.bookpago.profile.service;
 import invincibleDevs.bookpago.profile.model.FollowingMap;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.repository.FollowingMapRepository;
+import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -22,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FollowingMapService {
     private final FollowingMapRepository followingMapRepository;
+    private final ProfileRepository profileRepository;
 
     @Transactional
     public boolean savefollowingMap(Map<Profile, Profile> followingMap) { //토클 기능
@@ -46,9 +48,9 @@ public class FollowingMapService {
         }
     }
 
-    public Page<FollowingListDto> getFollowers(String username, int page) {
-        Pageable pageable = PageRequest.of(page,50);
-        Page<Profile> followerProfiles = followingMapRepository.findFollowersByFollowee(username,pageable);
+    public Page<FollowingListDto> getFollowers(Long targetId, int page, int size) { //맵에서 팔로이 가 타켓유저인거
+        Pageable pageable = PageRequest.of(page,size);
+        Page<Profile> followerProfiles = followingMapRepository.findFollowersByProfileId(targetId,pageable);
         System.out.println("#######################################");
         System.out.println(followerProfiles.getSize());
 

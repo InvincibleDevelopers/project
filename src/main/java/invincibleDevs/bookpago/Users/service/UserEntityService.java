@@ -2,7 +2,6 @@ package invincibleDevs.bookpago.Users.service;
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
 import invincibleDevs.bookpago.Users.dto.request.KakaoSignInRequest;
-import invincibleDevs.bookpago.Users.dto.request.SignInRequest;
 import invincibleDevs.bookpago.Users.dto.request.KakaoJoinRequest;
 import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;

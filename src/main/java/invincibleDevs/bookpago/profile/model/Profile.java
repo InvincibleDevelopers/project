@@ -1,17 +1,14 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.readingClub.ReadingClub;
-import invincibleDevs.bookpago.readingClub.ReadingClubMap;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.w3c.dom.Text;
 
 import java.util.Set;
-import java.util.UUID;
 
 @Entity
 @Getter

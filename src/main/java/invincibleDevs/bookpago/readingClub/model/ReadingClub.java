@@ -1,6 +1,6 @@
-package invincibleDevs.bookpago.readingClub;
+package invincibleDevs.bookpago.readingClub.model;
 
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

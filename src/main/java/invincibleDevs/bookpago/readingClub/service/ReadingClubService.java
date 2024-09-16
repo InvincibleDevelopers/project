@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.readingClub;
+package invincibleDevs.bookpago.readingClub.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

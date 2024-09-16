@@ -25,18 +25,19 @@ public class ProfileController {
             @ApiParam(value = "토큰", required = true)
             @RequestHeader(value = "Authorization", required = true) String serverToken,
             @RequestParam(value = "username") String username,
-            @RequestParam(defaultValue = "0") int bookclubpage,  // 쿼리 파라미터로 페이지 번호를 받음
-            @RequestParam(defaultValue = "5") int bookclubsize) { // 쿼리 파라미터로 페이지 크기를 받음
+            @RequestParam(defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
+            @RequestParam(defaultValue = "5") int size) { // 쿼리 파라미터로 페이지 크기를 받음
 
 
         ProfileRequest profileRequest = new ProfileRequest(username);
-        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username,bookclubpage,bookclubsize));
+        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username,page,size));
     }
 
     @PostMapping("/updateimage")
     public ResponseEntity<ProfileResponse> updateProfileImage(
             @ApiParam(value = "변경할 이미지 파일", required = true)
-//            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "username") String username,
             @RequestPart("file") MultipartFile file
     ) {
         return ResponseEntity.ok(profileFacade.updateProfileImage(file));
@@ -45,25 +46,28 @@ public class ProfileController {
     @PostMapping("/updatenickname")
     public ResponseEntity<ProfileResponse> updateNickname(
             @ApiParam(value = "변경할 닉네임", required = true)
-//            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "username") String username,
             @RequestBody UpdateProfileRequest updateProfileRequest
     ) {
-        System.out.println("================================");
         return ResponseEntity.ok(profileFacade.updateNickname(updateProfileRequest));
     }
 
     @PostMapping("/updateintroduce")
     public ResponseEntity<ProfileResponse> updateIntroduce(
             @ApiParam(value = "변경할 소개글", required = true)
-//            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "username") String username,
             @RequestBody UpdateProfileRequest updateProfileRequest
     ) {
         return ResponseEntity.ok(profileFacade.updateIntroduce(updateProfileRequest));
     }
 
     @PostMapping("/updatefollowing")
-    public ResponseEntity<String> updatefollowing(
+    public ResponseEntity<String> updatefollowing( // 로직추가 : 팔로워가 접속 user인지!
             @ApiParam(value ="follower, followee 필수", required = true)
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "username") String username,
             @RequestBody FollowRequest followRequest)  {
 
         if(profileFacade.updateFollow(followRequest)) {
@@ -73,12 +77,21 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/getfollowers")
-    public ResponseEntity<Page<FollowingListDto>> getfollowers(
-//            @RequestHeader(value = "Authorization", required = true) String serverToken,
-            @RequestHeader(value = "username", required = true) String username, int page
-    ) {
-        return ResponseEntity.ok(profileFacade.getFollowers(username,page));
+    @GetMapping("/getfollowerlist")
+    public ResponseEntity<Page<FollowingListDto>> getfollowers( //내가 상대의 팔로워 리스트 보는 요청
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "targetId") Long targetId,
+            @RequestParam(defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(profileFacade.getFollowers(targetId,page,size));
+    }
+    @GetMapping("/getfolloweelist")
+    public ResponseEntity<Page<FollowingListDto>> getfollowees( //내가 상대의 팔로잉 리스트 보는 요청
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "targetId") Long targetId,
+            @RequestParam(defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(profileFacade.getFollowees(targetId,page,size));
     }
 
 

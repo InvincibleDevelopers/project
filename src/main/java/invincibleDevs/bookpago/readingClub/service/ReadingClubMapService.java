@@ -1,6 +1,9 @@
-package invincibleDevs.bookpago.readingClub;
+package invincibleDevs.bookpago.readingClub.service;
 
 import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
+import invincibleDevs.bookpago.readingClub.repository.ReadingClubMapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,7 +20,7 @@ import java.util.stream.Collectors;
 public class ReadingClubMapService {
     private final ReadingClubMapRepository readingClubMapRepository;
 
-    public Page<ReadingClubDto> getUserClubs(Profile profile,int page, int size) {
+    public Page<ReadingClubDto> getUserClubs(Profile profile, int page, int size) {
         // 관리자와 멤버로 검색하여 리스트 가져오기
         List<ReadingClubMap> adminClubs = readingClubMapRepository.findByClubAdmin(profile);
         List<ReadingClubMap> memberClubs = readingClubMapRepository.findByClubMember(profile);

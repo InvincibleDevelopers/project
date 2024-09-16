@@ -10,14 +10,13 @@ import invincibleDevs.bookpago.profile.service.ProfileService;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
-import invincibleDevs.bookpago.readingClub.ReadingClubMapService;
+import invincibleDevs.bookpago.readingClub.service.ReadingClubMapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -61,8 +60,12 @@ public class ProfileFacade {
         return followingMapService.savefollowingMap(profileService.setFollowingMap(followRequest));
     }
 
-    public Page<FollowingListDto> getFollowers(String username, int page) {
+    public Page<FollowingListDto> getFollowers(Long targetId, int page, int size) {
         // ProfileService의 메서드를 호출하여 결과 반환
-        return followingMapService.getFollowers(username, page); // 올바른 서비스 인스턴스를 사용
+        return followingMapService.getFollowers(targetId, page, size); // 올바른 서비스 인스턴스를 사용
+    }
+    public Page<FollowingListDto> getFollowees(Long targetId, int page, int size) {
+        // ProfileService의 메서드를 호출하여 결과 반환
+        return followingMapService.getFollowers(targetId, page, size); // 올바른 서비스 인스턴스를 사용
     }
 }

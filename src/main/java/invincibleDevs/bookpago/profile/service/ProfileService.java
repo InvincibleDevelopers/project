@@ -46,7 +46,7 @@ public class ProfileService {
 
     public Profile getProfile(ProfileRequest profileRequest) {
         try{
-//            String username = Utils.getAuthenticatedUsername();
+            String username = Utils.getAuthenticatedUsername();
             UserEntity userEntity = userRepository.findByUsername(profileRequest.username()); //요청프로필
 
             Profile profile = findNickname(profileRequest.username());
@@ -79,9 +79,9 @@ public class ProfileService {
 
     public ProfileResponse updateNickname(UpdateProfileRequest updateProfileRequest) {
         try{
-//            String username = Utils.getAuthenticatedUsername();
+            String username = Utils.getAuthenticatedUsername();
 //            UserEntity userEntity = userRepository.findByUsername(username);
-            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
+            UserEntity userEntity = userRepository.findByUsername(username);
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
                     .orElseThrow(() -> new NoSuchElementException("Profile with username :" + updateProfileRequest.username() + "- not found"));

@@ -14,8 +14,9 @@ public interface FollowingMapRepository extends JpaRepository<FollowingMap, Long
 
     void deleteByFollowerAndFollowee(Profile follower, Profile followee);
 
+    @Query("SELECT fm.follower FROM FollowingMap fm WHERE fm.followee.id = :profileId ORDER BY fm.id DESC")
+    Page<Profile> findFollowersByProfileId(@Param("profileId") Long profileId, Pageable pageable);
 
-    @Query("SELECT fm.follower FROM FollowingMap fm WHERE fm.followee.nickName = :nickname ORDER BY fm.follower.nickName ASC")
-    Page<Profile> findFollowersByFollowee(@Param("nickname") String nickname, Pageable pageable);
-
+    @Query("SELECT fm.followee FROM FollowingMap fm WHERE fm.follower.id = :profileId ORDER BY fm.id DESC")
+    Page<Profile> findFolloweesByProfileId(@Param("profileId") Long profileId, Pageable pageable);
 }

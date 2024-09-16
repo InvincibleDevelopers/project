@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.readingClub;
+package invincibleDevs.bookpago.readingClub.dto;
 
 public record ReadingClubDto(
         String clubName,
