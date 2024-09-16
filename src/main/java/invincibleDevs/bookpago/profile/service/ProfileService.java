@@ -1,17 +1,22 @@
-package invincibleDevs.bookpago.profile;
+package invincibleDevs.bookpago.profile.service;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.common.Utils;
 import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.repository.ProfileRepository;
+import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 @Service
@@ -41,6 +46,7 @@ public class ProfileService {
     public ProfileResponse updateProfileImage(String url) {
         try{
             String username = Utils.getAuthenticatedUsername();
+            System.out.println(username);
             UserEntity userEntity = userRepository.findByUsername(username);
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
@@ -59,11 +65,12 @@ public class ProfileService {
 
     public ProfileResponse updateNickname(UpdateProfileRequest updateProfileRequest) {
         try{
-            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(username);
+//            String username = Utils.getAuthenticatedUsername();
+//            UserEntity userEntity = userRepository.findByUsername(username);
+            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
-                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + updateProfileRequest.username() + "- not found"));
             Profile updateProfile = profile.toBuilder()
                     .nickName(updateProfileRequest.nickname().
                             orElseThrow(()-> new IllegalArgumentException("변경값 필수")) )
@@ -85,7 +92,7 @@ public class ProfileService {
                     .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
 
             Profile updateProfile = profile.toBuilder()
-                    .nickName(updateProfileRequest.introduce().
+                    .introduce(updateProfileRequest.introduce().
                             orElseThrow(()-> new IllegalArgumentException("변경값 필수")) )
                     .build();
 
@@ -94,5 +101,31 @@ public class ProfileService {
         }catch (CustomException e) {
             return new ProfileResponse(false, "Error: " + e.getMessage(), null, null);
         }
+    }
+
+    public Map<Profile, Profile> setFollowingMap(FollowRequest followRequest) {
+        try{
+            Map<Profile, Profile> followingMap = new HashMap<>();
+
+            // 예시: 팔로우하는 사용자와 팔로우되는 사용자 프로필을 생성합니다.
+//            UserEntity userEntity = userRepository.findByUsername(followRequest.follower());
+//            UserEntity targetUserEntity = userRepository.findByUsername(followRequest.followee());
+            Profile follower = profileRepository.findByUserEntityUserName(followRequest.follower())
+                    .orElseThrow(() -> new NoSuchElementException("프로필을 찾을 수 없음"));
+
+            Profile followee = profileRepository.findByUserEntityUserName(followRequest.followee())
+                    .orElseThrow(() -> new NoSuchElementException("프로필을 찾을 수 없음"));
+
+            followingMap.put(follower, followee);
+            return followingMap;
+
+//            String username = Utils.getAuthenticatedUsername();
+//            UserEntity userEntity = userRepository.findByUsername(username);
+
+//        followingMapService.savefollowingMap(follower, followee);
+        }catch(CustomException e){
+            throw e;
+        }
+
     }
 }

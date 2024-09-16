@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.profile;
+package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import jakarta.persistence.*;
@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,8 +23,8 @@ public class Profile {
     @OneToOne
     private UserEntity userEntity;
 
-    @Builder.Default
-    private String profileImgUrl = "https://s3.amazonaws.com/e7c257aa-5b1d-48a1-aece-93eec0965365_profile_sample.png";
+    @Column(nullable = true)
+    private String profileImgUrl;
 
     @Builder.Default
     @Column(nullable = false)
@@ -38,11 +39,11 @@ public class Profile {
 //    @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE)
 //    private List<ReadingClub> readingClubList;
 //
-//    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE )
-//    private Set<FollowingMap> followerMaps;
-//
-//    @OneToMany(mappedBy = "followee")
-//    private Set<FollowingMap> followeeMaps;
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE )
+    private Set<FollowingMap> followerMaps;
+
+    @OneToMany(mappedBy = "followee")
+    private Set<FollowingMap> followeeMaps;
 
 
 //▼▼▼▼ DM기능 추가시 활성화 예정. 삭제 금지 ▼▼▼

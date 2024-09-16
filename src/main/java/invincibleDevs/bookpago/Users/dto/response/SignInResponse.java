@@ -7,5 +7,6 @@ public record SignInResponse(
         Optional<String> username,
         Optional<String> nickname,
         Optional<String> serverToken
+
 ) {
 }

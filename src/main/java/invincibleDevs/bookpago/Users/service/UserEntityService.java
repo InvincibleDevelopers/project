@@ -8,15 +8,13 @@ import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.common.JWTUtil;
-import invincibleDevs.bookpago.profile.Profile;
-import invincibleDevs.bookpago.profile.ProfileRepository;
+import invincibleDevs.bookpago.common.Utils;
+import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.Authenticator;
 import org.springframework.http.*;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.MultiValueMap;
@@ -41,15 +39,29 @@ public class UserEntityService {
 
     @Transactional
     public SignInResponse signInUser(SignInRequest signInRequest) { //기능 : 유저아이디 널이면 , false반환. 유저아이디 잇으면 아디 이름 반환.
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        if (userRepository.existsByUsername(username)) { //DB엔 String타입 저장되어있음
-            UserEntity userEntity = userRepository.findByUsername(signInRequest.username().toString());
-            String serverToken = jwtUtil.createJwt(userEntity.getUsername(), "USER",60*60*1000*10L);
-            return new SignInResponse(true, Optional.ofNullable(userEntity.getUsername()), Optional.ofNullable(userEntity.getNickname()),Optional.ofNullable(serverToken));
-        } else {
-            return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty());
-        }
+       try {
+           String username = Utils.getAuthenticatedUsername();
+           System.out.println("testnameeee");
+           System.out.println(username);
+           UserEntity userEntity = userRepository.findByUsername(username);
+           return new SignInResponse(
+                   true,
+                   Optional.ofNullable(username),
+                   Optional.ofNullable(userEntity.getNickname()), // Make sure to pass `nickname` if needed
+                   Optional.ofNullable(signInRequest.serverToken())
+           );
+
+       }catch (CustomException e) {
+           return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty());
+
+       }
+//        if (userRepository.existsByUsername(username)) { //DB엔 String타입 저장되어있음
+//            UserEntity userEntity = userRepository.findByUsername(signInRequest.username().toString());
+//            String serverToken = jwtUtil.createJwt(userEntity.getUsername(), "USER",60*60*1000*10L);
+//            return new SignInResponse(true, Optional.ofNullable(userEntity.getUsername()), Optional.ofNullable(userEntity.getNickname()),Optional.ofNullable(serverToken));
+//        } else {
+//            return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty());
+//        }
     }
 
     @Transactional

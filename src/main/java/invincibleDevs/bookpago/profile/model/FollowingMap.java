@@ -1,12 +1,14 @@
-package invincibleDevs.bookpago.profile;
+package invincibleDevs.bookpago.profile.model;
 
-import invincibleDevs.bookpago.profile.Profile;
+import invincibleDevs.bookpago.profile.model.Profile;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 @Entity
 @Getter
-@Setter
+@Builder(toBuilder = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "following_map", schema = "public", uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followee_id"}))
 public class FollowingMap {
 

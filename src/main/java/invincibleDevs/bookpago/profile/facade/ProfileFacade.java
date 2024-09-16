@@ -1,11 +1,15 @@
-package invincibleDevs.bookpago.profile;
+package invincibleDevs.bookpago.profile.facade;
 
 import invincibleDevs.bookpago.common.S3Service;
 import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.request.FollowRequest;
+import invincibleDevs.bookpago.profile.service.FollowingMapService;
+import invincibleDevs.bookpago.profile.service.ProfileService;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,6 +19,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class ProfileFacade {
     private final ProfileService profileService;
+    private final FollowingMapService followingMapService;
     private final S3Service s3Service;
 
 
@@ -42,5 +47,9 @@ public class ProfileFacade {
 
     public ProfileResponse updateIntroduce(UpdateProfileRequest updateProfileRequest) {
         return profileService.updateIntroduce(updateProfileRequest);
+    }
+
+    public boolean updateFollow(FollowRequest followRequest) {
+        return followingMapService.savefollowingMap(profileService.setFollowingMap(followRequest));
     }
 }

@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.review;
 
-import invincibleDevs.bookpago.profile.Profile;
+import invincibleDevs.bookpago.profile.model.Profile;
 import jakarta.persistence.*;
 import lombok.*;
 
