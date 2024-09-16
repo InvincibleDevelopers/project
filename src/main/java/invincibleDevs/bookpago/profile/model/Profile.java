@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.w3c.dom.Text;
 
 import java.util.Set;
 import java.util.UUID;
@@ -25,7 +26,7 @@ public class Profile {
     @OneToOne
     private UserEntity userEntity;
 
-    @Column(nullable = true)
+    @Column(nullable = true,columnDefinition = "TEXT")
     private String profileImgUrl;
 
     @Builder.Default

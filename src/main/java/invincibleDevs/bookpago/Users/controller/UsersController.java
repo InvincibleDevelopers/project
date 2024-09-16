@@ -10,8 +10,10 @@ import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequiredArgsConstructor

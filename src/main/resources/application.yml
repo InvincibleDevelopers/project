@@ -2,11 +2,6 @@ server:
   port: 8088
 
 spring:
-#  http:
-#    encoding:
-#      charset: UTF-8
-#      enabled: true
-#      force: true
   application:
     name: bookpago
   datasource:
@@ -26,7 +21,7 @@ spring:
       client:
         registration:
           kakao:
-            client-id: 6ea0ce235bdfc727eaf1e28fb5ecc2bd
+            client-id: ENC(T/ewgTqotRvwoJuFST+Z2mthZsQh5ygww2ZNLkbLPLFpGQZ7ZMywuoAyT6q3y/5L)
 #            client-secret: 제품 설정 -> 카카오 로그인 -> 보안 -> Client Secret
             redirect-uri: http://52.79.225.186/kakaoOauth
             authorization-grant-type: authorization_code
