@@ -4,16 +4,15 @@ import invincibleDevs.bookpago.profile.facade.ProfileFacade;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
+import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
+import org.springframework.data.domain.Page;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,15 +20,16 @@ import java.security.Principal;
 public class ProfileController {
     private final ProfileFacade profileFacade;
 
-    @GetMapping("/page")
-    public ResponseEntity<ProfileResponse> myProfile(
-            @ApiParam(value = "토큰", required = true)
-            @RequestHeader(value = "Authorization", required = true) String serverToken
-    ) {
-
-        ProfileRequest profileRequest = new ProfileRequest(serverToken);
-        return ResponseEntity.ok(profileFacade.getProfile(profileRequest));
-    }
+//    @GetMapping("/page")
+//    public ResponseEntity<ProfileResponse> profilePage(
+//            @ApiParam(value = "토큰", required = true)
+//            @RequestHeader(value = "Authorization", required = true) String serverToken,
+//            @RequestParam(value = "username") String username
+//    ) {
+//
+//        ProfileRequest profileRequest = new ProfileRequest(serverToken);
+//        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username));
+//    }
 
     @PostMapping("/updateimage")
     public ResponseEntity<ProfileResponse> updateProfileImage(
@@ -60,25 +60,25 @@ public class ProfileController {
     }
 
     @PostMapping("/updatefollowing")
-    public ResponseEntity<Boolean> updatefollowing(
+    public ResponseEntity<String> updatefollowing(
             @ApiParam(value ="follower, followee 필수", required = true)
             @RequestBody FollowRequest followRequest)  {
 
-        return ResponseEntity.ok(profileFacade.updateFollow(followRequest));
+        if(profileFacade.updateFollow(followRequest)) {
+            return ResponseEntity.ok("Success Follow.");
+        } else {
+            return ResponseEntity.ok("Success Unfollow.");
+        }
     }
 
-//    @PostMapping("/unfollow")
-//    public String unfollow(Model model, Principal principal, @RequestParam(value = "profileId") Long profileId) throws UnsupportedEncodingException {
-////        플필아디 받고
-////                팔로잉맵에 추가 현재로그인 foller로 플필아디followee로
-//        Profile followee = profileService.getProfileById(profileId);
-//        Member sitemember = this.memberService.getMember(principal.getName());
-//        Profile follower = sitemember.getProfile();
-//        followingMapService.deletefollowingMap(follower, followee);
-//
-//        String encodedProfileName = URLEncoder.encode(followee.getProfileName(), "UTF-8");
-//        return "redirect:/profile/detail/" + encodedProfileName;
-//    }
+    @GetMapping("/getfollowers")
+    public ResponseEntity<Page<FollowingListDto>> getfollowers(
+//            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestHeader(value = "username", required = true) String username, int page
+    ) {
+        return ResponseEntity.ok(profileFacade.getFollowers(username,page));
+    }
+
 
 
 }

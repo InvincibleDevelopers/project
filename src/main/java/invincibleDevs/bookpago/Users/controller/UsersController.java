@@ -52,10 +52,12 @@ public class UsersController {
 
     @GetMapping("/check")
     public String checkUser(
-            @RequestParam("username") String username
+            @RequestParam(value="username") String username,
+            @RequestHeader(value = "Authorization", required = true) String serverToken
     ) {
-        System.out.println("========================================");
+//        SignInRequest signInRequest = new SignInRequest(serverToken);
         System.out.println(username);
+        System.out.println(serverToken);
         if (userRepository.existsByUsername(username)) {
             UserEntity userEntity  = userRepository.findByUsername(username);
             return userEntity.getNickname();

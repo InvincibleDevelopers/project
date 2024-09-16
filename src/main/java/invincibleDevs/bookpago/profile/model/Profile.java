@@ -1,6 +1,8 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.readingClub.ReadingClub;
+import invincibleDevs.bookpago.readingClub.ReadingClubMap;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,9 +38,12 @@ public class Profile {
 //    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE )
 //    private List<Review> reviewList;
 //
-//    @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE)
-//    private List<ReadingClub> readingClubList;
-//
+    @OneToMany(mappedBy = "clubAdmin") // BookClub의 admin 필드와 매핑
+    private Set<ReadingClubMap> managedClub; // 관리하는 독서 모임
+
+    @OneToMany(mappedBy = "clubMember")
+    private Set<ReadingClubMap> readingClubs; // 가입한 독서 모임
+
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE )
     private Set<FollowingMap> followerMaps;
 

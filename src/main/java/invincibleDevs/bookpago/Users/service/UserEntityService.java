@@ -41,7 +41,7 @@ public class UserEntityService {
     public SignInResponse signInUser(SignInRequest signInRequest) { //기능 : 유저아이디 널이면 , false반환. 유저아이디 잇으면 아디 이름 반환.
        try {
            String username = Utils.getAuthenticatedUsername();
-           System.out.println("testnameeee");
+           System.out.println(signInRequest.serverToken());
            System.out.println(username);
            UserEntity userEntity = userRepository.findByUsername(username);
            return new SignInResponse(
