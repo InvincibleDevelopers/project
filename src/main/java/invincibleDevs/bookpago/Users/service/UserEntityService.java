@@ -38,17 +38,17 @@ public class UserEntityService {
     }
 
     @Transactional
-    public SignInResponse signInUser(SignInRequest signInRequest) { //기능 : 유저아이디 널이면 , false반환. 유저아이디 잇으면 아디 이름 반환.
+    public SignInResponse signInUser(String username) { //기능 : 유저아이디 널이면 , false반환. 유저아이디 잇으면 아디 이름 반환.
        try {
-           String username = Utils.getAuthenticatedUsername();
-           System.out.println(signInRequest.serverToken());
-           System.out.println(username);
+//           String username = Utils.getAuthenticatedUsername();
+//           System.out.println(signInRequest.serverToken());
+//           System.out.println(username);
            UserEntity userEntity = userRepository.findByUsername(username);
            return new SignInResponse(
                    true,
-                   Optional.ofNullable(username),
+                   Optional.ofNullable(userEntity.getUsername()),
                    Optional.ofNullable(userEntity.getNickname()), // Make sure to pass `nickname` if needed
-                   Optional.ofNullable(signInRequest.serverToken())
+                   null
            );
 
        }catch (CustomException e) {

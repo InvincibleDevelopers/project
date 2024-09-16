@@ -20,16 +20,18 @@ import java.util.List;
 public class ProfileController {
     private final ProfileFacade profileFacade;
 
-//    @GetMapping("/page")
-//    public ResponseEntity<ProfileResponse> profilePage(
-//            @ApiParam(value = "토큰", required = true)
-//            @RequestHeader(value = "Authorization", required = true) String serverToken,
-//            @RequestParam(value = "username") String username
-//    ) {
-//
-//        ProfileRequest profileRequest = new ProfileRequest(serverToken);
-//        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username));
-//    }
+    @GetMapping("/page")
+    public ResponseEntity<ProfileResponse> profilePage(
+            @ApiParam(value = "토큰", required = true)
+            @RequestHeader(value = "Authorization", required = true) String serverToken,
+            @RequestParam(value = "username") String username,
+            @RequestParam(defaultValue = "0") int bookclubpage,  // 쿼리 파라미터로 페이지 번호를 받음
+            @RequestParam(defaultValue = "5") int bookclubsize) { // 쿼리 파라미터로 페이지 크기를 받음
+
+
+        ProfileRequest profileRequest = new ProfileRequest(username);
+        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username,bookclubpage,bookclubsize));
+    }
 
     @PostMapping("/updateimage")
     public ResponseEntity<ProfileResponse> updateProfileImage(

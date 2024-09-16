@@ -33,22 +33,26 @@ public class ProfileService {
         return profile;
     }
 
+    public boolean isMyProfile(ProfileRequest profileRequest, Profile profile){
+        String username = Utils.getAuthenticatedUsername();
+
+        if (profile.getUserEntity().getUsername().equals(username)) {
+            return true;
+        } else {
+            // 두 사용자 이름이 일치하지 않을 때의 로직
+            return false;
+        }
+    }
+
     public Profile getProfile(ProfileRequest profileRequest) {
         try{
-            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(username);
+//            String username = Utils.getAuthenticatedUsername();
+            UserEntity userEntity = userRepository.findByUsername(profileRequest.username()); //요청프로필
 
-            Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
-                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
-//            if (profile.getUserEntity().getUsername().equals(username)) {
-//                return new ProfileResponse(true, profile.getNickName(), profile.getIntroduce(), profile.getProfileImgUrl());
-//            } else {
-//                // 두 사용자 이름이 일치하지 않을 때의 로직
-//                return new ProfileResponse(false, profile.getNickName(), profile.getIntroduce(), profile.getProfileImgUrl());
-//            }
+            Profile profile = findNickname(profileRequest.username());
             return profile;
+//                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
         }catch (CustomException e) {
-//            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null);
             throw e;
         }
     }

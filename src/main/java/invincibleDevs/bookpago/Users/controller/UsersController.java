@@ -23,10 +23,11 @@ public class UsersController {
     @GetMapping("/login")
     public ResponseEntity<SignInResponse> signIn(
             @ApiParam(value = "serverToken", required = true)
+            @RequestParam(value="username") String username,
             @RequestHeader(value = "Authorization", required = true) String serverToken
     ) {
-        SignInRequest signInRequest = new SignInRequest(serverToken);
-        return ResponseEntity.ok(userFacade.signInUser(signInRequest));
+//        SignInRequest signInRequest = new SignInRequest(serverToken);
+        return ResponseEntity.ok(userFacade.signInUser(username));
     }
 
     @GetMapping("/kakaologin")
@@ -52,16 +53,16 @@ public class UsersController {
 
     @GetMapping("/check")
     public String checkUser(
-            @RequestParam(value="username") String username,
+
             @RequestHeader(value = "Authorization", required = true) String serverToken
     ) {
 //        SignInRequest signInRequest = new SignInRequest(serverToken);
-        System.out.println(username);
+//        System.out.println(username);
         System.out.println(serverToken);
-        if (userRepository.existsByUsername(username)) {
-            UserEntity userEntity  = userRepository.findByUsername(username);
-            return userEntity.getNickname();
-        }
+//        if (userRepository.existsByUsername(username)) {
+//            UserEntity userEntity  = userRepository.findByUsername(username);
+//            return userEntity.getNickname();
+//        }
 
         return "error";
     }

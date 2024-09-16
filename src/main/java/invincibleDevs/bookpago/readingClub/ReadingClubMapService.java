@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class ReadingClubMapService {
     private final ReadingClubMapRepository readingClubMapRepository;
 
-    public Page<ReadingClubDto> getUserClubs(Profile profile) {
+    public Page<ReadingClubDto> getUserClubs(Profile profile,int page, int size) {
         // 관리자와 멤버로 검색하여 리스트 가져오기
         List<ReadingClubMap> adminClubs = readingClubMapRepository.findByClubAdmin(profile);
         List<ReadingClubMap> memberClubs = readingClubMapRepository.findByClubMember(profile);
@@ -36,12 +36,18 @@ public class ReadingClubMapService {
                 .collect(Collectors.toList()));
 
         // 페이징 정보 설정
-        Pageable pageable = PageRequest.of(1, 10);
+        Pageable pageable = PageRequest.of(page, size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), readingClubDtoList.size());
 
+        // 유효한 범위 내의 결과 리스트만 추출
+        List<ReadingClubDto> content = (start > readingClubDtoList.size())
+                ? new ArrayList<>()
+                : readingClubDtoList.subList(start, end);
+
+
         // 페이징된 결과 리스트 반환
-        return new PageImpl<>(readingClubDtoList.subList(start, end), pageable, readingClubDtoList.size());
+        return new PageImpl<>(content);
     }
 
 }

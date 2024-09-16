@@ -29,10 +29,11 @@ public class ProfileFacade {
     private final S3Service s3Service;
 
 
-    public ProfileResponse getProfile(ProfileRequest profileRequest, String username) {
+    public ProfileResponse getProfile(ProfileRequest profileRequest, String username,int page, int size) {
         Profile profile = profileService.getProfile(profileRequest);
-        ;
-        return new ProfileResponse(false, profile.getNickName(), profile.getIntroduce(), profile.getProfileImgUrl(), Optional.ofNullable(readingClubMapService.getUserClubs(profile)));
+        boolean isMine = profileService.isMyProfile(profileRequest,profile);
+
+        return new ProfileResponse(isMine, profile.getNickName(), profile.getIntroduce(), profile.getProfileImgUrl(), Optional.ofNullable(readingClubMapService.getUserClubs(profile,page,size)));
     }
 
     public ProfileResponse updateProfileImage(MultipartFile file) {

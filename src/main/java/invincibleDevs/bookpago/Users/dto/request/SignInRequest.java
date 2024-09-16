@@ -11,5 +11,5 @@ public record SignInRequest(
 //    @ApiModelProperty(value = "프로필 닉네임", required = true)
 //    @NotBlank
 //    String nickname
-        String serverToken
+        String username
 ){}

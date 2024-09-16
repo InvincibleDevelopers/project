@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserFacade {
     private final UserEntityService userEntityService;
-    public SignInResponse signInUser(SignInRequest signInRequest) {
-        return userEntityService.signInUser(signInRequest);
+    public SignInResponse signInUser(String username) {
+        return userEntityService.signInUser(username);
     }
 
     public SignInResponse kakaoLoginUser(KakaoSignInRequest kakaoSignInRequest) {
