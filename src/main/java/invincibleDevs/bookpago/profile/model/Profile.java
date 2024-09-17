@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +19,7 @@ import java.util.Set;
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class Profile {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 이거를 username으로 설정하는것도 고려해보기
     private Long id;
 
     @OneToOne
@@ -33,9 +35,9 @@ public class Profile {
     @Builder.Default
     private String introduce = "";
 
-//    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE )
-//    private List<Review> reviewList;
-//
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE )
+    private List<Review> reviewList;
+
     @OneToMany(mappedBy = "clubAdmin") // BookClub의 admin 필드와 매핑
     private Set<ReadingClubMap> managedClub; // 관리하는 독서 모임
 

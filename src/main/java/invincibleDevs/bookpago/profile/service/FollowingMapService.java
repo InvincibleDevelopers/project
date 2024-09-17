@@ -52,12 +52,12 @@ public class FollowingMapService {
         Pageable pageable = PageRequest.of(page,size);
         Page<Profile> followerProfiles = followingMapRepository.findFollowersByProfileId(targetId,pageable);
         System.out.println("#######################################");
-        System.out.println(followerProfiles.getSize());
+//        System.out.println(followerProfiles.getContent().get(0).getUserEntity().getUsername());
 
 
         // Page에서 List를 가져와서 Stream으로 처리
         List<FollowingListDto> followingListDtos = followerProfiles.getContent().stream()
-                .map(profile -> new FollowingListDto(profile.getProfileImgUrl(), profile.getNickName()))
+                .map(profile -> new FollowingListDto(profile.getNickName(), profile.getUserEntity().getUsername()))
                 .collect(Collectors.toList());
 
         // 새로운 Page 객체로 변환하여 반환

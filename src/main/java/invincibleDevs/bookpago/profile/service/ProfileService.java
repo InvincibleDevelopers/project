@@ -47,7 +47,7 @@ public class ProfileService {
     public Profile getProfile(ProfileRequest profileRequest) {
         try{
             String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(profileRequest.username()); //요청프로필
+            UserEntity userEntity = userRepository.findByUsername(username); //요청프로필
 
             Profile profile = findNickname(profileRequest.username());
             return profile;

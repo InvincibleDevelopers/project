@@ -1,7 +1,10 @@
 package invincibleDevs.bookpago.profile.response;
 
 public record FollowingListDto(
-        String profileImgUrl,
-        String nickname
+//        Long profileId,
+//        String profileImgUrl,
+        String nickname,
+        String username
+//        String introduce
 ) {
 }
