@@ -15,9 +15,7 @@ public class BookService {
             Book book = bookRepository.findById(bookId)
                     .orElseThrow(() -> new NoSuchElementException("Book not found with id: " + bookId));
             BookDTO bookDTO = new BookDTO();
-            bookDTO.setId(book.getId());
-            bookDTO.setTitle(book.getTitle());
-            bookDTO.setAuthor(book.getAuthor());
+            bookDTO.setIsbn(book.getIsbn());
 //            bookDTO.setGenre(book.getGenre());
 //            bookDTO.setSummary(book.getSummary());
 //            bookDTO.setImageURL(book.getBookImage());

@@ -1,14 +1,18 @@
 package invincibleDevs.bookpago.book;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class BookDTO {
-    private Long id;
+    private Long isbn;
     private String title;
     private String author;
+    private String image;
+    private String description;
+    private String publisher;
+    private String pubdate;
 //    private String genre;
 //    private String summary;
 //    private String imageURL;

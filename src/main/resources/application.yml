@@ -45,3 +45,8 @@ cloud:
       static: us-east-1
     s3:
       bucket: invincibledevs
+
+api:
+  naver:
+    id: ENC(E2ZAeEFIGfWn8SAf1IqqLLuKDTDaFF6VjOpV+b0IQuo=)
+    password: ENC(kbZBGy6vnkj6dMSSD2tRJkYy7+i9ADYw)
