@@ -25,8 +25,8 @@ public class UsersController {
     @GetMapping("/login")
     public ResponseEntity<SignInResponse> signIn(
             @ApiParam(value = "serverToken", required = true)
-            @RequestParam(value="username") String username,
-            @RequestHeader(value = "Authorization", required = true) String serverToken
+            @RequestParam(value="username") String username
+//            @RequestHeader(value = "Authorization", required = true) String serverToken
     ) {
 //        SignInRequest signInRequest = new SignInRequest(serverToken);
         return ResponseEntity.ok(userFacade.signInUser(username));

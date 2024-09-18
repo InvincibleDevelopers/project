@@ -28,7 +28,7 @@ public class ProfileController {
             @RequestParam(defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
             @RequestParam(defaultValue = "5") int size) { // 쿼리 파라미터로 페이지 크기를 받음
 
-
+        System.out.println(username);
         ProfileRequest profileRequest = new ProfileRequest(username);
         return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username,page,size));
     }
@@ -83,7 +83,9 @@ public class ProfileController {
             @RequestParam(value = "targetId") Long targetId,
             @RequestParam(defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(profileFacade.getFollowers(targetId,page,size));
+
+        System.out.println(targetId);
+        return ResponseEntity.ok(profileFacade.getFollowers(targetId,0,10));
     }
     @GetMapping("/getfolloweelist")
     public ResponseEntity<Page<FollowingListDto>> getfollowees( //내가 상대의 팔로잉 리스트 보는 요청
