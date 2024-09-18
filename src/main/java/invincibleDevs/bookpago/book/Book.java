@@ -13,10 +13,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    private String title;
-
-    private String author;
+    private Long isbn;
 
 //    private String genre;
 //
