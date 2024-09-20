@@ -26,6 +26,12 @@ public class BookService {
     @Value("${api.naver.password}")
     private String clientPassword;
 
+    @Value("${api.aladin.key}")
+    private String aladinApiKey;
+
+    private final String NAVER_API_URL = "https://openapi.naver.com/v1/search/book.json";
+    private final String ALADIN_API_URL = "http://www.aladin.co.kr/ttb/api/ItemList.aspx";
+
     private final BookRepository bookRepository;
 
     public BookDetailDTO getBookInfo(Long bookIsbn) {
@@ -78,11 +84,51 @@ public class BookService {
         return new BookSearchDTO(total, books);
     }
 
+    public BookSearchDTO getBestsellers() throws Exception {
+        try {
+            URI uri = UriComponentsBuilder
+                    .fromUriString(ALADIN_API_URL)
+                    .queryParam("ttbkey", aladinApiKey)
+                    .queryParam("QueryType", "Bestseller")
+                    .queryParam("MaxResults", 10)
+                    .queryParam("start", 1)
+                    .queryParam("SearchTarget", "Book")
+                    .queryParam("CategoryId", 0)
+                    .queryParam("output", "js")
+                    .queryParam("Version", "20131101")
+                    .build()
+                    .toUri();
+
+            RestTemplate restTemplate = new RestTemplate();
+            String responseBody = restTemplate.getForObject(uri, String.class);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode rootNode = objectMapper.readTree(responseBody);
+            JsonNode itemsNode = rootNode.get("item");
+
+            List<BookDTO> books = new ArrayList<>();
+            for (JsonNode itemNode : itemsNode) {
+                Long isbn = Long.parseLong(itemNode.get("isbn13").asText());
+                String title = itemNode.get("title").asText();
+                String author = itemNode.get("author").asText();
+                String image = itemNode.get("cover").asText();
+
+                BookDTO book = new BookDTO(isbn, title, author, image);
+                books.add(book);
+            }
+
+            int total = books.size();
+
+            return new BookSearchDTO(total, books);
+        } catch (Exception e) {
+            throw new Exception("Error occurred while fetching bestsellers from Aladin API: " + e.getMessage());
+        }
+    }
+
     public JsonNode bookJson(String query, int page, int size) throws Exception {
         int bookStart = (page - 1) * size + 1;
         URI uri = UriComponentsBuilder
-                .fromUriString("https://openapi.naver.com")
-                .path("v1/search/book.json")
+                .fromUriString(NAVER_API_URL)
                 .queryParam("query", query)
                 .queryParam("display", size)
                 .queryParam("start", bookStart)

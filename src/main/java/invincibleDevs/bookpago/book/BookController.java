@@ -1,5 +1,6 @@
 package invincibleDevs.bookpago.book;
 
+import com.amazonaws.Response;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,7 +13,16 @@ import org.springframework.web.bind.annotation.*;
 public class BookController {
     private final BookFacade bookFacade;
 
-    @GetMapping("/{bookIsbn}")
+    @GetMapping("/bestsellers")
+    public ResponseEntity<?> getBestsellers() {
+        try {
+            return ResponseEntity.ok(bookFacade.getBestsellersResponse());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping("/{bookIsbn:\\d+}")
     public ResponseEntity<BookDetailDTO> getBookInfo(
             @ApiParam(value = "책 상세 정보", required = true)
             @PathVariable("bookIsbn") Long bookIsbn
@@ -39,5 +49,4 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching for books.");
         }
     }
-
 }
