@@ -14,4 +14,8 @@ public class BookFacade {
     public BookSearchDTO searchBooksResponse(String query, int page, int size) throws Exception {
         return bookService.searchBooks(query, page, size);
     }
+
+    public BookSearchDTO getBestsellersResponse() throws Exception {
+        return bookService.getBestsellers();
+    }
 }

@@ -50,3 +50,5 @@ api:
   naver:
     id: ENC(E2ZAeEFIGfWn8SAf1IqqLLuKDTDaFF6VjOpV+b0IQuo=)
     password: ENC(kbZBGy6vnkj6dMSSD2tRJkYy7+i9ADYw)
+  aladin:
+    key: ENC(dx/ZzTPoJEJ3xxiCkcReqJ6tE0QGtnZyT24oNzQXMF8=)
