@@ -3,18 +3,17 @@ package invincibleDevs.bookpago.chat;
 import jakarta.websocket.server.ServerEndpoint;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Getter
-@Setter
-@RequiredArgsConstructor
+@Builder(toBuilder = true)  // toBuilder = true 설정
+@NoArgsConstructor // 기본 생성자 추가
+@AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class MessageDto {
-    // 메시지  타입 : 입장, 채팅
-    public enum MessageType{
-        ENTER, TALK
-    }
-
-    private MessageType messageType; // 메시지 타입
-    private Long chatRoomId; // 방 번호
-    private Long senderId; // 채팅을 보낸 사람
+    private Long id;
+    private String senderUsername; // 보낸 사람
+    private String receiverUsername; // 받는 사람
     private String message; // 메시지
+    private LocalDateTime createdAt;
 }

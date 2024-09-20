@@ -22,6 +22,7 @@ public class ReadingClubMapService {
 
     public Page<ReadingClubDto> getUserClubs(Profile profile, int page, int size) {
         // 관리자와 멤버로 검색하여 리스트 가져오기
+        System.out.println(profile.getId());
         List<ReadingClubMap> adminClubs = readingClubMapRepository.findByClubAdmin(profile);
         List<ReadingClubMap> memberClubs = readingClubMapRepository.findByClubMember(profile);
 
@@ -30,12 +31,12 @@ public class ReadingClubMapService {
 
         // adminClubs 리스트를 Dto로 변환 후 추가
         readingClubDtoList.addAll(adminClubs.stream()
-                .map(club -> new ReadingClubDto(club.getReadingClub().getClubName(), club.getReadingClub().getDescription()))
+                .map(club -> new ReadingClubDto(club.getReadingClub().getClubName(), club.getReadingClub().getDescription(), club.getReadingClub().getLocation(),club.getReadingClub().getDescription()))
                 .collect(Collectors.toList()));
 
         // memberClubs 리스트를 Dto로 변환 후 추가
         readingClubDtoList.addAll(memberClubs.stream()
-                .map(club -> new ReadingClubDto(club.getReadingClub().getClubName(), club.getReadingClub().getDescription()))
+                .map(club -> new ReadingClubDto(club.getReadingClub().getClubName(), club.getReadingClub().getDescription(), club.getReadingClub().getLocation(),club.getReadingClub().getDescription()))
                 .collect(Collectors.toList()));
 
         // 페이징 정보 설정
@@ -47,6 +48,7 @@ public class ReadingClubMapService {
         List<ReadingClubDto> content = (start > readingClubDtoList.size())
                 ? new ArrayList<>()
                 : readingClubDtoList.subList(start, end);
+        System.out.println(content.size());
 
 
         // 페이징된 결과 리스트 반환

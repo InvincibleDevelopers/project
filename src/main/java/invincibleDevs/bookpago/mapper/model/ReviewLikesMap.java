@@ -1,6 +1,7 @@
-package invincibleDevs.bookpago.review;
+package invincibleDevs.bookpago.mapper.model;
 
 import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.review.Review;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,18 +13,15 @@ import lombok.NoArgsConstructor;
 @Builder(toBuilder = true)  // toBuilder = true 설정
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
-public class Review {
+public class ReviewLikesMap {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;
-
-    private String content;
-
-    private Long isbn; //도서고유번호
+    @ManyToOne
+    private Profile profile;
 
     @ManyToOne
-    @JoinColumn(name = "author_profile_id")
-    private Profile profile;
+    private Review review;
+
 }

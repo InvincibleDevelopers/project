@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.profile.model;
+package invincibleDevs.bookpago.mapper.model;
 
 import invincibleDevs.bookpago.profile.model.Profile;
 import jakarta.persistence.*;

@@ -1,6 +1,9 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.chat.ChatRoom;
+import invincibleDevs.bookpago.mapper.model.FollowingMap;
+import invincibleDevs.bookpago.mapper.model.ReviewLikesMap;
 import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import jakarta.persistence.*;
@@ -35,6 +38,9 @@ public class Profile {
     @Builder.Default
     private String introduce = "";
 
+    @ElementCollection
+    private List<Long> wishIsbnList;
+
     @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE )
     private List<Review> reviewList;
 
@@ -50,6 +56,16 @@ public class Profile {
     @OneToMany(mappedBy = "followee")
     private Set<FollowingMap> followeeMaps;
 
+    @OneToMany(mappedBy = "profile")
+    private List<ReviewLikesMap> reviewLikesMaps;
+
+
+//    @OneToMany(mappedBy = "me",cascade = CascadeType.REMOVE)
+//    private List<ChatRoom> myChatRoomList;
+//
+//    @OneToMany(mappedBy = "partner")
+//    private List<ChatRoom> otherChatRoomList;
+
 
 //▼▼▼▼ DM기능 추가시 활성화 예정. 삭제 금지 ▼▼▼
 
@@ -59,9 +75,5 @@ public class Profile {
 //    @OneToMany(mappedBy = "receiver", cascade = CascadeType.REMOVE )
 //    private List<Message> receivedMessages;
 //
-//    @OneToMany(mappedBy = "me",cascade = CascadeType.REMOVE)
-//    private List<DmPage> myDmpageList;
-//
-//    @OneToMany(mappedBy = "partner")
-//    private List<DmPage> otherDmpageList;
+
 }

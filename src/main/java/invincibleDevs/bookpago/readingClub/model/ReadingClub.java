@@ -20,7 +20,9 @@ public class ReadingClub {
     private Long id;
 
     private String clubName;
+    private String location;
     private String description;
+    private String meetingTime;
 
     @OneToMany(mappedBy = "readingClub",cascade = CascadeType.REMOVE)
     private Set<ReadingClubMap> clubMembers; // 독서 모임의 회원들

@@ -4,6 +4,7 @@ import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.common.Utils;
 import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.MyBookDto;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
@@ -12,6 +13,7 @@ import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -26,10 +28,11 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
-    public Profile findNickname(String username){
-        UserEntity userEntity = userRepository.findByUsername(username);
+    public Profile findProfilebyUsername(UserEntity userEntity){
+//        UserEntity userEntity = userRepository.findByUsername(username);
         Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
-                .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
+                .orElseThrow(() -> new NoSuchElementException("Profile with username :" + userEntity.getUsername() + "- not found"));
+        System.out.println(profile.getNickName());
         return profile;
     }
 
@@ -46,10 +49,11 @@ public class ProfileService {
 
     public Profile getProfile(ProfileRequest profileRequest) {
         try{
-            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(username); //요청프로필
-
-            Profile profile = findNickname(profileRequest.username());
+//            String username = Utils.getAuthenticatedUsername();
+            UserEntity userEntity = userRepository.findByUsername(profileRequest.username()); //요청프로필
+//            System.out.println(userEntity.getUsername());
+            Profile profile = findProfilebyUsername(userEntity);
+//            System.out.println(profile.getNickName());
             return profile;
 //                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
         }catch (CustomException e) {
@@ -57,31 +61,31 @@ public class ProfileService {
         }
     }
 
-    public ProfileResponse updateProfileImage(String url) {
+    public ProfileResponse updateProfileImage(String url,UpdateProfileRequest updateProfileRequest) {
         try{
-            String username = Utils.getAuthenticatedUsername();
-            System.out.println(username);
-            UserEntity userEntity = userRepository.findByUsername(username);
+//            String username = Utils.getAuthenticatedUsername();
+            System.out.println(updateProfileRequest.username());
+            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
-                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + userEntity.getUsername() + "- not found"));
 
             Profile updateProfile = profile.toBuilder()
                     .profileImgUrl(url)
                     .build();
 
             profileRepository.save(updateProfile);
-            return new ProfileResponse(true, updateProfile.getNickName(), updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),null);
+            return new ProfileResponse(true, updateProfile.getNickName(), updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),updateProfile.getWishIsbnList(),null);
         } catch (CustomException e) {
-            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null,null);
+            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null,null,null);
         }
     }
 
     public ProfileResponse updateNickname(UpdateProfileRequest updateProfileRequest) {
         try{
-            String username = Utils.getAuthenticatedUsername();
+//            String username = Utils.getAuthenticatedUsername();
 //            UserEntity userEntity = userRepository.findByUsername(username);
-            UserEntity userEntity = userRepository.findByUsername(username);
+            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
                     .orElseThrow(() -> new NoSuchElementException("Profile with username :" + updateProfileRequest.username() + "- not found"));
@@ -90,20 +94,20 @@ public class ProfileService {
                             orElseThrow(()-> new IllegalArgumentException("변경값 필수")) )
                     .build();
             profileRepository.save(updateProfile);
-            return new ProfileResponse(true, updateProfile.getNickName(), updateProfile.getIntroduce(),updateProfile.getProfileImgUrl(),null);
+            return new ProfileResponse(true, updateProfile.getNickName(), updateProfile.getIntroduce(),updateProfile.getProfileImgUrl(),updateProfile.getWishIsbnList(),null);
 
         } catch(CustomException e) {
-            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null,null);
+            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null,null,null);
         }
     }
 
     public ProfileResponse updateIntroduce(UpdateProfileRequest updateProfileRequest) {
         try{
-            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(username);
+//            String username = Utils.getAuthenticatedUsername();
+            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
-                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
+                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + updateProfileRequest.username() + "- not found"));
 
             Profile updateProfile = profile.toBuilder()
                     .introduce(updateProfileRequest.introduce().
@@ -111,9 +115,9 @@ public class ProfileService {
                     .build();
 
             profileRepository.save(updateProfile);
-            return new ProfileResponse(true, updateProfile.getNickName(), updateProfile.getIntroduce(),updateProfile.getProfileImgUrl(),null);
+            return new ProfileResponse(true, updateProfile.getNickName(), updateProfile.getIntroduce(),updateProfile.getProfileImgUrl(),updateProfile.getWishIsbnList(),null);
         }catch (CustomException e) {
-            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null,null);
+            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null,null,null);
         }
     }
 
@@ -142,4 +146,8 @@ public class ProfileService {
         }
 
     }
+
+//    public Page<MyBookDto> getMyBooks(String username, int page, int size) {
+//        Profile profile = findProfilebyUsername()
+//    }
 }

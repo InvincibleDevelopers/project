@@ -1,8 +1,8 @@
-package invincibleDevs.bookpago.profile.service;
+package invincibleDevs.bookpago.mapper.service;
 
-import invincibleDevs.bookpago.profile.model.FollowingMap;
+import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.repository.FollowingMapRepository;
+import invincibleDevs.bookpago.mapper.repository.FollowingMapRepository;
 import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import lombok.RequiredArgsConstructor;

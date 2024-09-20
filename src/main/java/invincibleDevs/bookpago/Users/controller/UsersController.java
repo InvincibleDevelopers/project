@@ -30,6 +30,7 @@ public class UsersController {
     ) {
 //        SignInRequest signInRequest = new SignInRequest(serverToken);
         return ResponseEntity.ok(userFacade.signInUser(username));
+//        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username,page,size));
     }
 
     @GetMapping("/kakaologin")

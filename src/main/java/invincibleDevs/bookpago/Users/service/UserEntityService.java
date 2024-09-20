@@ -47,11 +47,12 @@ public class UserEntityService {
                    true,
                    Optional.ofNullable(userEntity.getUsername()),
                    Optional.ofNullable(userEntity.getNickname()), // Make sure to pass `nickname` if needed
-                   null
+                   null,
+                   userEntity.getProfile().getProfileImgUrl()
            );
 
        }catch (CustomException e) {
-           return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty());
+           return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty(),null);
 
        }
 //        if (userRepository.existsByUsername(username)) { //DB엔 String타입 저장되어있음
@@ -90,9 +91,9 @@ public class UserEntityService {
         if (userRepository.existsByUsername(username)) { //DB엔 String타입 저장되어있음
             UserEntity userEntity = userRepository.findByUsername(username);
             String serverToken = jwtUtil.createJwt(userEntity.getUsername(), "USER",60*60*1000*10L);
-            return new SignInResponse(true, Optional.ofNullable(userEntity.getUsername()), Optional.ofNullable(userEntity.getNickname()),Optional.ofNullable(serverToken));
+            return new SignInResponse(true, Optional.ofNullable(userEntity.getUsername()), Optional.ofNullable(userEntity.getNickname()),Optional.ofNullable(serverToken),userEntity.getProfile().getProfileImgUrl());
         } else {
-            return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty());
+            return new SignInResponse(false, Optional.empty(), Optional.empty(),Optional.empty(),null);
         }
 
     }
@@ -143,5 +144,9 @@ public class UserEntityService {
             throw new IllegalArgumentException("Invalid access token: " + response.getBody());
         }
 
+    }
+
+    public UserEntity findByUserName(String username) {
+        return userRepository.findByUsername(username);
     }
 }

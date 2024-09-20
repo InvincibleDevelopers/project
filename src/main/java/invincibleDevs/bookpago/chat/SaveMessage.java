@@ -1,29 +1,30 @@
-package invincibleDevs.bookpago.review;
+package invincibleDevs.bookpago.chat;
 
-import invincibleDevs.bookpago.profile.model.Profile;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder(toBuilder = true)  // toBuilder = true 설정
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
-public class Review {
+public class SaveMessage {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 이거를 username으로 설정하는것도 고려해보기
     private Long id;
-
-    private int rating;
-
     private String content;
-
-    private Long isbn; //도서고유번호
+    private String sender;
+    private String receiver;
+    private LocalDateTime createDate;
 
     @ManyToOne
-    @JoinColumn(name = "author_profile_id")
-    private Profile profile;
+    private ChatRoom chatRoom;
+
+
 }
+

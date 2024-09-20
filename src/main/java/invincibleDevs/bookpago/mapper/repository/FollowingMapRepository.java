@@ -1,6 +1,6 @@
-package invincibleDevs.bookpago.profile.repository;
+package invincibleDevs.bookpago.mapper.repository;
 
-import invincibleDevs.bookpago.profile.model.FollowingMap;
+import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.profile.model.Profile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
