@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+      integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@6.1.2/bundles/stomp.umd.min.js"></script>
+    <title>소켓 테스트 v0.0.1</title>
+    <style>
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>소켓 테스트 v0.0.1</h1>
+    <form id="form">
+      <label>
+        보내는 사람
+        <input id="sender-input" type="text" />
+      </label>
+      <label>
+        받는 사람
+        <input id="receiver-input" type="text" />
+      </label>
+      <label>
+        메세지
+        <input id="message-input" type="text" />
+      </label>
+      <button type="submit">전송</button>
+    </form>
+    <div id="messages"></div>
+
+    <script>
+      $(() => {
+        const BROKER_URL = 'ws://localhost:8088/ws-stomp';
+        const SUBSCRIPTION = '/sub';
+        const DESTINATION = '/pub';
+
+        console.log('BROKER_URL', BROKER_URL);
+        console.log('SUBSCRIPTION', SUBSCRIPTION);
+        console.log('DESTINATION', DESTINATION);
+
+        let stompClient = null;
+        let connection = false; // 연결중인지 여부
+        let messages = []; // 응답들
+        let token =
+          'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjM3MDQ2MTY4NTkiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcyNjgzMDczOSwiZXhwIjoxNzI2ODY2NzM5fQ.LKmY7EHHo9UvGfbZjHQDhxKSVASK9teo_fS3LErt8b0'; // 로그인 토큰
+
+        const $form = $('#form');
+        const $senderInput = $('#sender-input');
+        const $receiverInput = $('#receiver-input');
+        const $messageInput = $('#message-input');
+
+        const stompConfig = {
+          brokerURL: BROKER_URL,
+          connectHeaders: {
+            Authorization: `Bearer ${token}`,
+            user: 'user' + Math.round(Math.random() * 100),
+            login: 'guest',
+            passcode: 'guest',
+          },
+          onConnect(e) {
+            console.log('Broker connected.', e);
+            // 구독
+            subscription = stompClient.subscribe(
+              SUBSCRIPTION,
+              function (message) {
+                console.log('message', message);
+                messages.push(message.body);
+                document.getElementById('messages').innerHTML =
+                  messages.join('<br>');
+              },
+            );
+
+            connection = true;
+          },
+          onDisconnect() {
+            console.log('Broker disconnected.');
+            stompClient?.deactivate();
+            stompClient = null;
+            connection = false;
+          },
+          onStompError(error) {
+            console.error('Broker reported error: ' + error);
+          },
+          debug(str) {
+            console.log('Debugging', str);
+          },
+          reconnectDelay: 5000,
+          heartbeatIncoming: 4000,
+          heartbeatOutgoing: 4000,
+        };
+
+        function sendMessage(e) {
+          e.preventDefault();
+          // 메시지 전송
+          const body = JSON.stringify({
+            content: $messageInput.val(),
+            sender: $senderInput.val(),
+            receiver: $receiverInput.val(),
+          });
+
+          console.log('body', body);
+
+          if (stompClient && stompClient.connected) {
+            const destination = stompClient.publish({
+              destination: DESTINATION,
+              body,
+            });
+          } else {
+            alert('소켓 연결이 되어있지 않습니다.');
+          }
+        }
+
+        function init() {
+          $form.on('submit', sendMessage);
+
+          // 연결 입력정보
+          // token = window.prompt("로그인 토큰을 입력");
+
+          stompClient = new StompJs.Client(stompConfig);
+          stompClient.activate();
+        }
+
+        init();
+      });
+    </script>
+  </body>
+</html>
