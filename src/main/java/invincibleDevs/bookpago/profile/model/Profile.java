@@ -1,20 +1,25 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
-//import invincibleDevs.bookpago.calendar.Calendar;
-import invincibleDevs.bookpago.chat.ChatRoom;
-import invincibleDevs.bookpago.mapper.model.FollowingMap;
+import invincibleDevs.bookpago.mapper.model.FollowTable;
 import invincibleDevs.bookpago.mapper.model.ReviewLikesMap;
-import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
-import jakarta.persistence.*;
+import invincibleDevs.bookpago.review.Review;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import java.util.List;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -22,6 +27,7 @@ import java.util.Set;
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class Profile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)  // 이거를 username으로 설정하는것도 고려해보기
     private Long id;
@@ -29,7 +35,7 @@ public class Profile {
     @OneToOne
     private UserEntity userEntity;
 
-    @Column(nullable = true,columnDefinition = "TEXT")
+    @Column(nullable = true, columnDefinition = "TEXT")
     private String profileImgUrl;
 
     @Builder.Default
@@ -52,10 +58,10 @@ public class Profile {
     private Set<ReadingClubMap> readingClubs; // 가입한 독서 모임
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE)
-    private Set<FollowingMap> followerMaps;
+    private Set<FollowTable> followerMaps;
 
     @OneToMany(mappedBy = "followee")
-    private Set<FollowingMap> followeeMaps;
+    private Set<FollowTable> followeeMaps;
 
     @OneToMany(mappedBy = "profile")
     private List<ReviewLikesMap> reviewLikesMaps;
@@ -63,13 +69,11 @@ public class Profile {
 //    @OneToOne
 //    private Calendar calendar;
 
-
 //    @OneToMany(mappedBy = "me",cascade = CascadeType.REMOVE)
 //    private List<ChatRoom> myChatRoomList;
 //
 //    @OneToMany(mappedBy = "partner")
 //    private List<ChatRoom> otherChatRoomList;
-
 
 //▼▼▼▼ DM기능 추가시 활성화 예정. 삭제 금지 ▼▼▼
 
