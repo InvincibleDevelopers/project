@@ -109,7 +109,7 @@ public class ProfileController {
         return ResponseEntity.ok(profileFacade.getMyBooks(nickname,lastBookIsbn,size));
     }
 
-    @GetMapping("/wishBook")
+    @GetMapping("/wishbook")
     public ResponseEntity<List<BookDTO>> getWishBooks(
             @RequestParam(value = "nickname") String nickname,
             @RequestParam(value = "lastBookId", required = false) Long lastBookId,
