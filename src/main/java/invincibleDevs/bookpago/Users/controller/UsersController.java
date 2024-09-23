@@ -28,10 +28,12 @@ public class UsersController {
             @RequestParam(value="username") String username
 //            @RequestHeader(value = "Authorization", required = true) String serverToken
     ) {
-//        SignInRequest signInRequest = new SignInRequest(serverToken);
+//        System.out.println(serverToken);
         return ResponseEntity.ok(userFacade.signInUser(username));
 //        return ResponseEntity.ok(profileFacade.getProfile(profileRequest,username,page,size));
     }
+
+
 
     @GetMapping("/kakaologin")
     public ResponseEntity<SignInResponse> kakaoLogin(

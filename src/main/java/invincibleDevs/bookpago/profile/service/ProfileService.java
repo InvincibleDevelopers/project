@@ -17,10 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -147,7 +144,20 @@ public class ProfileService {
 
     }
 
-//    public Page<MyBookDto> getMyBooks(String username, int page, int size) {
-//        Profile profile = findProfilebyUsername()
-//    }
+
+    public Profile findByNickname(String nickname) {
+        Profile profile = profileRepository.findByNickName(nickname);
+        return profile;
+
+    }
+
+    public void addWishBook(String nickname, Long isbn) {
+        Profile profile = profileRepository.findByNickName(nickname);
+        List<Long> updateWishBookList = new ArrayList<>(profile.getWishIsbnList());
+        updateWishBookList.add(isbn);
+        Profile updateProfile = profile.toBuilder()
+                .wishIsbnList(updateWishBookList)
+                .build();
+        profileRepository.save(updateProfile);
+    }
 }

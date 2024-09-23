@@ -51,4 +51,13 @@ public class BookController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching for books.");
         }
     }
+
+    @PostMapping("/likes")
+    public ResponseEntity<?> addWishBook(
+            @ApiParam(value = "책 좋아요", required = true)
+            @RequestBody WishBookRequest wishBookRequest
+            ){
+        bookFacade.addWishBook(wishBookRequest);
+        return ResponseEntity.ok("200");
+    }
 }

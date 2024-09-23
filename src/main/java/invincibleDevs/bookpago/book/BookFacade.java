@@ -1,5 +1,7 @@
 package invincibleDevs.bookpago.book;
 
+import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -7,6 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class BookFacade {
     private final BookService bookService;
+    private final ProfileService profileService;
 
     public BookDetailDTO getBookInfoResponse(Long bookIsbn) {
         return bookService.getBookInfo(bookIsbn);
@@ -17,5 +20,11 @@ public class BookFacade {
 
     public BookSearchDTO getBestsellersResponse() throws Exception {
         return bookService.getBestsellers();
+    }
+
+    public void addWishBook(WishBookRequest wishBookRequest) {
+//        Profile profile = profileService.findByNickname(wishBookRequest.nickname());
+        profileService.addWishBook(wishBookRequest.nickname(), wishBookRequest.isbn());
+//        bookService.addWishBook(profile, wishBookRequest.isbn());
     }
 }

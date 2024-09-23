@@ -65,7 +65,7 @@ public class UserEntityService {
     }
 
     @Transactional
-    public SignInResponse kakaoSignInUser(KakaoSignInRequest kakaoSignInRequest) {
+    public SignInResponse kakaoSignInUser(KakaoSignInRequest kakaoSignInRequest) { //자동로그인 튕겼을때, 서버토큰 재발급
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + kakaoSignInRequest.kakaoAccessToken());
@@ -100,7 +100,7 @@ public class UserEntityService {
 
 
     @Transactional
-    public SignUpResponse kakaoJoinUser(KakaoJoinRequest kakaoJoinRequest) {
+    public SignUpResponse kakaoJoinUser(KakaoJoinRequest kakaoJoinRequest) { // 첫 회원가입 시 서버토큰 생성
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + kakaoJoinRequest.kakaoOauthToken());
@@ -138,7 +138,7 @@ public class UserEntityService {
                     .userEntity(userEntity)
                     .build();
             profileRepository.save(profile);
-            String serverToken = jwtUtil.createJwt(userEntity.getUsername(), "USER",60*60*1000*10L);
+            String serverToken = jwtUtil.createJwt(userEntity.getUsername(), "USER",60*1000L);
             return new SignUpResponse(userEntity.getUsername(), userEntity.getNickname(),serverToken);
         } else{
             throw new IllegalArgumentException("Invalid access token: " + response.getBody());

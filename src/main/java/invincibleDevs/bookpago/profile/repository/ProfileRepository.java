@@ -14,4 +14,9 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("select p from Profile p where p.userEntity.username = :username")
     Optional<Profile> findByUserEntityUserName(@Param("username") String username);
 
+//    @Query("SELECT p FROM Profile p WHERE p.nickname = :nickname")
+//    Profile findByNickname(@Param("nickname") String nickname);
+
+    Profile findByNickName(String nickname);
+
 }

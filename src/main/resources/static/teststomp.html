@@ -39,9 +39,9 @@
 
     <script>
       $(() => {
-        const BROKER_URL = 'ws://localhost:8088/ws-stomp';
-        const SUBSCRIPTION = '/sub';
-        const DESTINATION = '/pub';
+        const BROKER_URL = 'ws://localhost:8088/ws';
+        const SUBSCRIPTION = '/sub/message';
+        const DESTINATION = '/pub/hello';
 
         console.log('BROKER_URL', BROKER_URL);
         console.log('SUBSCRIPTION', SUBSCRIPTION);

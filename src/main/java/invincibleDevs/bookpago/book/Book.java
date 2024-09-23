@@ -2,6 +2,7 @@ package invincibleDevs.bookpago.book;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class Book {
     private Long isbn;
 
     private float average_rating;
+
 }

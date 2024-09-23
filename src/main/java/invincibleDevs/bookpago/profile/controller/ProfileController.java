@@ -1,5 +1,7 @@
 package invincibleDevs.bookpago.profile.controller;
 
+import invincibleDevs.bookpago.book.BookDTO;
+import invincibleDevs.bookpago.profile.MyBookDto;
 import invincibleDevs.bookpago.profile.facade.ProfileFacade;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
@@ -7,6 +9,7 @@ import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
+import invincibleDevs.bookpago.review.MyReviewDto;
 import org.springframework.data.domain.Page;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -96,6 +99,23 @@ public class ProfileController {
             @RequestParam(value = "page") int page,  // 쿼리 파라미터로 페이지 번호를 받음
             @RequestParam(value = "size") int size) {
         return ResponseEntity.ok(profileFacade.getFollowees(targetId,page,size));
+    }
+
+    @GetMapping("/library")
+    public ResponseEntity<List<MyReviewDto>> getMyBooks( //나의 서재
+             @RequestParam(value = "nickname") String nickname,
+             @RequestParam(value = "lastBookId", required = false) Long lastBookIsbn,
+             @RequestParam(value = "size") int size) {
+        return ResponseEntity.ok(profileFacade.getMyBooks(nickname,lastBookIsbn,size));
+    }
+
+    @GetMapping("/wishBook")
+    public ResponseEntity<List<BookDTO>> getWishBooks(
+            @RequestParam(value = "nickname") String nickname,
+            @RequestParam(value = "lastBookId", required = false) Long lastBookId,
+            @RequestParam(value = "size") int size
+    ){
+        return ResponseEntity.ok(profileFacade.getMyWishBooks(nickname,lastBookId,size));
     }
 
 

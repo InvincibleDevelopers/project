@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
+//import invincibleDevs.bookpago.calendar.Calendar;
 import invincibleDevs.bookpago.chat.ChatRoom;
 import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.mapper.model.ReviewLikesMap;
@@ -41,7 +42,7 @@ public class Profile {
     @ElementCollection
     private List<Long> wishIsbnList;
 
-    @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE )
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE)
     private List<Review> reviewList;
 
     @OneToMany(mappedBy = "clubAdmin") // BookClub의 admin 필드와 매핑
@@ -50,7 +51,7 @@ public class Profile {
     @OneToMany(mappedBy = "clubMember")
     private Set<ReadingClubMap> readingClubs; // 가입한 독서 모임
 
-    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE )
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE)
     private Set<FollowingMap> followerMaps;
 
     @OneToMany(mappedBy = "followee")
@@ -58,6 +59,9 @@ public class Profile {
 
     @OneToMany(mappedBy = "profile")
     private List<ReviewLikesMap> reviewLikesMaps;
+
+//    @OneToOne
+//    private Calendar calendar;
 
 
 //    @OneToMany(mappedBy = "me",cascade = CascadeType.REMOVE)
