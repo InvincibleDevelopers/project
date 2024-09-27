@@ -8,9 +8,12 @@ import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubRepository;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,11 +27,20 @@ public class ReadingClubFacade {
     private final ProfileService profileService;
     private final ReadingClubRepository readingClubRepository;
 
-    public Page<ReadingClub> getClubs(int page, int size) {
+    public Page<ReadingClubDto> getClubs(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<ReadingClub> readingClubsPage = readingClubRepository.findAll(pageable);
 
-        return readingClubsPage;
+        List<ReadingClubDto> clubDtos = readingClubsPage.getContent().stream()
+                                                        .map(readingClub -> new ReadingClubDto(
+                                                                readingClub.getClubMembers().size(),
+                                                                readingClub.getClubName(),
+                                                                readingClub.getLocation(),
+                                                                readingClub.getMeetingTime(),
+                                                                readingClub.getDescription()))
+                                                        .collect(Collectors.toList());
+
+        return new PageImpl<>(clubDtos, pageable, readingClubsPage.getTotalElements());
     }
 
     public ReadingClubDto getClub(String nickname, Long clubId) {
