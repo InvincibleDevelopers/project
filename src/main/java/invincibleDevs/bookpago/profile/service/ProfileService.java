@@ -26,12 +26,11 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
-    public Profile findProfilebyUsername(UserEntity userEntity) {
-//        UserEntity userEntity = userRepository.findByUsername(username);
+    public Profile findProfilebyUser(UserEntity userEntity) {
         Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
                                            .orElseThrow(() -> new NoSuchElementException(
                                                    "Profile with username :"
-                                                           + userEntity.getUsername()
+                                                           + userEntity.getKakaoId()
                                                            + "- not found"));
         System.out.println(profile.getNickName());
         return profile;
@@ -40,7 +39,7 @@ public class ProfileService {
     public boolean isMyProfile(ProfileRequest profileRequest, Profile profile) {
         String username = Utils.getAuthenticatedUsername();
 
-        if (profile.getUserEntity().getUsername().equals(username)) {
+        if (profile.getUserEntity().getKakaoId().equals(username)) {
             return true;
         } else {
             // 두 사용자 이름이 일치하지 않을 때의 로직
@@ -50,14 +49,10 @@ public class ProfileService {
 
     public Profile getProfile(ProfileRequest profileRequest) {
         try {
-//            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(
-                    profileRequest.username()); //요청프로필
-//            System.out.println(userEntity.getUsername());
-            Profile profile = findProfilebyUsername(userEntity);
-//            System.out.println(profile.getNickName());
+            UserEntity userEntity = userRepository.findByKakaoId(
+                    profileRequest.kakaoId()); //요청프로필
+            Profile profile = findProfilebyUser(userEntity);
             return profile;
-//                    .orElseThrow(() -> new NoSuchElementException("Profile with username :" + username + "- not found"));
         } catch (CustomException e) {
             throw e;
         }
@@ -66,14 +61,12 @@ public class ProfileService {
     public ProfileResponse updateProfileImage(String url,
             UpdateProfileRequest updateProfileRequest) {
         try {
-//            String username = Utils.getAuthenticatedUsername();
-            System.out.println(updateProfileRequest.username());
-            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
+            UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
                                                .orElseThrow(() -> new NoSuchElementException(
                                                        "Profile with username :"
-                                                               + userEntity.getUsername()
+                                                               + userEntity.getKakaoId()
                                                                + "- not found"));
 
             Profile updateProfile = profile.toBuilder()
@@ -81,24 +74,22 @@ public class ProfileService {
                                            .build();
 
             profileRepository.save(updateProfile);
-            return new ProfileResponse(true, updateProfile.getNickName(),
+            return new ProfileResponse(updateProfileRequest.kakaoId(), updateProfile.getNickName(),
                     updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
                     updateProfile.getWishIsbnList(), null);
         } catch (CustomException e) {
-            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null, null, null);
+            return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
         }
     }
 
     public ProfileResponse updateNickname(UpdateProfileRequest updateProfileRequest) {
         try {
-//            String username = Utils.getAuthenticatedUsername();
-//            UserEntity userEntity = userRepository.findByUsername(username);
-            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
+            UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
                                                .orElseThrow(() -> new NoSuchElementException(
                                                        "Profile with username :"
-                                                               + updateProfileRequest.username()
+                                                               + updateProfileRequest.kakaoId()
                                                                + "- not found"));
             Profile updateProfile = profile.toBuilder()
                                            .nickName(updateProfileRequest.nickname().
@@ -107,24 +98,25 @@ public class ProfileService {
                                                                                          "변경값 필수")))
                                            .build();
             profileRepository.save(updateProfile);
-            return new ProfileResponse(true, updateProfile.getNickName(),
+            return new ProfileResponse(updateProfile.getUserEntity().getKakaoId(),
+                    updateProfile.getNickName(),
                     updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
                     updateProfile.getWishIsbnList(), null);
 
         } catch (CustomException e) {
-            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null, null, null);
+            return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
         }
     }
 
     public ProfileResponse updateIntroduce(UpdateProfileRequest updateProfileRequest) {
         try {
 //            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByUsername(updateProfileRequest.username());
+            UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
 
             Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
                                                .orElseThrow(() -> new NoSuchElementException(
                                                        "Profile with username :"
-                                                               + updateProfileRequest.username()
+                                                               + updateProfileRequest.kakaoId()
                                                                + "- not found"));
 
             Profile updateProfile = profile.toBuilder()
@@ -135,11 +127,12 @@ public class ProfileService {
                                            .build();
 
             profileRepository.save(updateProfile);
-            return new ProfileResponse(true, updateProfile.getNickName(),
+            return new ProfileResponse(updateProfile.getUserEntity().getKakaoId(),
+                    updateProfile.getNickName(),
                     updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
                     updateProfile.getWishIsbnList(), null);
         } catch (CustomException e) {
-            return new ProfileResponse(false, "Error: " + e.getMessage(), null, null, null, null);
+            return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
         }
     }
 
@@ -150,11 +143,13 @@ public class ProfileService {
             // 예시: 팔로우하는 사용자와 팔로우되는 사용자 프로필을 생성합니다.
 //            UserEntity userEntity = userRepository.findByUsername(followRequest.follower());
 //            UserEntity targetUserEntity = userRepository.findByUsername(followRequest.followee());
-            Profile follower = profileRepository.findByUserEntityUserName(followRequest.follower())
+            Profile follower = profileRepository.findByUserEntityUserKakaoId(
+                                                        followRequest.followerKakaoId())
                                                 .orElseThrow(() -> new NoSuchElementException(
                                                         "프로필을 찾을 수 없음"));
 
-            Profile followee = profileRepository.findByUserEntityUserName(followRequest.followee())
+            Profile followee = profileRepository.findByUserEntityUserKakaoId(
+                                                        followRequest.followeeKakaoId())
                                                 .orElseThrow(() -> new NoSuchElementException(
                                                         "프로필을 찾을 수 없음"));
 
@@ -178,9 +173,10 @@ public class ProfileService {
 
     }
 
-    public String addWishBook(String nickname, Long isbn) {
-        Profile profile = profileRepository.findByNickName(nickname);
-        if (existsIsbnInWishList(profile.getId(), isbn)) {
+    public String addWishBook(Long kakaoId, Long isbn) {
+        Profile profile = profileRepository.findByUserEntityUserKakaoId(kakaoId)
+                                           .orElseThrow();
+        if (existsIsbnInWishList(profile.getUserEntity().getKakaoId(), isbn)) {
             // wishIsbnList에서 isbn 삭제
             List<Long> wishIsbnList = profile.getWishIsbnList();
             wishIsbnList.remove(isbn);
@@ -198,8 +194,8 @@ public class ProfileService {
         return "Add WishBook";
     }
 
-    public boolean existsIsbnInWishList(Long profileId, Long isbn) {
-        Optional<Profile> profileOpt = profileRepository.findById(profileId);
+    public boolean existsIsbnInWishList(Long kakaoId, Long isbn) {
+        Optional<Profile> profileOpt = profileRepository.findByUserEntityUserKakaoId(kakaoId);
 
         if (profileOpt.isPresent()) {
             Profile profile = profileOpt.get();

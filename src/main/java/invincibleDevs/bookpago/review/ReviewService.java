@@ -1,24 +1,16 @@
 package invincibleDevs.bookpago.review;
 
-import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.book.Book;
-import invincibleDevs.bookpago.book.BookDTO;
-import invincibleDevs.bookpago.profile.MyBookDto;
 import invincibleDevs.bookpago.profile.model.Profile;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.origin.PropertySourceOrigin;
-import org.springframework.stereotype.Service;
-
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class ReviewService {
+
     private final ReviewRepository reviewRepository;
+
     // 안전하게 Number 타입을 Long으로 변환하는 메서드
     private Long convertToLong(Object obj) {
         if (obj instanceof Integer) {
@@ -26,15 +18,19 @@ public class ReviewService {
         } else if (obj instanceof Long) {
             return (Long) obj;  // 이미 Long이면 그대로 반환
         } else {
-            throw new IllegalArgumentException("Unsupported type for conversion to Long: " + obj.getClass().getName());
+            throw new IllegalArgumentException(
+                    "Unsupported type for conversion to Long: " + obj.getClass().getName());
         }
     }
 
     public List<Review> getMyReviews(Profile profile, Long lastBookId, int size) {
         if (lastBookId == null) {
-           return reviewRepository.findFirstReviewsByLastBookIsbn(profile.getId(), size);
+            return reviewRepository.findFirstReviewsByLastBookIsbn(
+                    profile.getUserEntity().getKakaoId(), size);
         } else {
-            return reviewRepository.findReviewsByLastBookIsbnAfterCursor(profile.getId(), lastBookId,size);
+            return reviewRepository.findReviewsByLastBookIsbnAfterCursor(
+                    profile.getUserEntity().getKakaoId(),
+                    lastBookId, size);
         }
     }
 

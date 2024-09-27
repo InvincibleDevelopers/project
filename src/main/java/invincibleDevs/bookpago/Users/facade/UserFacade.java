@@ -2,7 +2,6 @@ package invincibleDevs.bookpago.Users.facade;
 
 import invincibleDevs.bookpago.Users.dto.request.KakaoJoinRequest;
 import invincibleDevs.bookpago.Users.dto.request.KakaoSignInRequest;
-import invincibleDevs.bookpago.Users.dto.request.SignInRequest;
 import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;
 import invincibleDevs.bookpago.Users.service.UserEntityService;
@@ -12,9 +11,11 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserFacade {
+
     private final UserEntityService userEntityService;
-    public SignInResponse signInUser(String username) {
-        return userEntityService.signInUser(username);
+
+    public SignInResponse signInUser(Long kakaoId) {
+        return userEntityService.signInUser(kakaoId);
     }
 
     public SignInResponse kakaoLoginUser(KakaoSignInRequest kakaoSignInRequest) {

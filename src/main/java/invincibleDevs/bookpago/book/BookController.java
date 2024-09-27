@@ -33,11 +33,11 @@ public class BookController {
     public ResponseEntity<?> getBookInfo( //이 api호출엔 항상 요청자 정보받아야됨
             @ApiParam(value = "책 상세 정보", required = true)
             @PathVariable("bookIsbn") Long bookIsbn,
-            @ApiParam(value = "요청자 닉네임", required = true) // 설명 추가
-            @RequestParam(name = "nickname") String nickname
+            @ApiParam(value = "kakaoId", required = true) // 설명 추가
+            @RequestParam(name = "kakaoId") Long kakaoId
     ) {
         try {
-            return ResponseEntity.ok(bookFacade.getBookInfoResponse(bookIsbn, nickname));
+            return ResponseEntity.ok(bookFacade.getBookInfoResponse(bookIsbn, kakaoId));
         } catch (Exception e) {
             // 예외가 발생한 경우 500 Internal Server Error 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

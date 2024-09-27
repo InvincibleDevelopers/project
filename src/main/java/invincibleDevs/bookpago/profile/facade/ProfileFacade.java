@@ -7,32 +7,33 @@ import invincibleDevs.bookpago.book.BookDetailDTO;
 import invincibleDevs.bookpago.book.BookService;
 import invincibleDevs.bookpago.common.S3Service;
 import invincibleDevs.bookpago.common.exception.CustomException;
-import invincibleDevs.bookpago.profile.MyBookDto;
+import invincibleDevs.bookpago.mapper.service.FollowingMapService;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
-import invincibleDevs.bookpago.profile.response.FollowingListDto;
-import invincibleDevs.bookpago.mapper.service.FollowingMapService;
-import invincibleDevs.bookpago.profile.service.ProfileService;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
+import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
+import invincibleDevs.bookpago.profile.service.ProfileService;
 import invincibleDevs.bookpago.readingClub.service.ReadingClubMapService;
 import invincibleDevs.bookpago.review.MyReviewDto;
 import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.review.ReviewService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class ProfileFacade {
+
     private final ProfileService profileService;
     private final UserEntityService userEntityService;
     private final ReadingClubMapService readingClubMapService;
@@ -42,14 +43,32 @@ public class ProfileFacade {
     private final BookService bookService;
 
 
-    public ProfileResponse getProfile(ProfileRequest profileRequest, String username, int page, int size) {
+    public Map<Boolean, Object> getProfile(ProfileRequest profileRequest,
+            Long currentUserKakaoId,
+            int page,
+            int size) {
         Profile profile = profileService.getProfile(profileRequest);
-        boolean isMine = profileService.isMyProfile(profileRequest, profile);
+        Profile currentProfile = profileService.findProfilebyUser(
+                userEntityService.findByKakaoId(currentUserKakaoId));
+        boolean isFollowing = isFollowing(currentProfile, profile);
 
-        return new ProfileResponse(isMine, profile.getNickName(), profile.getIntroduce(), profile.getProfileImgUrl(), profile.getWishIsbnList(), Optional.ofNullable(readingClubMapService.getUserClubs(profile, page, size)));
+        Map<Boolean, Object> responseMap = new HashMap<>();
+        responseMap.put(isFollowing, new ProfileResponse(profile.getUserEntity().getKakaoId(),
+                profile.getNickName(),
+                profile.getIntroduce(),
+                profile.getProfileImgUrl(), profile.getWishIsbnList(),
+                Optional.ofNullable(readingClubMapService.getUserClubs(profile, page,
+                        size)))); // true일 때 ProfileResponse 저장
+
+        return responseMap;
     }
 
-    public ProfileResponse updateProfileImage(MultipartFile file, UpdateProfileRequest updateProfileRequest) {
+    public boolean isFollowing(Profile follower, Profile following) {
+        return followingMapService.existsByFollowerFollowing(follower, following);
+    }
+
+    public ProfileResponse updateProfileImage(MultipartFile file,
+            UpdateProfileRequest updateProfileRequest) {
         try {
             String url = s3Service.uploadFile(file);
             deleteProfileImage(url);
@@ -75,9 +94,11 @@ public class ProfileFacade {
         return followingMapService.savefollowingMap(profileService.setFollowingMap(followRequest));
     }
 
-    public Page<FollowingListDto> getFollowers(Long targetId, int page, int size) {
+    public Page<FollowingListDto> getFollowers(Long kakaoId, int page, int size) {
         // ProfileService의 메서드를 호출하여 결과 반환
-        return followingMapService.getFollowers(targetId, page, size); // 올바른 서비스 인스턴스를 사용
+        Profile profile = profileService.findProfilebyUser(
+                userEntityService.findByKakaoId(kakaoId));
+        return followingMapService.getFollowers(profile.getId(), page, size); // 올바른 서비스 인스턴스를 사용
     }
 
     public Page<FollowingListDto> getFollowees(Long targetId, int page, int size) {
@@ -86,9 +107,10 @@ public class ProfileFacade {
     }
 
 
-    public List<MyReviewDto> getMyBooks(String nickname, Long lastBookIsbn, int size) { //페이징 나중에
+    public List<MyReviewDto> getMyBooks(Long kakaoId, Long lastBookIsbn, int size) { //페이징 나중에
 
-        Profile profile = profileService.findByNickname(nickname);
+        UserEntity user = userEntityService.findByKakaoId(kakaoId);
+        Profile profile = profileService.findProfilebyUser(user);
 
         List<Review> myReviews = reviewService.getMyReviews(profile, lastBookIsbn, size);
         List<MyReviewDto> myReviewDtoList = new ArrayList<>();
@@ -102,19 +124,19 @@ public class ProfileFacade {
                     review.getContent(),
                     review.getIsbn(),
                     review.getRating(),
-                    review.getProfile().getId()
+                    review.getProfile().getUserEntity().getKakaoId()
             );
             // 생성된 MyReviewDto를 리스트에 추가
-            myReviewDtoList.add(myReviewDto);}
-
-            return myReviewDtoList;
+            myReviewDtoList.add(myReviewDto);
         }
 
+        return myReviewDtoList;
+    }
 
 
-
-    public List<BookDTO> getMyWishBooks(String nickname, Long lastBookId, int size) { //페이징나중에
-        Profile profile = profileService.findByNickname(nickname);
+    public List<BookDTO> getMyWishBooks(Long kakaoId, Long lastBookId, int size) { //페이징나중에
+        UserEntity user = userEntityService.findByKakaoId(kakaoId);
+        Profile profile = profileService.findProfilebyUser(user);
         List<Long> isbnList = profile.getWishIsbnList();
         List<BookDTO> wishBooks = new ArrayList<>();
         for (Long isbn : isbnList) {

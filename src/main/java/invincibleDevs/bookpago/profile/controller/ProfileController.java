@@ -15,6 +15,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,33 +31,33 @@ public class ProfileController {
 
     private final ProfileFacade profileFacade;
 
-    @GetMapping("/page")
-    public ResponseEntity<ProfileResponse> profilePage(
-            @RequestParam(value = "username") String username,
+    @GetMapping("/{kakaoId}")
+    public ResponseEntity<?> profilePage(
+            @PathVariable(value = "kakaoId") Long kakaoId,
+            @RequestParam(value = "currentUserKakaoId") Long currentUserKakaoId,
             @RequestParam(value = "page", defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
             @RequestParam(value = "size", defaultValue = "5") int size) { // 쿼리 파라미터로 페이지 크기를 받음
 
-        ProfileRequest profileRequest = new ProfileRequest(username);
-        return ResponseEntity.ok(profileFacade.getProfile(profileRequest, username, page, size));
+        ProfileRequest profileRequest = new ProfileRequest(kakaoId);
+        return ResponseEntity.ok(
+                profileFacade.getProfile(profileRequest, currentUserKakaoId, page, size));
     }
 
-    @PostMapping("/image")
+    @PatchMapping("/image")
     public ResponseEntity<ProfileResponse> updateProfileImage(
             @ModelAttribute UpdateProfileRequest updateProfileRequest) {
-        System.out.println(updateProfileRequest.username());
-        System.out.println(updateProfileRequest);
         MultipartFile file = updateProfileRequest.file().orElseThrow();
         return ResponseEntity.ok(profileFacade.updateProfileImage(file, updateProfileRequest));
     }
 
-    @PostMapping("/nickname")
+    @PatchMapping("/nickname")
     public ResponseEntity<ProfileResponse> updateNickname(
             @ApiParam(value = "변경할 닉네임", required = true)
             @RequestBody UpdateProfileRequest updateProfileRequest) {
         return ResponseEntity.ok(profileFacade.updateNickname(updateProfileRequest));
     }
 
-    @PostMapping("/introduce")
+    @PatchMapping("/introduce")
     public ResponseEntity<ProfileResponse> updateIntroduce(
             @ApiParam(value = "변경할 소개글", required = true)
             @RequestBody UpdateProfileRequest updateProfileRequest) {
@@ -74,38 +76,36 @@ public class ProfileController {
         }
     }
 
-    @GetMapping("/follower")
+    @GetMapping("/{kakaoId}/follower")
     public ResponseEntity<Page<FollowingListDto>> getfollowers( //내가 상대의 팔로워 리스트 보는 요청
-            @RequestParam(value = "targetId") Long targetId,
+            @PathVariable(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size) {
-
-        System.out.println(targetId);
-        return ResponseEntity.ok(profileFacade.getFollowers(targetId, 0, 10));
+        return ResponseEntity.ok(profileFacade.getFollowers(kakaoId, page, size));
     }
 
-    @GetMapping("/followee")
+    @GetMapping("/{kakaoId}/following")
     public ResponseEntity<Page<FollowingListDto>> getfollowees( //내가 상대의 팔로잉 리스트 보는 요청
-            @RequestParam(value = "targetId") Long targetId,
+            @PathVariable(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "page") int page,
             @RequestParam(value = "size") int size) {
-        return ResponseEntity.ok(profileFacade.getFollowees(targetId, page, size));
+        return ResponseEntity.ok(profileFacade.getFollowees(kakaoId, page, size));
     }
 
     @GetMapping("/library")
     public ResponseEntity<List<MyReviewDto>> getMyBooks( //나의 서재
-            @RequestParam(value = "nickname") String nickname,
+            @RequestParam(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "lastBookId", required = false) Long lastBookIsbn,
             @RequestParam(value = "size") int size) {
-        return ResponseEntity.ok(profileFacade.getMyBooks(nickname, lastBookIsbn, size));
+        return ResponseEntity.ok(profileFacade.getMyBooks(kakaoId, lastBookIsbn, size));
     }
 
     @GetMapping("/wishbook")
     public ResponseEntity<List<BookDTO>> getWishBooks(
-            @RequestParam(value = "nickname") String nickname,
+            @RequestParam(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "lastBookId", required = false) Long lastBookId,
             @RequestParam(value = "size") int size) {
-        return ResponseEntity.ok(profileFacade.getMyWishBooks(nickname, lastBookId, size));
+        return ResponseEntity.ok(profileFacade.getMyWishBooks(kakaoId, lastBookId, size));
     }
 
 

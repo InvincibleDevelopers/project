@@ -1,9 +1,9 @@
 package invincibleDevs.bookpago.book;
 
+import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.Users.service.UserEntityService;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.service.ProfileService;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +13,17 @@ public class BookFacade {
 
     private final BookService bookService;
     private final ProfileService profileService;
+    private final UserEntityService userEntityService;
 
-    public Map<String, Object> getBookInfoResponse(Long bookIsbn, String nickname) {
-        Profile siteUser = profileService.findByNickname(nickname);
-        String isWishBook = "좋아요 안누른 사용자.";
-        if (profileService.existsIsbnInWishList(siteUser.getId(), bookIsbn)) {
-            isWishBook = "좋아요 누른 사용자 입니다.";
-        }
+
+    public BookDetailDTO getBookInfoResponse(Long bookIsbn, Long kakaoId) {
+        UserEntity user = userEntityService.findByKakaoId(kakaoId);
+        Profile siteUser = profileService.findProfilebyUser(user);
         BookDetailDTO bookDetailDTO = bookService.getBookInfo(bookIsbn);
-        // Map을 사용해 DTO와 String을 묶어서 반환
-        Map<String, Object> response = new HashMap<>();
-        response.put("bookDetail", bookDetailDTO);
-        response.put("isWishBook", isWishBook);
-        return response;
+        if (profileService.existsIsbnInWishList(siteUser.getUserEntity().getKakaoId(), bookIsbn)) {
+            bookDetailDTO.setWishBook(true);
+        }
+        return bookDetailDTO;
     }
 
     public BookSearchDTO searchBooksResponse(String query, int page, int size) throws Exception {
@@ -37,6 +35,6 @@ public class BookFacade {
     }
 
     public String addWishBook(WishBookRequest wishBookRequest, Long isbn) {
-        return profileService.addWishBook(wishBookRequest.nickname(), isbn);
+        return profileService.addWishBook(wishBookRequest.kakaoId(), isbn);
     }
 }

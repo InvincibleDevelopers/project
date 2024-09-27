@@ -1,13 +1,13 @@
 package invincibleDevs.bookpago.profile.request;
 
+import java.util.Optional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
-
 public record UpdateProfileRequest(
-        String username,
+        Long kakaoId,
         Optional<String> nickname,
         Optional<String> introduce,
         Optional<MultipartFile> file
 ) {
+
 }

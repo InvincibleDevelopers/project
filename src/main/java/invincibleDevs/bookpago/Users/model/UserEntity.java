@@ -1,13 +1,18 @@
 package invincibleDevs.bookpago.Users.model;
 
 import invincibleDevs.bookpago.profile.model.Profile;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,16 +20,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class UserEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String username;
+    private Long kakaoId;
 
     @Column(nullable = false)
     @Builder.Default
-    private String password = "password";
+    private String password = "";
 
     @Column(nullable = false)
     private String nickname;
@@ -68,7 +74,7 @@ public class UserEntity {
 //    // sns 연동 로그인에 사용되는 provider ID
 //    private String providerId;
 
-        //▼▼▼▼ DM기능 추가시 활성화 예정. 삭제 금지 ▼▼▼
+    //▼▼▼▼ DM기능 추가시 활성화 예정. 삭제 금지 ▼▼▼
 //    @OneToMany(mappedBy = "sender", cascade = CascadeType.REMOVE)
 //    private Set<ChatMessage> sendMessage = new HashSet<>();
 //
@@ -78,5 +84,5 @@ public class UserEntity {
 //    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
 //    private Set<MemberChatRoom> memberChatRooms = new HashSet<>();
 
-    }
+}
 

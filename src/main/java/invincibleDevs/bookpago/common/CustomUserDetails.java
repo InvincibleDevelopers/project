@@ -1,13 +1,13 @@
 package invincibleDevs.bookpago.common;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
+import java.util.ArrayList;
+import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 public class CustomUserDetails implements UserDetails {
+
     private final UserEntity userEntity;
 
     public CustomUserDetails(UserEntity userEntity) {
@@ -61,6 +61,6 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public String getUsername() {
 
-        return userEntity.getUsername();
+        return userEntity.getKakaoId().toString();
     }
 }

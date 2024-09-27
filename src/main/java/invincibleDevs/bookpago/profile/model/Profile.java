@@ -12,6 +12,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
@@ -28,11 +30,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class Profile {
 
+    //    @Id
+//    private Long kakaoId;  // userEntity의 kakaoId를 기본 키로 사용
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // 이거를 username으로 설정하는것도 고려해보기
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne
+    @MapsId
+    @JoinColumn(name = "kakaoId", referencedColumnName = "kakaoId")
     private UserEntity userEntity;
 
     @Column(nullable = true, columnDefinition = "TEXT")

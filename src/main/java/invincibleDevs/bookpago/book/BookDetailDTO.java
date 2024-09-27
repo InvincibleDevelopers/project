@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BookDetailDTO {
+
+    private boolean isWishBook;
     private Long isbn;
     private String title;
     private String author;
