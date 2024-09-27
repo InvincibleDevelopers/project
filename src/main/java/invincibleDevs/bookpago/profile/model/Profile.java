@@ -1,7 +1,7 @@
 package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.mapper.model.FollowTable;
+import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.mapper.model.ReviewLikesMap;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.review.Review;
@@ -58,10 +58,10 @@ public class Profile {
     private Set<ReadingClubMap> readingClubs; // 가입한 독서 모임
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE)
-    private Set<FollowTable> followerMaps;
+    private Set<FollowingMap> followerMaps;
 
     @OneToMany(mappedBy = "followee")
-    private Set<FollowTable> followeeMaps;
+    private Set<FollowingMap> followeeMaps;
 
     @OneToMany(mappedBy = "profile")
     private List<ReviewLikesMap> reviewLikesMaps;

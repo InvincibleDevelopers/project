@@ -1,16 +1,22 @@
 package invincibleDevs.bookpago.book;
 
-import com.amazonaws.Response;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/books")
 public class BookController {
+
     private final BookFacade bookFacade;
 
 
@@ -24,12 +30,14 @@ public class BookController {
     }
 
     @GetMapping("/{bookIsbn:\\d+}")
-    public ResponseEntity<BookDetailDTO> getBookInfo(
+    public ResponseEntity<?> getBookInfo( //이 api호출엔 항상 요청자 정보받아야됨
             @ApiParam(value = "책 상세 정보", required = true)
-            @PathVariable("bookIsbn") Long bookIsbn
+            @PathVariable("bookIsbn") Long bookIsbn,
+            @ApiParam(value = "요청자 닉네임", required = true) // 설명 추가
+            @RequestParam(name = "nickname") String nickname
     ) {
         try {
-            return ResponseEntity.ok(bookFacade.getBookInfoResponse(bookIsbn));
+            return ResponseEntity.ok(bookFacade.getBookInfoResponse(bookIsbn, nickname));
         } catch (Exception e) {
             // 예외가 발생한 경우 500 Internal Server Error 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -48,16 +56,17 @@ public class BookController {
             return ResponseEntity.ok(bookFacade.searchBooksResponse(query, page, size));
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred while searching for books.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("An error occurred while searching for books.");
         }
     }
 
-    @PostMapping("/likes")
+    @PostMapping("/{isbn}/likes")
     public ResponseEntity<?> addWishBook(
             @ApiParam(value = "책 좋아요", required = true)
+            @PathVariable("isbn") Long isbn,
             @RequestBody WishBookRequest wishBookRequest
-            ){
-        bookFacade.addWishBook(wishBookRequest);
-        return ResponseEntity.ok("200");
+    ) {
+        return ResponseEntity.ok(bookFacade.addWishBook(wishBookRequest, isbn));
     }
 }

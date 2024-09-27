@@ -1,9 +1,8 @@
 package invincibleDevs.bookpago.mapper.service;
 
-import invincibleDevs.bookpago.mapper.model.FollowTable;
+import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.mapper.repository.FollowingMapRepository;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import java.util.List;
 import java.util.Map;
@@ -21,29 +20,28 @@ import org.springframework.transaction.annotation.Transactional;
 public class FollowingMapService {
 
     private final FollowingMapRepository followingMapRepository;
-    private final ProfileRepository profileRepository;
 
     @Transactional
     public boolean savefollowingMap(Map<Profile, Profile> followingMap) { //토클 기능
-        FollowTable thisFollowTable = FollowTable.builder()
-                .build();
+        FollowingMap thisFollowingMap = FollowingMap.builder()
+                                                    .build();
 
         for (Map.Entry<Profile, Profile> entry : followingMap.entrySet()) {
             Profile follower = entry.getKey();   // 팔로워 프로필
             Profile followee = entry.getValue(); // 팔로위 프로필
-            thisFollowTable = thisFollowTable.toBuilder()
-                    .follower(follower)
-                    .followee(followee)
-                    .build();
+            thisFollowingMap = thisFollowingMap.toBuilder()
+                                               .follower(follower)
+                                               .followee(followee)
+                                               .build();
         }
         // 팔로워와 팔로위의 존재 여부를 확인하고 저장
-        if (!followingMapRepository.existsByFollowerAndFollowee(thisFollowTable.getFollower(),
-                thisFollowTable.getFollowee())) {
-            followingMapRepository.save(thisFollowTable);
+        if (!followingMapRepository.existsByFollowerAndFollowee(thisFollowingMap.getFollower(),
+                thisFollowingMap.getFollowee())) {
+            followingMapRepository.save(thisFollowingMap);
             return true;
         } else {
-            followingMapRepository.deleteByFollowerAndFollowee(thisFollowTable.getFollower(),
-                    thisFollowTable.getFollowee());
+            followingMapRepository.deleteByFollowerAndFollowee(thisFollowingMap.getFollower(),
+                    thisFollowingMap.getFollowee());
             return false;
         }
     }
@@ -58,9 +56,11 @@ public class FollowingMapService {
 
         // Page에서 List를 가져와서 Stream으로 처리
         List<FollowingListDto> followingListDtos = followerProfiles.getContent().stream()
-                .map(profile -> new FollowingListDto(profile.getNickName(),
-                        profile.getUserEntity().getUsername()))
-                .collect(Collectors.toList());
+                                                                   .map(profile -> new FollowingListDto(
+                                                                           profile.getNickName(),
+                                                                           profile.getUserEntity()
+                                                                                  .getUsername()))
+                                                                   .collect(Collectors.toList());
 
         // 새로운 Page 객체로 변환하여 반환
         return new PageImpl<>(followingListDtos, pageable, followerProfiles.getTotalElements());
