@@ -34,7 +34,7 @@ public class FollowingMapService {
                                                .followee(followee)
                                                .build();
         }
-        // 팔로워와 팔로위의 존재 여부를 확인하고 저장
+        // 팔로워와 팔로잉의 존재 여부를 확인하고 저장
         if (!followingMapRepository.existsByFollowerAndFollowee(thisFollowingMap.getFollower(),
                 thisFollowingMap.getFollowee())) {
             followingMapRepository.save(thisFollowingMap);

@@ -80,7 +80,7 @@ public class ProfileController {
     public ResponseEntity<Page<FollowingListDto>> getfollowers( //내가 상대의 팔로워 리스트 보는 요청
             @PathVariable(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(profileFacade.getFollowers(kakaoId, page, size));
     }
 
@@ -88,7 +88,7 @@ public class ProfileController {
     public ResponseEntity<Page<FollowingListDto>> getfollowees( //내가 상대의 팔로잉 리스트 보는 요청
             @PathVariable(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "page") int page,
-            @RequestParam(value = "size") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(profileFacade.getFollowees(kakaoId, page, size));
     }
 
@@ -96,7 +96,7 @@ public class ProfileController {
     public ResponseEntity<List<MyReviewDto>> getMyBooks( //나의 서재
             @RequestParam(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "lastBookId", required = false) Long lastBookIsbn,
-            @RequestParam(value = "size") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(profileFacade.getMyBooks(kakaoId, lastBookIsbn, size));
     }
 
@@ -104,7 +104,7 @@ public class ProfileController {
     public ResponseEntity<List<BookDTO>> getWishBooks(
             @RequestParam(value = "kakaoId") Long kakaoId,
             @RequestParam(value = "lastBookId", required = false) Long lastBookId,
-            @RequestParam(value = "size") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         return ResponseEntity.ok(profileFacade.getMyWishBooks(kakaoId, lastBookId, size));
     }
 
