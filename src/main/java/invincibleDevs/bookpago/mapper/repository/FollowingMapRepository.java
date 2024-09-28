@@ -17,4 +17,6 @@ public interface FollowingMapRepository extends JpaRepository<FollowingMap, Long
     @Query("SELECT fm.follower FROM FollowingMap fm WHERE fm.followee.id = :profileId ORDER BY fm.id DESC")
     Page<Profile> findFollowersByProfileId(@Param("profileId") Long profileId, Pageable pageable);
 
+    @Query("SELECT fm.followee FROM FollowingMap fm WHERE fm.follower.id = :profileId ORDER BY fm.id DESC")
+    Page<Profile> findFollowingsByProfileId(@Param("profileId") Long profileId, Pageable pageable);
 }

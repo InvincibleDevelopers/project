@@ -55,6 +55,7 @@ public class FollowingMapService {
         // Page에서 List를 가져와서 Stream으로 처리
         List<FollowingListDto> followingListDtos = followerProfiles.getContent().stream()
                                                                    .map(profile -> new FollowingListDto(
+                                                                           profile.getProfileImgUrl(),
                                                                            profile.getNickName(),
                                                                            profile.getUserEntity()
                                                                                   .getKakaoId()))
@@ -62,6 +63,25 @@ public class FollowingMapService {
 
         // 새로운 Page 객체로 변환하여 반환
         return new PageImpl<>(followingListDtos, pageable, followerProfiles.getTotalElements());
+    }
+
+    public Page<FollowingListDto> getFollowings(Long profileId, int page,
+            int size) { //맵에서 팔로이 가 타켓유저인거
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Profile> followingProfiles = followingMapRepository.findFollowingsByProfileId(
+                profileId,
+                pageable);
+        // Page에서 List를 가져와서 Stream으로 처리
+        List<FollowingListDto> followingListDtos = followingProfiles.getContent().stream()
+                                                                    .map(profile -> new FollowingListDto(
+                                                                            profile.getProfileImgUrl(),
+                                                                            profile.getNickName(),
+                                                                            profile.getUserEntity()
+                                                                                   .getKakaoId()))
+                                                                    .collect(Collectors.toList());
+
+        // 새로운 Page 객체로 변환하여 반환
+        return new PageImpl<>(followingListDtos, pageable, followingProfiles.getTotalElements());
     }
 
     public boolean existsByFollowerFollowing(Profile follower, Profile following) {

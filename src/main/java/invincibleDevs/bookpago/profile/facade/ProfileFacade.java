@@ -101,9 +101,11 @@ public class ProfileFacade {
         return followingMapService.getFollowers(profile.getId(), page, size); // 올바른 서비스 인스턴스를 사용
     }
 
-    public Page<FollowingListDto> getFollowees(Long targetId, int page, int size) {
+    public Page<FollowingListDto> getFollowees(Long kakaoId, int page, int size) {
         // ProfileService의 메서드를 호출하여 결과 반환
-        return followingMapService.getFollowers(targetId, page, size); // 올바른 서비스 인스턴스를 사용
+        Profile profile = profileService.findProfilebyUser(
+                userEntityService.findByKakaoId(kakaoId));
+        return followingMapService.getFollowings(profile.getId(), page, size); // 올바른 서비스 인스턴스를 사용
     }
 
 
