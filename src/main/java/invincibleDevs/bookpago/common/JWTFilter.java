@@ -26,6 +26,16 @@ public class JWTFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
 
+        System.out.println("*****************");
+        System.out.println(request.getRequestURI());
+
+        // 카카오 인증 요청에 대해 JWT 필터를 무시
+        if (request.getRequestURI().equals("/user/kakaologin")) {
+            System.out.println("카카오로그인JWT필터적용안함");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         //request에서 Authorization 헤더를 찾음
         String authorization = request.getHeader("Authorization");
 

@@ -80,7 +80,9 @@ public class UserEntityService {
     public SignInResponse kakaoSignInUser(
             KakaoSignInRequest kakaoSignInRequest) { //자동로그인 튕겼을때, 서버토큰 재발급
         RestTemplate restTemplate = new RestTemplate();
+        System.out.println("카카오로그인요청jwt필터해제적용완료");
         HttpHeaders headers = new HttpHeaders();
+        System.out.println(kakaoSignInRequest.kakaoAccessToken());
         headers.add("Authorization", "Bearer " + kakaoSignInRequest.kakaoAccessToken());
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
 
