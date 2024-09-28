@@ -45,6 +45,16 @@ public class UserEntityService {
             Long kakaoId) { //기능 : 유저아이디 널이면 , false반환. 유저아이디 잇으면 아디 이름 반환.
         try {
             UserEntity userEntity = userRepository.findByKakaoId(kakaoId);
+
+            // userEntity가 null이면 커스텀 응답 생성
+            if (userEntity == null) {
+                return new SignInResponse(
+                        false, // 로그인 실패
+                        Optional.empty(), // 카카오 ID 없음
+                        Optional.empty(), // 닉네임 없음
+                        null // 프로필 이미지 없음
+                );
+            }
             return new SignInResponse(
                     true,
                     Optional.ofNullable(userEntity.getKakaoId()),

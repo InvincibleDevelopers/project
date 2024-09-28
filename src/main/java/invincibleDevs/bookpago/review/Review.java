@@ -1,7 +1,12 @@
 package invincibleDevs.bookpago.review;
 
 import invincibleDevs.bookpago.profile.model.Profile;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,11 +18,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int rating;
+    private double rating;
 
     private String content;
 
