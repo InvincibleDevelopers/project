@@ -209,7 +209,7 @@ public class ProfileService {
     }
 
     public Profile findByKakaoId(Long kakaoId) {
-        return profileRepository.findByUserEntityId(kakaoId)
+        return profileRepository.findByUserEntityUserKakaoId(kakaoId)
                                 .orElseThrow(() -> new NoSuchElementException(
                                         "Profile with username :"
                                                 + kakaoId

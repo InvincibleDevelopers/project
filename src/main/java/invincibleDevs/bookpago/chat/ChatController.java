@@ -27,6 +27,7 @@ public class ChatController {
         logger.info("messaging...");
         //아직 룸에 대해서는 제대로 처리가 되지 않은거 같다.
         //ChatRoom chatRoom = chatRoomService.getMyChatRoom(sendMessage.getSender(), sendMessage.getReceiver());
+        System.out.println(sendMessage.senderId());
         Profile sender = profileService.findByKakaoId(sendMessage.senderId());
         Profile receiver = profileService.findByKakaoId(sendMessage.receiverId());
 
@@ -36,8 +37,15 @@ public class ChatController {
                                              .content(sendMessage.content())
                                              .createDate(sendMessage.getCreatedAtAsLocalDateTime())
                                              .build();
+
+        // ChatRoom 저장 후 saveMessage에 chatRoom 설정
+        ChatRoom chatRoom = chatRoomService.saveChatRoom(sender, receiver, saveMessage);
+        saveMessage = saveMessage.toBuilder()
+                                 .chatRoom(chatRoom)  // chatRoom을 설정한 새로운 객체를 saveMessage에 다시 할당
+                                 .build();
+
+// 최종적으로 saveMessage를 저장
         saveMessageRepository.save(saveMessage);
-        chatRoomService.saveChatRoom(sender, receiver, saveMessage);
 
         MessageDto messageDto = MessageDto.builder()
                                           .id(saveMessage.getId())

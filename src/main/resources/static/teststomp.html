@@ -40,25 +40,14 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-<!-- STOMP.js 로드 확인 -->
 <script>
-  console.log("STOMP object:", Stomp); // 로드 확인
-</script>
-
-<script>
-
   $(document).ready(function() {
-    const BROKER_URL = '/ws';  // SockJS를 사용할 때는 단순 경로만 사용
+    const BROKER_URL = '/ws';  // SockJS 경로
     const SUBSCRIPTION = '/sub/message';
     const DESTINATION = '/pub/hello';
 
-    console.log('BROKER_URL', BROKER_URL);
-    console.log('SUBSCRIPTION', SUBSCRIPTION);
-    console.log('DESTINATION', DESTINATION);
-
     let stompClient = null;
-    let connection = false; // 연결중인지 여부
-    let messages = []; // 응답들
+    let messages = []; // 메시지 저장 배열
     let token =
       'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IjM3MDQ2MTY4NTkiLCJyb2xlIjoiVVNFUiIsImlhdCI6MTcyNjgzMDczOSwiZXhwIjoxNzI2ODY2NzM5fQ.LKmY7EHHo9UvGfbZjHQDhxKSVASK9teo_fS3LErt8b0'; // 로그인 토큰
 
@@ -67,85 +56,54 @@
     const $receiverInput = $('#receiver-input');
     const $messageInput = $('#message-input');
 
-    const stompConfig = {
-      connectHeaders: {
-        user: 'user' + Math.round(Math.random() * 100),
-        login: 'guest',
-        passcode: 'guest',
-      },
-      onConnect(e) {
-        console.log('Broker connected.', e);
-        // 구독
-        subscription = stompClient.subscribe(
-          SUBSCRIPTION,
-          function (message) {
-            console.log('message', message);
-            messages.push(message.body);
-            document.getElementById('messages').innerHTML =
-              messages.join('<br>');
-          },
-        );
-
-        connection = true;
-      },
-      onDisconnect() {
-        console.log('Broker disconnected.');
-        stompClient?.deactivate();
-        stompClient = null;
-        connection = false;
-      },
-      onStompError(error) {
-        console.error('Broker reported error: ' + error);
-      },
-      debug(str) {
-        console.log('Debugging', str);
-      },
-      reconnectDelay: 5000,
-      heartbeatIncoming: 4000,
-      heartbeatOutgoing: 4000,
-    };
-
+    // 메시지 전송 함수
     function sendMessage(e) {
+
+
       e.preventDefault();
-      // 메시지 전송
+
+      // 현재 시간을 yyyy-MM-dd HH:mm:ss 형식으로 생성
+      const currentDateTime = new Date().toISOString().slice(0, 19).replace('T', ' ');
+
       const body = JSON.stringify({
         content: $messageInput.val(),
-        sender: $senderInput.val(),
-        receiver: $receiverInput.val(),
+        senderId: $senderInput.val(),
+        receiverId: $receiverInput.val(),
+        createdAt : currentDateTime
       });
 
-      console.log('body', body);
+      console.log('전송할 메시지:', body);
 
       if (stompClient && stompClient.connected) {
-        stompClient.publish({
-          destination: DESTINATION,
-          body,
-        });
+        stompClient.send(DESTINATION, {}, body); // 구형 방식에서 send() 메서드를 사용하여 메시지 전송
       } else {
-        alert('소켓 연결이 되어있지 않습니다.');
+        alert('소켓 연결이 되어 있지 않습니다.');
       }
     }
 
+    // 소켓 연결 초기화 함수
     function init() {
-  $form.on('submit', sendMessage);
+      $form.on('submit', sendMessage);
 
-  const socket = new SockJS(BROKER_URL); // SockJS 경로를 통해 WebSocket 연결
-  stompClient = Stomp.over(socket); // SockJS를 사용하는 Stomp 클라이언트
+      const socket = new SockJS(BROKER_URL); // SockJS 경로로 WebSocket 연결
+      stompClient = Stomp.over(socket); // STOMP 클라이언트 생성
 
-  // STOMP.js 2.x.x 버전에서는 configure, activate 대신 connect 사용
-  stompClient.connect({}, function(frame) {
-    console.log('Connected: ' + frame);
-    stompClient.subscribe(SUBSCRIPTION, function(message) {
-      console.log('Received message:', message.body);
-      messages.push(message.body);
-      document.getElementById('messages').innerHTML = messages.join('<br>');
-    });
-  }, function(error) {
-    console.log('STOMP error:', error);
-  });
-}
+      // STOMP 클라이언트 연결
+      stompClient.connect({}, function(frame) {
+        console.log('연결 성공: ' + frame);
 
+        // 메시지 구독 설정
+        stompClient.subscribe(SUBSCRIPTION, function(message) {
+          console.log('받은 메시지:', message.body);
+          messages.push(message.body); // 메시지를 배열에 저장
+          document.getElementById('messages').innerHTML = messages.join('<br>'); // 메시지 화면 출력
+        });
+      }, function(error) {
+        console.log('STOMP 연결 오류:', error);
+      });
+    }
 
+    // 초기화 함수 실행
     init();
   });
 </script>

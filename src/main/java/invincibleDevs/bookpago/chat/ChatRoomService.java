@@ -17,7 +17,7 @@ public class ChatRoomService {
     private final UserEntityService userEntityService;
     private final ProfileService profileService;
 
-    public void saveChatRoom(Profile sender, Profile receiver, SaveMessage saveMessage) {
+    public ChatRoom saveChatRoom(Profile sender, Profile receiver, SaveMessage saveMessage) {
         if (chatRoomRepository.existsBySenderAndReceiver(sender, receiver)) {
             // 기존 ChatRoom 가져오기
             ChatRoom existingChatRoom = chatRoomRepository.findBySenderAndReceiver(sender,
@@ -32,7 +32,7 @@ public class ChatRoomService {
                                                        .saveMessages(
                                                                updatedMessages)  // 메시지 리스트를 업데이트
                                                        .build();
-            chatRoomRepository.save(updatedChatRoom);
+            return chatRoomRepository.save(updatedChatRoom);
         }
         List<SaveMessage> newMessages = new ArrayList<>();
         newMessages.add(saveMessage);
@@ -42,7 +42,7 @@ public class ChatRoomService {
                                     .saveMessages(newMessages)
                                     .createDate(LocalDateTime.now())
                                     .build();
-        chatRoomRepository.save(chatRoom);
+        return chatRoomRepository.save(chatRoom);
     }
 
 //    public ChatRoom getMyChatRoom(Long senderKakaoId, Long receiverKakaoId) {

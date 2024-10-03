@@ -13,7 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import java.util.List;
@@ -37,8 +36,8 @@ public class Profile {
     private Long id;
 
     @OneToOne
-    @MapsId
     @JoinColumn(name = "kakaoId", referencedColumnName = "kakaoId")
+    // Profile 테이블의 kakao_id가 UserEntity의 kakaoId를 참조
     private UserEntity userEntity;
 
     @Column(nullable = true, columnDefinition = "TEXT")
