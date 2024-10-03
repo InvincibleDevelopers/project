@@ -3,12 +3,6 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
-      integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@6.1.2/bundles/stomp.umd.min.js"></script>
   <title>소켓 테스트 v0.0.1</title>
   <style>
     form {
@@ -37,9 +31,24 @@
 </form>
 <div id="messages"></div>
 
+<!-- jQuery, SockJS, STOMP.js 라이브러리 로드를 body 끝으로 이동 -->
+<script
+    src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.js"
+    integrity="sha512-+k1pnlgt4F1H8L7t3z95o3/KO+o78INEcXTbnoJQ/F2VqDVhWoaiVml/OEHv9HsVgxUaVW+IbiZPUJQfF/YxZw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+<!-- STOMP.js 로드 확인 -->
 <script>
-  $(() => {
-    const BROKER_URL = 'ws://52.79.225.186:8088/ws';
+  console.log("STOMP object:", Stomp); // 로드 확인
+</script>
+
+<script>
+
+  $(document).ready(function() {
+    const BROKER_URL = '/ws';  // SockJS를 사용할 때는 단순 경로만 사용
     const SUBSCRIPTION = '/sub/message';
     const DESTINATION = '/pub/hello';
 
@@ -59,9 +68,7 @@
     const $messageInput = $('#message-input');
 
     const stompConfig = {
-      brokerURL: BROKER_URL,
       connectHeaders: {
-        Authorization: `Bearer ${token}`,
         user: 'user' + Math.round(Math.random() * 100),
         login: 'guest',
         passcode: 'guest',
@@ -110,7 +117,7 @@
       console.log('body', body);
 
       if (stompClient && stompClient.connected) {
-        const destination = stompClient.publish({
+        stompClient.publish({
           destination: DESTINATION,
           body,
         });
@@ -120,14 +127,24 @@
     }
 
     function init() {
-      $form.on('submit', sendMessage);
+  $form.on('submit', sendMessage);
 
-      // 연결 입력정보
-      // token = window.prompt("로그인 토큰을 입력");
+  const socket = new SockJS(BROKER_URL); // SockJS 경로를 통해 WebSocket 연결
+  stompClient = Stomp.over(socket); // SockJS를 사용하는 Stomp 클라이언트
 
-      stompClient = new StompJs.Client(stompConfig);
-      stompClient.activate();
-    }
+  // STOMP.js 2.x.x 버전에서는 configure, activate 대신 connect 사용
+  stompClient.connect({}, function(frame) {
+    console.log('Connected: ' + frame);
+    stompClient.subscribe(SUBSCRIPTION, function(message) {
+      console.log('Received message:', message.body);
+      messages.push(message.body);
+      document.getElementById('messages').innerHTML = messages.join('<br>');
+    });
+  }, function(error) {
+    console.log('STOMP error:', error);
+  });
+}
+
 
     init();
   });
