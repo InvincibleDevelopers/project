@@ -207,4 +207,12 @@ public class ProfileService {
 
         return false;
     }
+
+    public Profile findByKakaoId(Long kakaoId) {
+        return profileRepository.findByUserEntityId(kakaoId)
+                                .orElseThrow(() -> new NoSuchElementException(
+                                        "Profile with username :"
+                                                + kakaoId
+                                                + "- not found"));
+    }
 }
