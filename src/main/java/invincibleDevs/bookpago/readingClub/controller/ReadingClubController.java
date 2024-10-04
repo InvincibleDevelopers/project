@@ -1,17 +1,12 @@
 package invincibleDevs.bookpago.readingClub.controller;
 
+import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
 import invincibleDevs.bookpago.readingClub.service.ReadingClubFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -45,10 +40,68 @@ public class ReadingClubController {
 
     @GetMapping("/clubs/{clubId}")
     public ResponseEntity<?> getTargetClub(
-            @PathVariable("clubId") Long clubId,
-            @RequestParam(value = "nickname") String nickname
+            @PathVariable("clubId") Long clubId
     ) {
-        return ResponseEntity.ok(readingClubFacade.getClub(nickname, clubId));
+        return ResponseEntity.ok(readingClubFacade.getClub(clubId));
     }
 
+    @PostMapping("/clubs/{clubId}/members")
+    public ResponseEntity<?> joinClub(
+            @PathVariable("clubId") Long clubId,
+            @RequestBody ReadingClubMapRequest readingClubMapRequest
+            ) {
+        try {
+            return ResponseEntity.ok(readingClubFacade.joinClub(clubId, readingClubMapRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/clubs/{clubId}/members")
+    public ResponseEntity<?> leaveClub(
+            @PathVariable("clubId") Long clubId,
+            @RequestBody ReadingClubMapRequest readingClubMapRequest
+    ) {
+        try {
+            return ResponseEntity.ok(readingClubFacade.leaveClub(clubId, readingClubMapRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/clubs/{clubId}/admin")
+    public ResponseEntity<?> banishClub(
+            @PathVariable("clubId") Long clubId,
+            @RequestBody ReadingClubMapRequest readingClubMapRequest
+    ) {
+        try {
+            return ResponseEntity.ok(readingClubFacade.banishClub(clubId, readingClubMapRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/clubs/{clubId}/applicants")
+    public ResponseEntity<?> rejectApplicants(
+            @PathVariable("clubId") Long clubId,
+            @RequestBody ReadingClubMapRequest readingClubMapRequest
+    ) {
+        try {
+            return ResponseEntity.ok(readingClubFacade.rejectApplicants(clubId, readingClubMapRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PostMapping("/clubs/{clubId}/applicants")
+    public ResponseEntity<?> acceptApplicants(
+            @PathVariable("clubId") Long clubId,
+            @RequestBody ReadingClubMapRequest readingClubMapRequest
+    ) {
+        try {
+            return ResponseEntity.ok(readingClubFacade.acceptApplicants(clubId, readingClubMapRequest));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

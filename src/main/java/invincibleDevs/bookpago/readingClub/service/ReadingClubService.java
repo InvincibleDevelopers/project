@@ -16,18 +16,21 @@ public class ReadingClubService {
 
     public ReadingClub findById(Long clubId) {
         return readingClubRepository.findById(clubId)
-                                    .orElseThrow();
+                                    .orElse(null);
     }
 
     public ReadingClub createClub(ReadingClubRequest readingClubRequest,
             Set<ReadingClubMap> members) {
 
         ReadingClub readingClub = ReadingClub.builder()
+                                             .id(readingClubRequest.id())
                                              .clubMembers(members)
                                              .clubName(readingClubRequest.clubName())
                                              .description(readingClubRequest.description())
                                              .location(readingClubRequest.location())
-                                             .meetingTime(readingClubRequest.meetingTime())
+                                             .time(readingClubRequest.time())
+                                             .repeatCycle(readingClubRequest.repeatCycle())
+                                             .weekDay(readingClubRequest.weekDay())
                                              .build();
         return readingClubRepository.save(readingClub);
     }

@@ -33,21 +33,27 @@ public class ReadingClubMapService {
         // adminClubs 리스트를 Dto로 변환 후 추가
         readingClubDtoList.addAll(adminClubs.stream()
                                             .map(club -> new ReadingClubDto(
+                                                    club.getReadingClub().getId(),
                                                     club.getReadingClub().getClubMembers().size(),
                                                     club.getReadingClub().getClubName(),
-                                                    club.getReadingClub().getDescription(),
                                                     club.getReadingClub().getLocation(),
-                                                    club.getReadingClub().getDescription()))
+                                                    club.getReadingClub().getDescription(),
+                                                    club.getReadingClub().getTime(),
+                                                    club.getReadingClub().getRepeatCycle(),
+                                                    club.getReadingClub().getWeekDay()))
                                             .collect(Collectors.toList()));
 
         // memberClubs 리스트를 Dto로 변환 후 추가
         readingClubDtoList.addAll(memberClubs.stream()
                                              .map(club -> new ReadingClubDto(
+                                                     club.getReadingClub().getId(),
                                                      club.getReadingClub().getClubMembers().size(),
                                                      club.getReadingClub().getClubName(),
-                                                     club.getReadingClub().getDescription(),
                                                      club.getReadingClub().getLocation(),
-                                                     club.getReadingClub().getDescription()))
+                                                     club.getReadingClub().getDescription(),
+                                                     club.getReadingClub().getTime(),
+                                                     club.getReadingClub().getRepeatCycle(),
+                                                     club.getReadingClub().getWeekDay()))
                                              .collect(Collectors.toList()));
 
         // 페이징 정보 설정
@@ -65,11 +71,35 @@ public class ReadingClubMapService {
         return new PageImpl<>(content);
     }
 
-    public ReadingClubMap create(Profile admin, ReadingClub readingClub) {
+    public ReadingClubMap create_admin(Profile admin, ReadingClub readingClub) {
         ReadingClubMap readingClubMap = ReadingClubMap.builder()
                                                       .clubAdmin(admin)
                                                       .readingClub(readingClub)
                                                       .build();
+        return readingClubMapRepository.save(readingClubMap);
+    }
+
+    public ReadingClubMap create_applicant(Profile applicant, ReadingClub readingClub) {
+        ReadingClubMap readingClubMap = ReadingClubMap.builder()
+                .clubApplicant(applicant)
+                .readingClub(readingClub)
+                .build();
+        return readingClubMapRepository.save(readingClubMap);
+    }
+
+    public ReadingClubMap create_member(Profile member, ReadingClub readingClub) {
+        ReadingClubMap readingClubMap = ReadingClubMap.builder()
+                .clubMember(member)
+                .readingClub(readingClub)
+                .build();
+        return readingClubMapRepository.save(readingClubMap);
+    }
+
+    public ReadingClubMap delete(Profile admin, ReadingClub readingClub) {
+        ReadingClubMap readingClubMap = ReadingClubMap.builder()
+                .clubAdmin(admin)
+                .readingClub(readingClub)
+                .build();
         return readingClubMapRepository.save(readingClubMap);
     }
 }
