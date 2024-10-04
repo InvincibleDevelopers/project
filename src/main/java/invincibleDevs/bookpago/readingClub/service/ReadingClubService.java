@@ -34,4 +34,11 @@ public class ReadingClubService {
                                              .build();
         return readingClubRepository.save(readingClub);
     }
+
+    public int getMemberCount(ReadingClub readingClub) {
+        // clubApplicant가 null인 경우만 멤버로 포함 (관리자와 정식 멤버)
+        return (int) readingClub.getClubMembers().stream()
+                .filter(clubMap -> clubMap.getClubApplicant() == null)
+                .count();
+    }
 }

@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 public class ReadingClubMapService {
 
     private final ReadingClubMapRepository readingClubMapRepository;
+    private final ReadingClubService readingClubService;
 
     public Page<ReadingClubDto> getUserClubs(Profile profile, int page, int size) {
         // 관리자와 멤버로 검색하여 리스트 가져오기
-        System.out.println(profile.getUserEntity().getKakaoId());
         List<ReadingClubMap> adminClubs = readingClubMapRepository.findByClubAdmin(profile);
         List<ReadingClubMap> memberClubs = readingClubMapRepository.findByClubMember(profile);
 
@@ -34,7 +34,7 @@ public class ReadingClubMapService {
         readingClubDtoList.addAll(adminClubs.stream()
                                             .map(club -> new ReadingClubDto(
                                                     club.getReadingClub().getId(),
-                                                    club.getReadingClub().getClubMembers().size(),
+                                                    readingClubService.getMemberCount(club.getReadingClub()),
                                                     club.getReadingClub().getClubName(),
                                                     club.getReadingClub().getLocation(),
                                                     club.getReadingClub().getDescription(),
@@ -47,7 +47,7 @@ public class ReadingClubMapService {
         readingClubDtoList.addAll(memberClubs.stream()
                                              .map(club -> new ReadingClubDto(
                                                      club.getReadingClub().getId(),
-                                                     club.getReadingClub().getClubMembers().size(),
+                                                     readingClubService.getMemberCount(club.getReadingClub()),
                                                      club.getReadingClub().getClubName(),
                                                      club.getReadingClub().getLocation(),
                                                      club.getReadingClub().getDescription(),
