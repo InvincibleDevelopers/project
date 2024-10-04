@@ -131,7 +131,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long memberId : readingClubMapRequest.memberIds()) {
+        for (Long memberId : readingClubMapRequest.members()) {
             Profile member = profileService.findByKakaoId(memberId);
             Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndMember(clubId, member);
             if (clubMapOptional.isPresent())
@@ -151,7 +151,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long applicantId : readingClubMapRequest.applicantIds()) {
+        for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
             Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(clubId, applicant);
             if (clubMapOptional.isPresent())
@@ -171,7 +171,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long applicantId : readingClubMapRequest.applicantIds()) {
+        for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
             Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(clubId, applicant);
             if (clubMapOptional.isPresent()) {
