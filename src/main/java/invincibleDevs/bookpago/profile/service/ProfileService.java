@@ -172,11 +172,6 @@ public class ProfileService {
 
     }
 
-    public Profile findByKakaoId(Long kakaoId) {
-        return profileRepository.findByUserEntityUserKakaoId(kakaoId)
-                .orElse(null);
-    }
-
     public String addWishBook(Long kakaoId, Long isbn) {
         Profile profile = profileRepository.findByUserEntityUserKakaoId(kakaoId)
                                            .orElseThrow();
