@@ -1,11 +1,16 @@
 package invincibleDevs.bookpago.readingClub.dto;
 
+import java.util.List;
+
 public record ReadingClubRequest(
-        String nickname,
+        Long id,
+        Long kakaoId,
         String clubName,
-        String description,
         String location,
-        String meetingTime
+        String description,
+        String time,
+        int repeatCycle,
+        List<Integer> weekDay
 ) {
 
 }

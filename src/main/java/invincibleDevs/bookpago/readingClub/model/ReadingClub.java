@@ -1,11 +1,8 @@
 package invincibleDevs.bookpago.readingClub.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
+import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,7 +23,12 @@ public class ReadingClub {
     private String clubName;
     private String location;
     private String description;
-    private String meetingTime;
+    private String time;
+    private int repeatCycle;
+
+    @ElementCollection
+    private List<Integer> weekDay;
+
 
     @OneToMany(mappedBy = "readingClub", cascade = CascadeType.REMOVE)
     private Set<ReadingClubMap> clubMembers; // 독서 모임의 회원들 -> 이거갯수세면 몇명참여중 표시
