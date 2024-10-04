@@ -32,5 +32,4 @@ public class ReadingClub {
 
     @OneToMany(mappedBy = "readingClub", cascade = CascadeType.REMOVE)
     private Set<ReadingClubMap> clubMembers; // 독서 모임의 회원들 -> 이거갯수세면 몇명참여중 표시
-
 }

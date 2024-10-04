@@ -104,4 +104,17 @@ public class ReadingClubController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    @GetMapping("/clubs/users/{kakaoId}")
+    public ResponseEntity<?> getUserClubs(
+            @PathVariable("kakaoId") Long kakaoId,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        try {
+            return ResponseEntity.ok(readingClubFacade.getUserClubs(kakaoId, page, size));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
