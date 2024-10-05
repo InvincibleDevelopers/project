@@ -79,12 +79,9 @@ public class ProfileFacade {
         s3Service.deleteFile(targetUrl);
     }
 
-    public ProfileResponse updateNickname(UpdateProfileRequest updateProfileRequest) {
-        return profileService.updateNickname(updateProfileRequest);
-    }
-
-    public ProfileResponse updateIntroduce(UpdateProfileRequest updateProfileRequest) {
-        return profileService.updateIntroduce(updateProfileRequest);
+    public ProfileResponse updateNicknameAndIntroduction(
+            UpdateProfileRequest updateProfileRequest) {
+        return profileService.updateNicknameAndIntroduction(updateProfileRequest);
     }
 
     public boolean updateFollow(FollowRequest followRequest) {
