@@ -3,6 +3,9 @@ package invincibleDevs.bookpago.review;
 import invincibleDevs.bookpago.profile.model.Profile;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +24,19 @@ public class ReviewService {
             throw new IllegalArgumentException(
                     "Unsupported type for conversion to Long: " + obj.getClass().getName());
         }
+    }
+
+    public Page<ReviewDto> getBookReviews(Long isbn, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Review> reviews = reviewRepository.findByIsbn(isbn, pageable);
+
+        return reviews.map(review -> new ReviewDto(
+                review.getId(),
+                review.getRating(),
+                review.getContent(),
+                review.getProfile().getNickName()
+        ));
     }
 
     public List<Review> getMyReviews(Profile profile, Long lastBookId, int size) {
