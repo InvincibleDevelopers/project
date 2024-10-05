@@ -42,20 +42,36 @@ public class ProfileFacade {
     private final BookService bookService;
 
 
-    public Map<Boolean, Object> getProfile(ProfileRequest profileRequest, Long currentUserKakaoId,
+    public Map<String, Object> getProfile(ProfileRequest profileRequest, Long currentUserKakaoId,
             int page, int size) {
         Profile profile = profileService.getProfile(profileRequest);
         Profile currentProfile = profileService.findProfilebyUser(
                 userEntityService.findByKakaoId(currentUserKakaoId));
         boolean isFollowing = isFollowing(currentProfile, profile);
 
-        Map<Boolean, Object> responseMap = new HashMap<>();
-        responseMap.put(isFollowing,
-                new ProfileResponse(profile.getUserEntity().getKakaoId(), profile.getNickName(),
-                        profile.getIntroduce(), profile.getProfileImgUrl(),
-                        profile.getWishIsbnList(), Optional.ofNullable(
-                        readingClubMapService.getUserClubs(profile, page,
-                                size)))); // true일 때 ProfileResponse 저장
+        Map<String, Object> responseMap = new HashMap<>();
+
+        // "isFollow" 키에 boolean 값을 저장
+        responseMap.put("isFollow", isFollowing);
+
+// "profile" 키에 ProfileResponse 객체 저장
+        responseMap.put("profile",
+                new ProfileResponse(
+                        profile.getUserEntity().getKakaoId(),
+                        profile.getNickName(),
+                        profile.getIntroduce(),
+                        profile.getProfileImgUrl(),
+                        profile.getWishIsbnList(),
+                        Optional.ofNullable(readingClubMapService.getUserClubs(profile, page, size))
+                )
+        );
+
+//        responseMap.put(isFollowing,
+//                new ProfileResponse(profile.getUserEntity().getKakaoId(), profile.getNickName(),
+//                        profile.getIntroduce(), profile.getProfileImgUrl(),
+//                        profile.getWishIsbnList(), Optional.ofNullable(
+//                        readingClubMapService.getUserClubs(profile, page,
+//                                size)))); // true일 때 ProfileResponse 저장
 
         return responseMap;
     }

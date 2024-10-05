@@ -34,6 +34,34 @@ public class ReviewService {
         }
     }
 
+    public Review addReview(Profile profile, ReviewRequest reviewRequest) {
+        Review review = Review.builder()
+                              .rating(reviewRequest.rating())
+                              .content(reviewRequest.content())
+                              .isbn(reviewRequest.isbn())
+                              .profile(profile)
+                              .build();
+        return reviewRepository.save(review);
+    }
+
+    public Review updateReview(Profile profile, ReviewRequest reviewRequest) {
+        Review review = reviewRepository.findById(reviewRequest.reviewId()
+                                                               .orElseThrow())
+                                        .orElseThrow();
+        Review updatedReview = review.toBuilder()
+                                     .rating(reviewRequest.rating())
+                                     .content(reviewRequest.content())
+                                     .build();
+        return reviewRepository.save(updatedReview);
+    }
+
+    public void deleteReview(Profile profile, ReviewRequest reviewRequest) {
+        Review review = reviewRepository.findById(reviewRequest.reviewId()
+                                                               .orElseThrow())
+                                        .orElseThrow();
+        reviewRepository.delete(review);
+    }
+
 //    public List<BookDTO> getMyWishBooks(Profile profile, Long lastBookId, int size) {
 //        List<Long> myWishBookisbn = profile.getWishIsbnList();
 //        if (lastBookId == null) {

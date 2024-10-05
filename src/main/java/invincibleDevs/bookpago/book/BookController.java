@@ -1,10 +1,13 @@
 package invincibleDevs.bookpago.book;
 
+import invincibleDevs.bookpago.review.ReviewRequest;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -69,4 +72,48 @@ public class BookController {
     ) {
         return ResponseEntity.ok(bookFacade.addWishBook(wishBookRequest, isbn));
     }
+
+    @PostMapping("/{bookIsbn:\\d+}")
+    public ResponseEntity<?> addReview( //이 api호출엔 항상 요청자 정보받아야됨
+            @ApiParam(value = "책 상세 정보", required = true)
+            @PathVariable("bookIsbn") Long bookIsbn,
+            @RequestBody ReviewRequest reviewRequest
+    ) {
+        try {
+            return ResponseEntity.ok("reviewId : " + bookFacade.addReview(reviewRequest));
+        } catch (Exception e) {
+            // 예외가 발생한 경우 500 Internal Server Error 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PatchMapping("/{bookIsbn:\\d+}")
+    public ResponseEntity<?> updateReview( //이 api호출엔 항상 요청자 정보받아야됨
+            @ApiParam(value = "책 상세 정보", required = true)
+            @PathVariable("bookIsbn") Long bookIsbn,
+            @RequestBody ReviewRequest reviewRequest
+    ) {
+        try {
+            return ResponseEntity.ok(bookFacade.updateReview(reviewRequest));
+        } catch (Exception e) {
+            // 예외가 발생한 경우 500 Internal Server Error 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @DeleteMapping("/{bookIsbn:\\d+}")
+    public ResponseEntity<?> deleteReview( //이 api호출엔 항상 요청자 정보받아야됨
+            @ApiParam(value = "책 상세 정보", required = true)
+            @PathVariable("bookIsbn") Long bookIsbn,
+            @RequestBody ReviewRequest reviewRequest
+    ) {
+        try {
+            return ResponseEntity.ok(bookFacade.deleteReview(reviewRequest));
+        } catch (Exception e) {
+            // 예외가 발생한 경우 500 Internal Server Error 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
 }

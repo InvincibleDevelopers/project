@@ -48,6 +48,9 @@ public class ProfileService {
 
     public Profile getProfile(ProfileRequest profileRequest) {
         try {
+
+            System.out.println("############################");
+            System.out.println(profileRequest.kakaoId());
             UserEntity userEntity = userRepository.findByKakaoId(
                     profileRequest.kakaoId()); //요청프로필
             Profile profile = findProfilebyUser(userEntity);
