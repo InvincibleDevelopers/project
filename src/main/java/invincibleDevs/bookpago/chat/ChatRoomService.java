@@ -1,8 +1,8 @@
 package invincibleDevs.bookpago.chat;
 
 import invincibleDevs.bookpago.Users.service.UserEntityService;
+import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.service.ProfileService;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -2,8 +2,8 @@ package invincibleDevs.bookpago.book;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.service.UserEntityService;
+import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

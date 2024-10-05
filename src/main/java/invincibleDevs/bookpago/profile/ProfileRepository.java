@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.profile.repository;
+package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.profile.model.Profile;
 import java.util.Optional;

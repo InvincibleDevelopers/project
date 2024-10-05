@@ -1,7 +1,6 @@
-package invincibleDevs.bookpago.profile.controller;
+package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.book.BookDTO;
-import invincibleDevs.bookpago.profile.facade.ProfileFacade;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;

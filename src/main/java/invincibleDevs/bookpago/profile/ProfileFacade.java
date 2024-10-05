@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.profile.facade;
+package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.service.UserEntityService;
@@ -14,7 +14,6 @@ import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
-import invincibleDevs.bookpago.profile.service.ProfileService;
 import invincibleDevs.bookpago.readingClub.service.ReadingClubMapService;
 import invincibleDevs.bookpago.review.MyReviewDto;
 import invincibleDevs.bookpago.review.Review;
@@ -43,22 +42,20 @@ public class ProfileFacade {
     private final BookService bookService;
 
 
-    public Map<Boolean, Object> getProfile(ProfileRequest profileRequest,
-            Long currentUserKakaoId,
-            int page,
-            int size) {
+    public Map<Boolean, Object> getProfile(ProfileRequest profileRequest, Long currentUserKakaoId,
+            int page, int size) {
         Profile profile = profileService.getProfile(profileRequest);
         Profile currentProfile = profileService.findProfilebyUser(
                 userEntityService.findByKakaoId(currentUserKakaoId));
         boolean isFollowing = isFollowing(currentProfile, profile);
 
         Map<Boolean, Object> responseMap = new HashMap<>();
-        responseMap.put(isFollowing, new ProfileResponse(profile.getUserEntity().getKakaoId(),
-                profile.getNickName(),
-                profile.getIntroduce(),
-                profile.getProfileImgUrl(), profile.getWishIsbnList(),
-                Optional.ofNullable(readingClubMapService.getUserClubs(profile, page,
-                        size)))); // true일 때 ProfileResponse 저장
+        responseMap.put(isFollowing,
+                new ProfileResponse(profile.getUserEntity().getKakaoId(), profile.getNickName(),
+                        profile.getIntroduce(), profile.getProfileImgUrl(),
+                        profile.getWishIsbnList(), Optional.ofNullable(
+                        readingClubMapService.getUserClubs(profile, page,
+                                size)))); // true일 때 ProfileResponse 저장
 
         return responseMap;
     }
@@ -118,16 +115,10 @@ public class ProfileFacade {
         List<MyReviewDto> myReviewDtoList = new ArrayList<>();
         for (Review review : myReviews) {
             BookDetailDTO bookDetailDTO = bookService.getBookInfo(review.getIsbn());
-            MyReviewDto myReviewDto = new MyReviewDto(
-                    bookDetailDTO.getImage(),
-                    bookDetailDTO.getTitle(),
-                    bookDetailDTO.getAuthor(),
-                    review.getId(),
-                    review.getContent(),
-                    review.getIsbn(),
-                    review.getRating(),
-                    review.getProfile().getUserEntity().getKakaoId()
-            );
+            MyReviewDto myReviewDto = new MyReviewDto(bookDetailDTO.getImage(),
+                    bookDetailDTO.getTitle(), bookDetailDTO.getAuthor(), review.getId(),
+                    review.getContent(), review.getIsbn(), review.getRating(),
+                    review.getProfile().getUserEntity().getKakaoId());
             // 생성된 MyReviewDto를 리스트에 추가
             myReviewDtoList.add(myReviewDto);
         }
@@ -143,12 +134,8 @@ public class ProfileFacade {
         List<BookDTO> wishBooks = new ArrayList<>();
         for (Long isbn : isbnList) {
             BookDetailDTO bookDetailDTO = bookService.getBookInfo(isbn);
-            BookDTO bookDto = new BookDTO(
-                    bookDetailDTO.getIsbn(),
-                    bookDetailDTO.getTitle(),
-                    bookDetailDTO.getAuthor(),
-                    bookDetailDTO.getImage()
-            );
+            BookDTO bookDto = new BookDTO(bookDetailDTO.getIsbn(), bookDetailDTO.getTitle(),
+                    bookDetailDTO.getAuthor(), bookDetailDTO.getImage());
             wishBooks.add(bookDto);
         }
         return wishBooks;
