@@ -4,8 +4,8 @@ import java.util.List;
 
 public record ReadingClubMapRequest(
         Long kakaoId,
-        List<Long> memberIds,
-        List<Long> applicantIds
+        List<Long> members,
+        List<Long> applicants
 
 ) {
 }

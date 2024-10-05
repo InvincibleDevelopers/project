@@ -40,7 +40,7 @@ public class ReadingClubFacade {
         List<ReadingClubDto> clubDtos = readingClubsPage.getContent().stream()
                                                         .map(readingClub -> new ReadingClubDto(
                                                                 readingClub.getId(),
-                                                                readingClub.getClubMembers().size(),
+                                                                readingClubService.getMemberCount(readingClub),
                                                                 readingClub.getClubName(),
                                                                 readingClub.getLocation(),
                                                                 readingClub.getDescription(),
@@ -58,7 +58,7 @@ public class ReadingClubFacade {
         // ReadingClubMap의 갯수 구하기
         return new ReadingClubDto(
                 readingClub.getId(),
-                readingClub.getClubMembers().size(),
+                readingClubService.getMemberCount(readingClub),
                 readingClub.getClubName(),
                 readingClub.getLocation(),
                 readingClub.getDescription(),
@@ -78,7 +78,7 @@ public class ReadingClubFacade {
                         readingClub)); // 단일 ReadingClubMap 객체를 Set에 추가
 
         ReadingClubDto readingClubDto = new ReadingClubDto(
-                readingClub.getId(), clubMembers.size(),
+                readingClub.getId(), readingClubService.getMemberCount(readingClub),
                 readingClubRequest.clubName(), readingClubRequest.location(),
                 readingClubRequest.description(), readingClubRequest.time(),
                 readingClubRequest.repeatCycle(), readingClubRequest.weekDay()
@@ -100,7 +100,6 @@ public class ReadingClubFacade {
             return response;
         }
 
-        System.out.println(applicant.getId() + " " + readingClub.getId());
         readingClubMapService.create_applicant(applicant, readingClub);
 
         response.put("success", true);
@@ -139,7 +138,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long memberId : readingClubMapRequest.memberIds()) {
+        for (Long memberId : readingClubMapRequest.members()) {
             Profile member = profileService.findByKakaoId(memberId);
             Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndMember(
                     clubId, member);
@@ -162,7 +161,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long applicantId : readingClubMapRequest.applicantIds()) {
+        for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
             Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(
                     clubId, applicant);
@@ -185,7 +184,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long applicantId : readingClubMapRequest.applicantIds()) {
+        for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
             Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(
                     clubId, applicant);
@@ -199,5 +198,10 @@ public class ReadingClubFacade {
 
         response.put("success", true);
         return response;
+    }
+
+    public Page<ReadingClubDto> getUserClubs(Long kakaoId, int page, int size) {
+        Profile user = profileService.findByKakaoId(kakaoId);
+        return readingClubMapService.getUserClubs(user, page, size);
     }
 }
