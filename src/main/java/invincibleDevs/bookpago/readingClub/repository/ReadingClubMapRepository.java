@@ -30,4 +30,16 @@ public interface ReadingClubMapRepository extends JpaRepository<ReadingClubMap,L
     // 특정 독서 모임(clubId)에서 특정 프로필이 clubApplicant로 있는지 확인
     @Query("SELECT rc FROM ReadingClubMap rc WHERE rc.readingClub.id = :clubId AND rc.clubApplicant = :profile")
     Optional<ReadingClubMap> findByIdAndApplicant(@Param("clubId") Long clubId, @Param("profile") Profile profile);
+
+    // 특정 독서 모임(clubId)에서 멤버 리스트 조회
+    @Query("SELECT rc FROM ReadingClubMap rc WHERE rc.readingClub.id = :clubId AND rc.clubMember IS NOT NULL")
+    List<ReadingClubMap> findMembersByClubId(@Param("clubId") Long clubId);
+
+    // 특정 독서 모임(clubId)에서 대기자 리스트 조회
+    @Query("SELECT rc FROM ReadingClubMap rc WHERE rc.readingClub.id = :clubId AND rc.clubApplicant IS NOT NULL")
+    List<ReadingClubMap> findApplicantsByClubId(@Param("clubId") Long clubId);
+
+    // 특정 독서 모임(clubId)에서 관리자 조회
+    @Query("SELECT rc FROM ReadingClubMap rc WHERE rc.readingClub.id = :clubId AND rc.clubAdmin IS NOT NULL")
+    Optional<ReadingClubMap> findAdminByClubId(@Param("clubId") Long clubId);
 }
