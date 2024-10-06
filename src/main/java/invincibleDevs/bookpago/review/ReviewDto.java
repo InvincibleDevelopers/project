@@ -1,10 +1,14 @@
 package invincibleDevs.bookpago.review;
 
+import java.util.Optional;
+
 public record ReviewDto(
         Long id,
         double rating,
         String content,
-        String nickname
+        String nickname,
+        Optional<Boolean> isLiked
+
 ) {
 
 }

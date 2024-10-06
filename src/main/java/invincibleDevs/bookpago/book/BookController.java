@@ -37,12 +37,10 @@ public class BookController {
             @ApiParam(value = "책 상세 정보", required = true)
             @PathVariable("bookIsbn") Long bookIsbn,
             @ApiParam(value = "kakaoId", required = true) // 설명 추가
-            @RequestParam(name = "kakaoId") Long kakaoId,
-            @RequestParam(value = "page") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size
+            @RequestParam(name = "kakaoId") Long kakaoId
     ) {
         try {
-            return ResponseEntity.ok(bookFacade.getBookInfoResponse(bookIsbn, kakaoId, page, size));
+            return ResponseEntity.ok(bookFacade.getBookInfoResponse(bookIsbn, kakaoId));
         } catch (Exception e) {
             // 예외가 발생한 경우 500 Internal Server Error 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
