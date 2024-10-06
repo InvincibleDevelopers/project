@@ -47,7 +47,7 @@ public class DummyDataInitializer {
     @Transactional
     public CommandLineRunner loadDummyData() {
         return args -> {
-            int numberOfDummyData = 1; // 생성할 더미 데이터 개수
+            int numberOfDummyData = 0; // 생성할 더미 데이터 개수
 
             // 1. UserEntity 및 Profile 생성
             List<Profile> profiles = generateUserAndProfileData(numberOfDummyData);
