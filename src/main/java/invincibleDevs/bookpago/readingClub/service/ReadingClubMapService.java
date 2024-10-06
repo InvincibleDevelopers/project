@@ -1,12 +1,16 @@
 package invincibleDevs.bookpago.readingClub.service;
 
 import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.readingClub.ProfileDTO;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMapRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -89,5 +93,53 @@ public class ReadingClubMapService {
                                                       .readingClub(readingClub)
                                                       .build();
         return readingClubMapRepository.save(readingClubMap);
+    }
+
+    public List<ProfileDTO> getMemberProfiles(Long clubId) {
+        List<ProfileDTO> memberProfiles = new ArrayList<>();
+
+        // 관리자 정보를 맴버 리스트에 추가
+        Optional<ReadingClubMap> adminMapOptional = readingClubMapRepository.findAdminByClubId(clubId);
+        if (adminMapOptional.isPresent()) {
+            Profile adminProfile = adminMapOptional.get().getClubAdmin();
+            ProfileDTO adminDto = new ProfileDTO(
+                    adminProfile.getUserEntity().getKakaoId(),
+                    adminProfile.getNickName(),
+                    adminProfile.getProfileImgUrl()
+            );
+            memberProfiles.add(adminDto);
+        }
+
+        // 맴버 정보를 맴버 리스트에 추가
+        List<ReadingClubMap> memberMaps = readingClubMapRepository.findMembersByClubId(clubId);
+        for (ReadingClubMap memberMap : memberMaps) {
+            Profile memberProfile = memberMap.getClubMember();
+            ProfileDTO memberDto = new ProfileDTO(
+                    memberProfile.getUserEntity().getKakaoId(),
+                    memberProfile.getNickName(),
+                    memberProfile.getProfileImgUrl()
+            );
+            memberProfiles.add(memberDto);
+        }
+
+        return memberProfiles;
+    }
+
+    public List<ProfileDTO> getApplicantProfiles(Long clubId) {
+        List<ProfileDTO> applicantProfiles = new ArrayList<>();
+
+        // 맴버 정보를 맴버 리스트에 추가
+        List<ReadingClubMap> applicantMaps = readingClubMapRepository.findApplicantsByClubId(clubId);
+        for (ReadingClubMap applicantMap : applicantMaps) {
+            Profile applicantProfile = applicantMap.getClubApplicant();
+            ProfileDTO applicantDto = new ProfileDTO(
+                    applicantProfile.getUserEntity().getKakaoId(),
+                    applicantProfile.getNickName(),
+                    applicantProfile.getProfileImgUrl()
+            );
+            applicantProfiles.add(applicantDto);
+        }
+
+        return applicantProfiles;
     }
 }

@@ -5,6 +5,7 @@ import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
+import invincibleDevs.bookpago.readingClub.dto.ReadingClubResponse;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMapRepository;
@@ -52,19 +53,25 @@ public class ReadingClubFacade {
         return new PageImpl<>(clubDtos, pageable, readingClubsPage.getTotalElements());
     }
 
-    public ReadingClubDto getClub(Long clubId) {
+    public ReadingClubResponse getClub(Long clubId) {
         ReadingClub readingClub = readingClubService.findById(clubId);
+        Optional<ReadingClubMap> adminMapOptional = readingClubMapRepository.findAdminByClubId(clubId);
+        Long adminId = 0L;
+        if (adminMapOptional.isPresent()) { adminId = adminMapOptional.get().getClubAdmin().getUserEntity().getKakaoId(); }
         // Dto 변환 코드 (레코드 타입 사용)
         // ReadingClubMap의 갯수 구하기
-        return new ReadingClubDto(
+        return new ReadingClubResponse(
                 readingClub.getId(),
+                adminId,
                 readingClubService.getMemberCount(readingClub),
                 readingClub.getClubName(),
                 readingClub.getLocation(),
                 readingClub.getDescription(),
                 readingClub.getTime(),
                 readingClub.getRepeatCycle(),
-                readingClub.getWeekDay()
+                readingClub.getWeekDay(),
+                readingClubMapService.getMemberProfiles(clubId),
+                readingClubMapService.getApplicantProfiles(clubId)
         );
     }
 
