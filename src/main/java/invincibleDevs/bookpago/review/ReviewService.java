@@ -2,6 +2,7 @@ package invincibleDevs.bookpago.review;
 
 import invincibleDevs.bookpago.profile.model.Profile;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,17 +27,31 @@ public class ReviewService {
         }
     }
 
-    public Page<ReviewDto> getBookReviews(Long isbn, int page, int size) {
+    public Page<Review> getBookReviews(Long isbn, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Review> reviews = reviewRepository.findByIsbn(isbn, pageable);
+        return reviews;
+    }
+
+
+    public List<Long> getBookReviewsIdList(Long isbn, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         Page<Review> reviews = reviewRepository.findByIsbn(isbn, pageable);
 
-        return reviews.map(review -> new ReviewDto(
-                review.getId(),
-                review.getRating(),
-                review.getContent(),
-                review.getProfile().getNickName()
-        ));
+        // 리뷰 ID 목록을 추출합니다.
+        List<Long> reviewIds = reviews.stream()
+                                      .map(Review::getId)
+                                      .collect(Collectors.toList());
+        return reviewIds;
+//        return reviews.map(review -> new ReviewDto(
+//                review.getId(),
+//                review.getRating(),
+//                review.getContent(),
+//                review.getProfile().getNickName(),
+//                Optional.of(false)
+//        ));
     }
 
     public List<Review> getMyReviews(Profile profile, Long lastBookId, int size) {
@@ -76,6 +91,10 @@ public class ReviewService {
                                                                .orElseThrow())
                                         .orElseThrow();
         reviewRepository.delete(review);
+    }
+
+    public Review getReview(Long id) {
+        return reviewRepository.findById(id).get();
     }
 
 //    public List<BookDTO> getMyWishBooks(Profile profile, Long lastBookId, int size) {

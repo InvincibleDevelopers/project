@@ -4,12 +4,9 @@ import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.service.UserEntityService;
 import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.review.ReviewDto;
 import invincibleDevs.bookpago.review.ReviewRequest;
 import invincibleDevs.bookpago.review.ReviewService;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,19 +19,13 @@ public class BookFacade {
     private final ReviewService reviewService;
 
 
-    public BookDetailDTO getBookInfoResponse(Long bookIsbn, Long kakaoId, int page, int size) {
+    public BookDetailDTO getBookInfoResponse(Long bookIsbn, Long kakaoId) {
         UserEntity user = userEntityService.findByKakaoId(kakaoId);
         Profile siteUser = profileService.findProfilebyUser(user);
         BookDetailDTO bookDetailDTO = bookService.getBookInfo(bookIsbn);
         if (profileService.existsIsbnInWishList(siteUser.getUserEntity().getKakaoId(), bookIsbn)) {
             bookDetailDTO.setWishBook(true);
         }
-
-        // 리뷰 페이징 처리해서 가져오기
-        Page<ReviewDto> reviews = reviewService.getBookReviews(bookIsbn, page, size);
-
-        // 책 상세 정보 DTO에 리뷰 리스트 추가
-        bookDetailDTO.setReviews(Optional.ofNullable(reviews));
 
         return bookDetailDTO;
     }

@@ -2,9 +2,9 @@ package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.mapper.model.FollowingMap;
-import invincibleDevs.bookpago.mapper.model.ReviewLikesMap;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.review.Review;
+import invincibleDevs.bookpago.review.ReviewLike;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -69,7 +69,7 @@ public class Profile {
     private Set<FollowingMap> followeeMaps;
 
     @OneToMany(mappedBy = "profile")
-    private List<ReviewLikesMap> reviewLikesMaps;
+    private List<ReviewLike> reviewLikesMaps;
 
 //    @OneToOne
 //    private Calendar calendar;
