@@ -1,7 +1,7 @@
 package invincibleDevs.bookpago.readingClub.service;
 
+import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.service.ProfileService;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
@@ -10,8 +10,12 @@ import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMapRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubRepository;
-
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -77,7 +81,8 @@ public class ReadingClubFacade {
         Set<ReadingClubMap> clubMembers = new HashSet<>();
         ReadingClub readingClub = readingClubService.createClub(readingClubRequest, clubMembers);
         clubMembers.add(
-                readingClubMapService.create_admin(admin, readingClub)); // 단일 ReadingClubMap 객체를 Set에 추가
+                readingClubMapService.create_admin(admin,
+                        readingClub)); // 단일 ReadingClubMap 객체를 Set에 추가
 
         ReadingClubDto readingClubDto = new ReadingClubDto(
                 readingClub.getId(), readingClubService.getMemberCount(readingClub),
@@ -108,11 +113,13 @@ public class ReadingClubFacade {
         return response;
     }
 
-    public Map<String, Boolean> leaveClub(Long clubId, ReadingClubMapRequest readingClubMapRequest) {
+    public Map<String, Boolean> leaveClub(Long clubId,
+            ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
 
         Profile user = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
-        Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndMember(clubId, user);
+        Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndMember(
+                clubId, user);
         // 독서 모임의 멤버나 대기자가 아님
         if (clubMapOptional.isEmpty()) {
             clubMapOptional = readingClubMapRepository.findByIdAndApplicant(clubId, user);
@@ -128,7 +135,8 @@ public class ReadingClubFacade {
         return response;
     }
 
-    public Map<String, Boolean> banishClub(Long clubId, ReadingClubMapRequest readingClubMapRequest) {
+    public Map<String, Boolean> banishClub(Long clubId,
+            ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
 
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
@@ -139,16 +147,19 @@ public class ReadingClubFacade {
         }
         for (Long memberId : readingClubMapRequest.members()) {
             Profile member = profileService.findByKakaoId(memberId);
-            Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndMember(clubId, member);
-            if (clubMapOptional.isPresent())
+            Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndMember(
+                    clubId, member);
+            if (clubMapOptional.isPresent()) {
                 readingClubMapRepository.delete(clubMapOptional.get());
+            }
         }
 
         response.put("success", true);
         return response;
     }
 
-    public Map<String, Boolean> rejectApplicants(Long clubId, ReadingClubMapRequest readingClubMapRequest) {
+    public Map<String, Boolean> rejectApplicants(Long clubId,
+            ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
 
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
@@ -159,16 +170,19 @@ public class ReadingClubFacade {
         }
         for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
-            Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(clubId, applicant);
-            if (clubMapOptional.isPresent())
+            Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(
+                    clubId, applicant);
+            if (clubMapOptional.isPresent()) {
                 readingClubMapRepository.delete(clubMapOptional.get());
+            }
         }
 
         response.put("success", true);
         return response;
     }
 
-    public Map<String, Boolean> acceptApplicants(Long clubId, ReadingClubMapRequest readingClubMapRequest) {
+    public Map<String, Boolean> acceptApplicants(Long clubId,
+            ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
 
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
@@ -179,7 +193,8 @@ public class ReadingClubFacade {
         }
         for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
-            Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(clubId, applicant);
+            Optional<ReadingClubMap> clubMapOptional = readingClubMapRepository.findByIdAndApplicant(
+                    clubId, applicant);
             if (clubMapOptional.isPresent()) {
                 ReadingClubMap clubMap = clubMapOptional.get();
                 clubMap.setClubMember(applicant);

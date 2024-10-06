@@ -1,7 +1,6 @@
-package invincibleDevs.bookpago.profile.controller;
+package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.book.BookDTO;
-import invincibleDevs.bookpago.profile.facade.ProfileFacade;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
@@ -34,34 +33,25 @@ public class ProfileController {
     @GetMapping("/{kakaoId}")
     public ResponseEntity<?> profilePage(
             @PathVariable(value = "kakaoId") Long kakaoId,
-            @RequestParam(value = "currentUserKakaoId") Long currentUserKakaoId,
-            @RequestParam(value = "page", defaultValue = "0") int page,  // 쿼리 파라미터로 페이지 번호를 받음
-            @RequestParam(value = "size", defaultValue = "5") int size) { // 쿼리 파라미터로 페이지 크기를 받음
+            @RequestParam(value = "currentUserKakaoId") Long currentUserKakaoId) { // 쿼리 파라미터로 페이지 크기를 받음
 
         ProfileRequest profileRequest = new ProfileRequest(kakaoId);
         return ResponseEntity.ok(
-                profileFacade.getProfile(profileRequest, currentUserKakaoId, page, size));
+                profileFacade.getProfile(profileRequest, currentUserKakaoId, 0, Integer.MAX_VALUE));
     }
 
     @PatchMapping("/image")
-    public ResponseEntity<ProfileResponse> updateProfileImage(
+    public ResponseEntity<?> updateProfileImage(
             @ModelAttribute UpdateProfileRequest updateProfileRequest) {
         MultipartFile file = updateProfileRequest.file().orElseThrow();
         return ResponseEntity.ok(profileFacade.updateProfileImage(file, updateProfileRequest));
     }
 
-    @PatchMapping("/nickname")
+    @PatchMapping("/{kakaoId}")
     public ResponseEntity<ProfileResponse> updateNickname(
-            @ApiParam(value = "변경할 닉네임", required = true)
+            @ApiParam(value = "변경할 닉네임, 소개글", required = true)
             @RequestBody UpdateProfileRequest updateProfileRequest) {
-        return ResponseEntity.ok(profileFacade.updateNickname(updateProfileRequest));
-    }
-
-    @PatchMapping("/introduce")
-    public ResponseEntity<ProfileResponse> updateIntroduce(
-            @ApiParam(value = "변경할 소개글", required = true)
-            @RequestBody UpdateProfileRequest updateProfileRequest) {
-        return ResponseEntity.ok(profileFacade.updateIntroduce(updateProfileRequest));
+        return ResponseEntity.ok(profileFacade.updateNicknameAndIntroduction(updateProfileRequest));
     }
 
     @PostMapping("/follow")

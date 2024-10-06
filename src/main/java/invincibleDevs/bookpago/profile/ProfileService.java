@@ -1,11 +1,10 @@
-package invincibleDevs.bookpago.profile.service;
+package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.common.Utils;
 import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
@@ -82,7 +81,8 @@ public class ProfileService {
         }
     }
 
-    public ProfileResponse updateNickname(UpdateProfileRequest updateProfileRequest) {
+    public ProfileResponse updateNicknameAndIntroduction(
+            UpdateProfileRequest updateProfileRequest) {
         try {
             UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
 
@@ -96,41 +96,17 @@ public class ProfileService {
                                                                          orElseThrow(
                                                                                  () -> new IllegalArgumentException(
                                                                                          "변경값 필수")))
-                                           .build();
-            profileRepository.save(updateProfile);
-            return new ProfileResponse(updateProfile.getUserEntity().getKakaoId(),
-                    updateProfile.getNickName(),
-                    updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
-                    updateProfile.getWishIsbnList(), null);
-
-        } catch (CustomException e) {
-            return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
-        }
-    }
-
-    public ProfileResponse updateIntroduce(UpdateProfileRequest updateProfileRequest) {
-        try {
-//            String username = Utils.getAuthenticatedUsername();
-            UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
-
-            Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
-                                               .orElseThrow(() -> new NoSuchElementException(
-                                                       "Profile with username :"
-                                                               + updateProfileRequest.kakaoId()
-                                                               + "- not found"));
-
-            Profile updateProfile = profile.toBuilder()
-                                           .introduce(updateProfileRequest.introduce().
-                                                                          orElseThrow(
+                                           .introduce(updateProfileRequest.introduce()
+                                                                          .orElseThrow(
                                                                                   () -> new IllegalArgumentException(
-                                                                                          "변경값 필수")))
+                                                                                          "변경 소개글 필수")))
                                            .build();
-
             profileRepository.save(updateProfile);
             return new ProfileResponse(updateProfile.getUserEntity().getKakaoId(),
                     updateProfile.getNickName(),
                     updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
                     updateProfile.getWishIsbnList(), null);
+
         } catch (CustomException e) {
             return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
         }

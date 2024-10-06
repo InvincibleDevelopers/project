@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,39 +27,28 @@ public class ReadingClubMapService {
 
     public Page<ReadingClubDto> getUserClubs(Profile profile, int page, int size) {
         // 관리자와 멤버로 검색하여 리스트 가져오기
-        List<ReadingClubMap> adminClubs = readingClubMapRepository.findByClubAdmin(profile);
-        List<ReadingClubMap> memberClubs = readingClubMapRepository.findByClubMember(profile);
-
-        // 두 리스트를 합치기 위해 새로운 리스트 생성
+        List<Long> clubIds = readingClubMapRepository.findDistinctReadingClubIdsByClubAdminOrClubMember(
+                profile);
+        System.out.println("%%%%%%%%%%%%%%");
+        System.out.println(clubIds.size());
+        // ReadingClubDto 리스트 초기화
         List<ReadingClubDto> readingClubDtoList = new ArrayList<>();
+        for (Long clubId : clubIds) {
+            ReadingClub readingClub = readingClubService.findById(clubId);
+            ReadingClubDto readingClubDto = new ReadingClubDto(
+                    readingClub.getId(),
+                    readingClub.getClubMembers().size(),
+                    readingClub.getClubName(),
+                    readingClub.getLocation(),
+                    readingClub.getDescription(),
+                    readingClub.getTime(),
+                    readingClub.getRepeatCycle(),
+                    readingClub.getWeekDay()
+            );
+            readingClubDtoList.add(readingClubDto);
 
-        // adminClubs 리스트를 Dto로 변환 후 추가
-        readingClubDtoList.addAll(adminClubs.stream()
-                                            .map(club -> new ReadingClubDto(
-                                                    club.getReadingClub().getId(),
-                                                    readingClubService.getMemberCount(club.getReadingClub()),
-                                                    club.getReadingClub().getClubName(),
-                                                    club.getReadingClub().getLocation(),
-                                                    club.getReadingClub().getDescription(),
-                                                    club.getReadingClub().getTime(),
-                                                    club.getReadingClub().getRepeatCycle(),
-                                                    club.getReadingClub().getWeekDay()))
-                                            .collect(Collectors.toList()));
+        }
 
-        // memberClubs 리스트를 Dto로 변환 후 추가
-        readingClubDtoList.addAll(memberClubs.stream()
-                                             .map(club -> new ReadingClubDto(
-                                                     club.getReadingClub().getId(),
-                                                     readingClubService.getMemberCount(club.getReadingClub()),
-                                                     club.getReadingClub().getClubName(),
-                                                     club.getReadingClub().getLocation(),
-                                                     club.getReadingClub().getDescription(),
-                                                     club.getReadingClub().getTime(),
-                                                     club.getReadingClub().getRepeatCycle(),
-                                                     club.getReadingClub().getWeekDay()))
-                                             .collect(Collectors.toList()));
-
-        // 페이징 정보 설정
         Pageable pageable = PageRequest.of(page, size);
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), readingClubDtoList.size());
@@ -67,10 +57,10 @@ public class ReadingClubMapService {
         List<ReadingClubDto> content = (start > readingClubDtoList.size())
                 ? new ArrayList<>()
                 : readingClubDtoList.subList(start, end);
-        System.out.println(content.size());
 
         // 페이징된 결과 리스트 반환
-        return new PageImpl<>(content);
+        return new PageImpl<>(content, pageable, readingClubDtoList.size());
+
     }
 
     public ReadingClubMap create_admin(Profile admin, ReadingClub readingClub) {
@@ -83,25 +73,25 @@ public class ReadingClubMapService {
 
     public ReadingClubMap create_applicant(Profile applicant, ReadingClub readingClub) {
         ReadingClubMap readingClubMap = ReadingClubMap.builder()
-                .clubApplicant(applicant)
-                .readingClub(readingClub)
-                .build();
+                                                      .clubApplicant(applicant)
+                                                      .readingClub(readingClub)
+                                                      .build();
         return readingClubMapRepository.save(readingClubMap);
     }
 
     public ReadingClubMap create_member(Profile member, ReadingClub readingClub) {
         ReadingClubMap readingClubMap = ReadingClubMap.builder()
-                .clubMember(member)
-                .readingClub(readingClub)
-                .build();
+                                                      .clubMember(member)
+                                                      .readingClub(readingClub)
+                                                      .build();
         return readingClubMapRepository.save(readingClubMap);
     }
 
     public ReadingClubMap delete(Profile admin, ReadingClub readingClub) {
         ReadingClubMap readingClubMap = ReadingClubMap.builder()
-                .clubAdmin(admin)
-                .readingClub(readingClub)
-                .build();
+                                                      .clubAdmin(admin)
+                                                      .readingClub(readingClub)
+                                                      .build();
         return readingClubMapRepository.save(readingClubMap);
     }
 

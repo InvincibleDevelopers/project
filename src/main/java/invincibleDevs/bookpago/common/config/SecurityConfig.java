@@ -7,7 +7,6 @@ import invincibleDevs.bookpago.common.JWTFilter;
 import invincibleDevs.bookpago.common.JWTUtil;
 import invincibleDevs.bookpago.common.LoginFilter;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.Arrays;
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -64,8 +63,7 @@ public class SecurityConfig {
                                     HttpServletRequest request) {
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 configuration.setAllowedOrigins(
-                                        Arrays.asList("http://localhost:3000",
-                                                "http://127.0.0.1:5500"));  // 여러 도메인 허용
+                                        Collections.singletonList("http://localhost:3000"));
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
                                 configuration.setAllowedHeaders(Collections.singletonList("*"));

@@ -1,75 +1,79 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.3.3'
-	id 'io.spring.dependency-management' version '1.1.6'
+    id 'java'
+    id 'org.springframework.boot' version '3.3.3'
+    id 'io.spring.dependency-management' version '1.1.6'
 }
 
 group = 'invincibleDevs'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	// Spring Boot Web Starter (RestTemplate을 사용하기 위해 필요)
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	//web sockek library
-	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	//Spring Security & JWT
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
-	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
-	implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
-	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
-	testImplementation 'org.springframework.security:spring-security-test'
 
-	//OAuth2 Client
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // Spring Boot Web Starter (RestTemplate을 사용하기 위해 필요)
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    //web sockek library
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-	//git
-	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+    //Spring Security & JWT
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+    testImplementation 'org.springframework.security:spring-security-test'
 
-	//DB
-	runtimeOnly 'com.mysql:mysql-connector-j'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    //OAuth2 Client
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
-	//Swagger
-	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-	implementation 'io.swagger:swagger-annotations:1.6.11'
-	implementation 'io.springfox:springfox-swagger2:3.0.0'
+    //git
+    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 
-	//S3
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-	// AWS SDK S3 모듈 추가
-	implementation 'software.amazon.awssdk:s3:2.20.48'
+    //DB
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    //Swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation 'io.swagger:swagger-annotations:1.6.11'
+    implementation 'io.springfox:springfox-swagger2:3.0.0'
+
+    //S3
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+    // AWS SDK S3 모듈 추가
+    implementation 'software.amazon.awssdk:s3:2.20.48'
+    //java faker
+//    implementation 'com.github.javafaker:javafaker:1.0.2'
 
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 jar {
-	enabled = false
+    enabled = false
 }

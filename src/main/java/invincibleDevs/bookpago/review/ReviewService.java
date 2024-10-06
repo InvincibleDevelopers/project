@@ -3,6 +3,9 @@ package invincibleDevs.bookpago.review;
 import invincibleDevs.bookpago.profile.model.Profile;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,6 +26,19 @@ public class ReviewService {
         }
     }
 
+    public Page<ReviewDto> getBookReviews(Long isbn, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        Page<Review> reviews = reviewRepository.findByIsbn(isbn, pageable);
+
+        return reviews.map(review -> new ReviewDto(
+                review.getId(),
+                review.getRating(),
+                review.getContent(),
+                review.getProfile().getNickName()
+        ));
+    }
+
     public List<Review> getMyReviews(Profile profile, Long lastBookId, int size) {
         if (lastBookId == null) {
             return reviewRepository.findFirstReviewsByLastBookIsbn(
@@ -32,6 +48,34 @@ public class ReviewService {
                     profile.getUserEntity().getKakaoId(),
                     lastBookId, size);
         }
+    }
+
+    public Review addReview(Profile profile, ReviewRequest reviewRequest) {
+        Review review = Review.builder()
+                              .rating(reviewRequest.rating())
+                              .content(reviewRequest.content())
+                              .isbn(reviewRequest.isbn())
+                              .profile(profile)
+                              .build();
+        return reviewRepository.save(review);
+    }
+
+    public Review updateReview(Profile profile, ReviewRequest reviewRequest) {
+        Review review = reviewRepository.findById(reviewRequest.reviewId()
+                                                               .orElseThrow())
+                                        .orElseThrow();
+        Review updatedReview = review.toBuilder()
+                                     .rating(reviewRequest.rating())
+                                     .content(reviewRequest.content())
+                                     .build();
+        return reviewRepository.save(updatedReview);
+    }
+
+    public void deleteReview(Profile profile, ReviewRequest reviewRequest) {
+        Review review = reviewRepository.findById(reviewRequest.reviewId()
+                                                               .orElseThrow())
+                                        .orElseThrow();
+        reviewRepository.delete(review);
     }
 
 //    public List<BookDTO> getMyWishBooks(Profile profile, Long lastBookId, int size) {

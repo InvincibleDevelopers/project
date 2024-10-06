@@ -1,7 +1,7 @@
 package invincibleDevs.bookpago.chat;
 
+import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.service.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

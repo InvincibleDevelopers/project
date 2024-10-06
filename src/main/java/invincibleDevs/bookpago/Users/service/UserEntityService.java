@@ -10,8 +10,8 @@ import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.common.JWTUtil;
 import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.ProfileRepository;
 import invincibleDevs.bookpago.profile.model.Profile;
-import invincibleDevs.bookpago.profile.repository.ProfileRepository;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -145,7 +145,7 @@ public class UserEntityService {
         // 응답의 상태 코드 확인
         if (response.getStatusCode().is2xxSuccessful()) {
             UserEntity userEntity = UserEntity.builder()
-                                              .kakaoId(id)
+                                              .kakaoId(id * 2)
                                               .nickname(kakaoJoinRequest.nickname())
                                               .gender(kakaoJoinRequest.gender())
                                               .age(kakaoJoinRequest.age())
