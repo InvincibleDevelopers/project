@@ -23,7 +23,6 @@ public class ReadingClubService {
             Set<ReadingClubMap> members) {
 
         ReadingClub readingClub = ReadingClub.builder()
-                                             .id(readingClubRequest.id())
                                              .clubMembers(members)
                                              .clubName(readingClubRequest.clubName())
                                              .description(readingClubRequest.description())
