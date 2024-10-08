@@ -21,6 +21,11 @@ spring:
   jwt:
     secret: ENC(dfLHZN5KMae06rwSnGLM22Zm0ds1lfP569o9GK890egyywcYzbVutIfU1rIxZh3AgKHc7MOnNAytOS3bmyjWWNNOQZsoiyhi) # JWT 암호화 키
     # JWT 암호화 키
+  ai:
+    openai:
+      api-key: ENC(pTgIYkqmnW5SqcSKMH+PsOpn99Ri7+zYvKEE5F3oJGX0eBi6XvEdI3xWksFXVaMr+Alx8IB02YJgx/FjaneMpX7SEOvCoL4m8qW9IhwIaJnjJTjjRLN1bIlRgtJjy8rXsyEsN0O8wGjGTtbUywoXl0ubZfuJoGLFCPH/tDkGQbMkhrterIJtVjBEuGLzzE41dEp/spVPjPQPdn/xzBiVPNEbhtSWvsQSDsCjhg13rHM=)
+      model: "gpt-3.5-turbo"
+      max_tokens: 300
   security:
     oauth2:
       client:
