@@ -97,7 +97,7 @@ public class ReviewService {
         return reviewRepository.findById(id).get();
     }
 
-//    public List<BookDTO> getMyWishBooks(Profile profile, Long lastBookId, int size) {
+    //    public List<BookDTO> getMyWishBooks(Profile profile, Long lastBookId, int size) {
 //        List<Long> myWishBookisbn = profile.getWishIsbnList();
 //        if (lastBookId == null) {
 //            // 처음 페이지인 경우, 커서 없이 처음부터 조회
@@ -126,5 +126,12 @@ public class ReviewService {
 //                    .collect(Collectors.toList());
 //        }
 //    }
+    public List<Review> getProfileReviewList(Profile profile) {
+        return reviewRepository.findByProfile(profile);
+    }
 
+
+    public Review findById(Long id) {
+        return reviewRepository.findById(id).get();
+    }
 }

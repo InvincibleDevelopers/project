@@ -2,6 +2,10 @@ package invincibleDevs.bookpago.book;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -11,11 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +40,14 @@ public class BookService {
             JsonNode itemsNode = rootNode.get("items");
 
             if (itemsNode.isEmpty()) {
-                throw new NoSuchElementException("No book found with the provided ISBN in the API response.");
+                throw new NoSuchElementException(
+                        "No book found with the provided ISBN in the API response.");
             }
 
             JsonNode bookNode = itemsNode.get(0);
 
             Book book = bookRepository.findById(bookIsbn)
-                    .orElse(new Book(bookIsbn, (float)0.0));
+                                      .orElse(new Book(bookIsbn, (float) 0.0));
 
             BookDetailDTO bookDetailDTO = new BookDetailDTO();
             bookDetailDTO.setIsbn(book.getIsbn());
@@ -60,7 +60,7 @@ public class BookService {
             bookDetailDTO.setPublisher(bookNode.get("publisher").asText());
 
             return bookDetailDTO;
-        } catch(NoSuchElementException e) {
+        } catch (NoSuchElementException e) {
             throw new NoSuchElementException("Book not found", e);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -122,7 +122,8 @@ public class BookService {
 
             return new BookSearchDTO(total, books);
         } catch (Exception e) {
-            throw new Exception("Error occurred while fetching bestsellers from Aladin API: " + e.getMessage());
+            throw new Exception(
+                    "Error occurred while fetching bestsellers from Aladin API: " + e.getMessage());
         }
     }
 
@@ -145,7 +146,8 @@ public class BookService {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity, String.class);
+        ResponseEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, entity,
+                String.class);
         String responseBody = response.getBody();
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -153,4 +155,14 @@ public class BookService {
         return objectMapper.readTree(responseBody);
     }
 
+    public List<BookDTO> getBookDtoList(List<Long> wishIsbnList) {
+        List<BookDTO> wishBooks = new ArrayList<>();
+        for (Long isbn : wishIsbnList) {
+            BookDetailDTO bookDetailDTO = getBookInfo(isbn);
+            BookDTO bookDto = new BookDTO(bookDetailDTO.getIsbn(), bookDetailDTO.getTitle(),
+                    bookDetailDTO.getAuthor(), bookDetailDTO.getImage());
+            wishBooks.add(bookDto);
+        }
+        return wishBooks;
+    }
 }

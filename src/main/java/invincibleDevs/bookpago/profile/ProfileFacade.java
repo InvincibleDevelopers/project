@@ -17,6 +17,8 @@ import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import invincibleDevs.bookpago.readingClub.service.ReadingClubMapService;
 import invincibleDevs.bookpago.review.MyReviewDto;
 import invincibleDevs.bookpago.review.Review;
+import invincibleDevs.bookpago.review.ReviewDto;
+import invincibleDevs.bookpago.review.ReviewLikeService;
 import invincibleDevs.bookpago.review.ReviewService;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,6 +42,7 @@ public class ProfileFacade {
     private final FollowingMapService followingMapService;
     private final S3Service s3Service;
     private final ReviewService reviewService;
+    private final ReviewLikeService reviewLikeService;
     private final BookService bookService;
 
 
@@ -49,29 +53,43 @@ public class ProfileFacade {
                 userEntityService.findByKakaoId(currentUserKakaoId));
         boolean isFollowing = isFollowing(currentProfile, profile);
 
+        List<Review> profileReviews = reviewService.getProfileReviewList(
+                profile); //null체크를 어디서부터/;;
+        Map<Long, Integer> mostLikedReviewMap = reviewLikeService.findMostLikedReviewMap(
+                profileReviews);
+        Optional<ReviewDto> reviewDtoOptional = Optional.empty(); // 초기에는 Optional.empty()로 설정
+
+        if (!mostLikedReviewMap.isEmpty()) {
+            Long targetId = mostLikedReviewMap.keySet().iterator().next();
+            Review review = reviewService.findById(targetId);
+            boolean isLiked = reviewLikeService.booleanByProfileReview(currentProfile, review);
+            ReviewDto reviewDto = new ReviewDto(review.getId(),
+                    review.getRating(),
+                    review.getContent(),
+                    review.getProfile().getNickName(),
+                    Optional.of(isLiked),
+                    mostLikedReviewMap.get(targetId));
+            reviewDtoOptional = Optional.of(reviewDto); // reviewDto 생성 시 Optional에 담음
+        }
+
         Map<String, Object> responseMap = new HashMap<>();
 
         // "isFollow" 키에 boolean 값을 저장
         responseMap.put("isFollow", isFollowing);
 
-// "profile" 키에 ProfileResponse 객체 저장
+        // "profile" 키에 ProfileResponse 객체 저장
         responseMap.put("profile",
                 new ProfileResponse(
                         profile.getUserEntity().getKakaoId(),
                         profile.getNickName(),
                         profile.getIntroduce(),
                         profile.getProfileImgUrl(),
-                        profile.getWishIsbnList(),
-                        Optional.ofNullable(readingClubMapService.getUserClubs(profile, page, size))
+                        Optional.ofNullable(bookService.getBookDtoList(profile.getWishIsbnList())),
+                        Optional.ofNullable(
+                                readingClubMapService.getUserClubs(profile, page, size)),
+                        reviewDtoOptional
                 )
         );
-
-//        responseMap.put(isFollowing,
-//                new ProfileResponse(profile.getUserEntity().getKakaoId(), profile.getNickName(),
-//                        profile.getIntroduce(), profile.getProfileImgUrl(),
-//                        profile.getWishIsbnList(), Optional.ofNullable(
-//                        readingClubMapService.getUserClubs(profile, page,
-//                                size)))); // true일 때 ProfileResponse 저장
 
         return responseMap;
     }
@@ -80,7 +98,7 @@ public class ProfileFacade {
         return followingMapService.existsByFollowerFollowing(follower, following);
     }
 
-    public ProfileResponse updateProfileImage(MultipartFile file,
+    public ResponseEntity<?> updateProfileImage(MultipartFile file,
             UpdateProfileRequest updateProfileRequest) {
         try {
             String url = s3Service.uploadFile(file);
@@ -95,7 +113,7 @@ public class ProfileFacade {
         s3Service.deleteFile(targetUrl);
     }
 
-    public ProfileResponse updateNicknameAndIntroduction(
+    public ResponseEntity<?> updateNicknameAndIntroduction(
             UpdateProfileRequest updateProfileRequest) {
         return profileService.updateNicknameAndIntroduction(updateProfileRequest);
     }

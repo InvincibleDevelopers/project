@@ -8,7 +8,6 @@ import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
-import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +15,8 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,7 +58,7 @@ public class ProfileService {
         }
     }
 
-    public ProfileResponse updateProfileImage(String url,
+    public ResponseEntity<?> updateProfileImage(String url,
             UpdateProfileRequest updateProfileRequest) {
         try {
             UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
@@ -73,15 +74,13 @@ public class ProfileService {
                                            .build();
 
             profileRepository.save(updateProfile);
-            return new ProfileResponse(updateProfileRequest.kakaoId(), updateProfile.getNickName(),
-                    updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
-                    updateProfile.getWishIsbnList(), null);
+            return ResponseEntity.ok("update image success.");
         } catch (CustomException e) {
-            return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("update image Failed.");
         }
     }
 
-    public ProfileResponse updateNicknameAndIntroduction(
+    public ResponseEntity<?> updateNicknameAndIntroduction(
             UpdateProfileRequest updateProfileRequest) {
         try {
             UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
@@ -102,13 +101,10 @@ public class ProfileService {
                                                                                           "변경 소개글 필수")))
                                            .build();
             profileRepository.save(updateProfile);
-            return new ProfileResponse(updateProfile.getUserEntity().getKakaoId(),
-                    updateProfile.getNickName(),
-                    updateProfile.getIntroduce(), updateProfile.getProfileImgUrl(),
-                    updateProfile.getWishIsbnList(), null);
+            return ResponseEntity.ok("success.");
 
         } catch (CustomException e) {
-            return new ProfileResponse(null, "Error: " + e.getMessage(), null, null, null, null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed.");
         }
     }
 
@@ -164,8 +160,10 @@ public class ProfileService {
         updateWishBookList.add(isbn);
         Profile updateProfile = profile.toBuilder()
                                        .wishIsbnList(updateWishBookList)
+                                       .userEntity(profile.getUserEntity())
                                        .build();
         profileRepository.save(updateProfile);
+        //개븅신같네? 유저엔티티ㅣ먼저수정하고 저장한담에저장해야댐?
         return "Add WishBook";
     }
 

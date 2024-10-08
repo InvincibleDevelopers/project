@@ -145,7 +145,7 @@ public class UserEntityService {
         // 응답의 상태 코드 확인
         if (response.getStatusCode().is2xxSuccessful()) {
             UserEntity userEntity = UserEntity.builder()
-                                              .kakaoId(id * 2)
+                                              .kakaoId(id)
                                               .nickname(kakaoJoinRequest.nickname())
                                               .gender(kakaoJoinRequest.gender())
                                               .age(kakaoJoinRequest.age())

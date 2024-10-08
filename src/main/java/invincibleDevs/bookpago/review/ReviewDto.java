@@ -7,7 +7,8 @@ public record ReviewDto(
         double rating,
         String content,
         String nickname,
-        Optional<Boolean> isLiked
+        Optional<Boolean> isLiked,
+        int likes
 
 ) {
 

@@ -5,7 +5,6 @@ import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
-import invincibleDevs.bookpago.profile.response.ProfileResponse;
 import invincibleDevs.bookpago.review.MyReviewDto;
 import io.swagger.annotations.ApiParam;
 import java.util.List;
@@ -37,7 +36,7 @@ public class ProfileController {
 
         ProfileRequest profileRequest = new ProfileRequest(kakaoId);
         return ResponseEntity.ok(
-                profileFacade.getProfile(profileRequest, currentUserKakaoId, 0, Integer.MAX_VALUE));
+                profileFacade.getProfile(profileRequest, currentUserKakaoId, 0, 10));
     }
 
     @PatchMapping("/image")
@@ -48,10 +47,10 @@ public class ProfileController {
     }
 
     @PatchMapping("/{kakaoId}")
-    public ResponseEntity<ProfileResponse> updateNickname(
+    public ResponseEntity<?> updateNickname(
             @ApiParam(value = "변경할 닉네임, 소개글", required = true)
             @RequestBody UpdateProfileRequest updateProfileRequest) {
-        return ResponseEntity.ok(profileFacade.updateNicknameAndIntroduction(updateProfileRequest));
+        return profileFacade.updateNicknameAndIntroduction(updateProfileRequest);
     }
 
     @PostMapping("/follow")

@@ -21,7 +21,9 @@ public class ReviewFacade {
         Page<Review> reviews = reviewService.getBookReviews(bookIsbn, page, size);
         List<Long> reviewIds = reviewService.getBookReviewsIdList(bookIsbn, page, size);
         List<ReviewLike> reviewLikeList = reviewLikeService.reviewLikeList(reviewIds, profile);
-        return reviewLikeService.reviewLikeMap(reviewLikeList, reviews);
+
+        return reviewLikeService.reviewDtoList(reviewLikeList, reviews,
+                reviewLikeService.countLikes(reviews));
     }
 
     public String addLikes(ReviewLikeRequest reviewLikeRequest) {
@@ -29,4 +31,6 @@ public class ReviewFacade {
         Profile profile = profileService.findByKakaoId(reviewLikeRequest.kakaoId());
         return reviewLikeService.addLikes(review, profile);
     }
+
+
 }

@@ -1,23 +1,27 @@
 package invincibleDevs.bookpago.util;
 
 import com.github.javafaker.Faker;
-import invincibleDevs.bookpago.book.Book;
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.book.BookRepository;
 import invincibleDevs.bookpago.profile.ProfileRepository;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMapRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubRepository;
+import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.review.ReviewRepository;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.time.LocalDateTime;
-import java.util.*;
 
 @Configuration
 public class DummyDataInitializer {
@@ -33,8 +37,9 @@ public class DummyDataInitializer {
     private final Faker faker = new Faker(new Locale("ko"));
 
     public DummyDataInitializer(UserRepository userRepository, ProfileRepository profileRepository,
-                                BookRepository bookRepository, ReviewRepository reviewRepository,
-                                ReadingClubRepository readingClubRepository, ReadingClubMapRepository readingClubMapRepository) {
+            BookRepository bookRepository, ReviewRepository reviewRepository,
+            ReadingClubRepository readingClubRepository,
+            ReadingClubMapRepository readingClubMapRepository) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.bookRepository = bookRepository;
@@ -47,7 +52,7 @@ public class DummyDataInitializer {
     @Transactional
     public CommandLineRunner loadDummyData() {
         return args -> {
-            int numberOfDummyData = 0; // 생성할 더미 데이터 개수
+            int numberOfDummyData = 10; // 생성할 더미 데이터 개수
 
             // 1. UserEntity 및 Profile 생성
             List<Profile> profiles = generateUserAndProfileData(numberOfDummyData);
@@ -56,16 +61,82 @@ public class DummyDataInitializer {
 //            List<Book> books = generateBookData(numberOfDummyData);
 //
 //            // 3. ReadingClub 데이터 생성
-//            List<ReadingClub> readingClubs = generateReadingClubData(numberOfDummyData);
+            List<ReadingClub> readingClubs = generateReadingClubData(numberOfDummyData);
 //
 //            // 4. ReadingClubMap 데이터 생성
-//            generateReadingClubMapData(readingClubs, profiles);
+            List<ReadingClubMap> readingClubMaps = generateReadingClubMapData(numberOfDummyData,
+                    readingClubs, profiles);
 //
 //            // 5. Review 데이터 생성
-//            generateReviewData(books, profiles);
+            List<Review> reviews = generateReviewData(numberOfDummyData, profiles);
 //
 //            System.out.println("All dummy data generation complete.");
         };
+    }
+
+    private List<Review> generateReviewData(int numberOfDummyData, List<Profile> profiles) {
+        List<Review> reviews = new ArrayList<>();
+        long isbn = 9780306406157L;
+
+        for (int i = 0; i < numberOfDummyData; i++) {
+            Review review = Review.builder()
+                                  .isbn(isbn + i - 0)
+                                  .rating(3.5)
+                                  .content("좋은책")
+                                  .profile(profiles.get(i))
+                                  .build();
+
+            reviews.add(review);
+        }
+        reviewRepository.saveAll(reviews);
+        return reviews;
+    }
+
+    private List<ReadingClubMap> generateReadingClubMapData(int numberOfDummyData,
+            List<ReadingClub> readingClubs, List<Profile> profiles) {
+        List<ReadingClubMap> readingClubMaps = new ArrayList<>();
+        for (int i = 1; i <= numberOfDummyData; i++) {
+            ReadingClubMap readingClubMap = ReadingClubMap.builder()
+                                                          .readingClub(readingClubs.get(i - 1))
+                                                          .clubAdmin(profiles.get(i - 1))
+                                                          .build();
+
+            readingClubMaps.add(readingClubMap);
+        }
+        readingClubMapRepository.saveAll(readingClubMaps);
+        return readingClubMaps;
+    }
+
+    private List<ReadingClub> generateReadingClubData(int numberOfDummyData) {
+        List<ReadingClub> readingClubs = new ArrayList<>();
+        // List<Integer>로 요일을 나타내는 숫자 목록 생성
+        List<Integer> weekDay = new ArrayList<>();
+
+        // 예시로 1 = Monday, 2 = Tuesday ... 7 = Sunday
+        weekDay.add(1); // Monday
+        weekDay.add(2); // Tuesday
+        weekDay.add(3); // Wednesday
+        weekDay.add(4); // Thursday
+        weekDay.add(5); // Friday
+        weekDay.add(6); // Saturday
+        weekDay.add(7); // Sunday
+
+        for (int i = 1; i <= numberOfDummyData; i++) {
+            String clubName = "Club" + i;
+
+            ReadingClub readingClub = ReadingClub.builder()
+                                                 .clubName(clubName)
+                                                 .location("location " + i)
+                                                 .description("club description " + i)
+                                                 .time("meeting time " + i)
+                                                 .repeatCycle(3)
+                                                 .weekDay(weekDay)
+                                                 .build();
+            readingClubs.add(readingClub);
+        }
+        readingClubRepository.saveAll(readingClubs);
+        return readingClubs;
+
     }
 
     // UserEntity 및 Profile 생성 메소드
@@ -78,26 +149,28 @@ public class DummyDataInitializer {
             long kakaoId;
             do {
                 kakaoId = (long) faker.number().numberBetween(1000000, 9999999);
-            } while (generatedKakaoIds.contains(kakaoId) || userRepository.existsByKakaoId(kakaoId));
+            } while (generatedKakaoIds.contains(kakaoId) || userRepository.existsByKakaoId(
+                    kakaoId));
 
             generatedKakaoIds.add(kakaoId);
 
             UserEntity user = UserEntity.builder()
-                    .kakaoId(kakaoId)
-                    .password(faker.internet().password())
-                    .nickname(generateNickname())
-                    .role("USER")
-                    .gender(convertGender(faker.demographic().sex()))
-                    .age(faker.number().numberBetween(18, 60))
-                    .created_at(LocalDateTime.now())
-                    .build();
+                                        .kakaoId(kakaoId)
+                                        .password(faker.internet().password())
+                                        .nickname(generateNickname())
+                                        .role("USER")
+                                        .gender(convertGender(faker.demographic().sex()))
+                                        .age(faker.number().numberBetween(18, 60))
+                                        .created_at(LocalDateTime.now())
+                                        .build();
 
             Profile profile = Profile.builder()
-                    .userEntity(user)
-                    .profileImgUrl("https://invincibledevs.s3.amazonaws.com/60b21208-f4c1-40fa-ab3f-3b4c8f8dd58f_2024100415374448023_1728023863.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241006T075519Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIATKHCK2JANRTZDEMR%2F20241006%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=9591f9ecdf894da6dacf370be71b663420215db8b40db9b9d9b6e70702cffaf4")
-                    .nickName(user.getNickname())
-                    .introduce(generateKoreanIntroduction())
-                    .build();
+                                     .userEntity(user)
+                                     .profileImgUrl(
+                                             "https://invincibledevs.s3.amazonaws.com/60b21208-f4c1-40fa-ab3f-3b4c8f8dd58f_2024100415374448023_1728023863.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20241006T075519Z&X-Amz-SignedHeaders=host&X-Amz-Expires=86400&X-Amz-Credential=AKIATKHCK2JANRTZDEMR%2F20241006%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=9591f9ecdf894da6dacf370be71b663420215db8b40db9b9d9b6e70702cffaf4")
+                                     .nickName(user.getNickname())
+                                     .introduce(generateKoreanIntroduction())
+                                     .build();
 
             users.add(user);
             profiles.add(profile);
