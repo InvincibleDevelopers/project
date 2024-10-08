@@ -185,4 +185,14 @@ public class BookService {
         return recommendList;
     }
 
+    public List<BookDTO> getBookDtoList(List<Long> wishIsbnList) {
+        List<BookDTO> wishBooks = new ArrayList<>();
+        for (Long isbn : wishIsbnList) {
+            BookDetailDTO bookDetailDTO = getBookInfo(isbn);
+            BookDTO bookDto = new BookDTO(bookDetailDTO.getIsbn(), bookDetailDTO.getTitle(),
+                    bookDetailDTO.getAuthor(), bookDetailDTO.getImage());
+            wishBooks.add(bookDto);
+        }
+        return wishBooks;
+    }
 }
