@@ -6,6 +6,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -15,11 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
@@ -174,6 +172,17 @@ public class BookService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         return objectMapper.readTree(responseBody);
+    }
+
+    public List<String> extractRecommendations(String response) {
+        List<String> recommendList = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\d+\\.\\s([^\\(]+\\([^\\)]+\\))");
+        Matcher matcher = pattern.matcher(response);
+        while (matcher.find()) {
+            String titleAndAuthor = matcher.group(1).trim();
+            recommendList.add(titleAndAuthor);
+        }
+        return recommendList;
     }
 
 }
