@@ -6,6 +6,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -85,6 +88,22 @@ public class BookService {
         return new BookSearchDTO(total, books);
     }
 
+    public BookDTO searchBook(String query) throws Exception {
+        JsonNode rootNode = bookJson(query, 1, 1);
+        JsonNode itemsNode = rootNode.get("items");
+
+        BookDTO book = null;
+        for (JsonNode itemNode : itemsNode) {
+            Long isbn = itemNode.get("isbn").asLong();
+            String title = itemNode.get("title").asText();
+            String author = itemNode.get("author").asText();
+            String image = itemNode.get("image").asText();
+
+            book = new BookDTO(isbn, title, author, image);
+        }
+        return book;
+    }
+
     public BookSearchDTO getBestsellers() throws Exception {
         try {
             URI uri = UriComponentsBuilder
@@ -153,6 +172,17 @@ public class BookService {
         ObjectMapper objectMapper = new ObjectMapper();
 
         return objectMapper.readTree(responseBody);
+    }
+
+    public List<String> extractRecommendations(String response) {
+        List<String> recommendList = new ArrayList<>();
+        Pattern pattern = Pattern.compile("\\d+\\.\\s([^\\(]+\\([^\\)]+\\))");
+        Matcher matcher = pattern.matcher(response);
+        while (matcher.find()) {
+            String titleAndAuthor = matcher.group(1).trim();
+            recommendList.add(titleAndAuthor);
+        }
+        return recommendList;
     }
 
     public List<BookDTO> getBookDtoList(List<Long> wishIsbnList) {

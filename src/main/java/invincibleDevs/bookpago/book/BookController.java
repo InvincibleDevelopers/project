@@ -64,6 +64,21 @@ public class BookController {
         }
     }
 
+    @GetMapping("/recommend")
+    public ResponseEntity<?> recommendBooks(
+            @ApiParam(value = "kakaoId", required = true)
+            @RequestParam(name = "kakaoId") Long kakaoId,
+            @RequestParam(value = "size", defaultValue = "5") int size
+    ) {
+        try {
+            return ResponseEntity.ok(bookFacade.recommendBooks(kakaoId, size));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("An error occurred while recommending books.");
+        }
+    }
+
     @PostMapping("/{isbn}/likes")
     public ResponseEntity<?> addWishBook(
             @ApiParam(value = "책 좋아요", required = true)
