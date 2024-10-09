@@ -7,6 +7,7 @@ import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.review.MyReviewDto;
 import io.swagger.annotations.ApiParam;
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -54,14 +55,16 @@ public class ProfileController {
     }
 
     @PostMapping("/follow")
-    public ResponseEntity<String> updatefollowing(
+    public ResponseEntity<?> updatefollowing(
             @ApiParam(value = "follower, followee 필수", required = true)
             @RequestBody FollowRequest followRequest) {
+        boolean isFollowed = profileFacade.updateFollow(followRequest);
 
-        if (profileFacade.updateFollow(followRequest)) {
-            return ResponseEntity.ok("Success Follow.");
+        if (isFollowed) {
+            return ResponseEntity.ok(Collections.singletonMap("isFollowed", isFollowed));
         } else {
-            return ResponseEntity.ok("Success Unfollow.");
+
+            return ResponseEntity.ok(Collections.singletonMap("isFollowed", isFollowed));
         }
     }
 
