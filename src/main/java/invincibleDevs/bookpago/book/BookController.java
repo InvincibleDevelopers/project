@@ -2,6 +2,8 @@ package invincibleDevs.bookpago.book;
 
 import invincibleDevs.bookpago.review.ReviewRequest;
 import io.swagger.annotations.ApiParam;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +77,7 @@ public class BookController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("An error occurred while recommending books.");
+                                 .body("An error occurred while recommending books.");
         }
     }
 
@@ -95,7 +97,9 @@ public class BookController {
             @RequestBody ReviewRequest reviewRequest
     ) {
         try {
-            return ResponseEntity.ok("reviewId : " + bookFacade.addReview(reviewRequest));
+            Map<String, Object> response = new HashMap<>();
+            response.put("reviewId", bookFacade.addReview(reviewRequest));
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             // 예외가 발생한 경우 500 Internal Server Error 반환
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

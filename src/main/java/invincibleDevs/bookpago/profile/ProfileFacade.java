@@ -67,6 +67,7 @@ public class ProfileFacade {
                     review.getRating(),
                     review.getContent(),
                     review.getProfile().getNickName(),
+                    review.getProfile().getProfileImgUrl(),
                     Optional.of(isLiked),
                     mostLikedReviewMap.get(targetId));
             reviewDtoOptional = Optional.of(reviewDto); // reviewDto 생성 시 Optional에 담음

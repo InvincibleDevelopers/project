@@ -56,6 +56,7 @@ public class ReviewLikeService {
                                                         review.getRating(),
                                                         review.getContent(),
                                                         review.getProfile().getNickName(),
+                                                        review.getProfile().getProfileImgUrl(),
                                                         Optional.of(isLiked),
                                                         likeCount);//좋아요갯수넣어야댐
                                             })
