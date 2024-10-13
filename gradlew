@@ -250,3 +250,5 @@ eval "set -- $(
     )" '"$@"'
 
 exec "$JAVACMD" "$@"
+
+SET "JAVA_HOME=C:\Users\USER\.jdks\corretto-17.0.10\.jdk"
