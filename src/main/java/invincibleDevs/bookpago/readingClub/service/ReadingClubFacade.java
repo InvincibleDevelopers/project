@@ -5,8 +5,10 @@ import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
+import invincibleDevs.bookpago.readingClub.model.Applicant;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
+import invincibleDevs.bookpago.readingClub.repository.ApplicantRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMembersRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubRepository;
 import java.util.HashMap;
@@ -32,6 +34,7 @@ public class ReadingClubFacade {
     private final ProfileService profileService;
     private final ReadingClubRepository readingClubRepository;
     private final ReadingClubMembersRepository readingClubMembersRepository;
+    private final ApplicantRepository applicantRepository;
 
     public Page<ReadingClubDto> getClubs(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -84,7 +87,12 @@ public class ReadingClubFacade {
             return response;
         }
 
-//        readingClubMembersService.create_applicant(applicant, readingClub);
+        Applicant applicantRequest = Applicant.builder()
+                                              .applicant(applicant)
+                                              .readingClub(readingClub)
+                                              .build();
+
+        applicantRepository.save(applicantRequest);
 
         response.put("success", true);
         return response;
@@ -145,14 +153,20 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-//        for (Long applicantId : readingClubMapRequest.applicants()) {
-//            Profile applicant = profileService.findByKakaoId(applicantId);
-//            Optional<ReadingClubMembers> clubMapOptional = readingClubMembersRepository.findByIdAndApplicant(
-//                    clubId, applicant);
-//            if (clubMapOptional.isPresent()) {
-//                readingClubMembersRepository.delete(clubMapOptional.get());
-//            }
-//        }
+        for (Long applicantId : readingClubMapRequest.applicants()) {
+            Profile applicant = profileService.findByKakaoId(applicantId);
+
+            applicantRepository.findByApplicantAndReadingClub(applicantId, clubId)
+                               .ifPresentOrElse(
+                                       applicantRepository::delete,
+                                       () -> {
+                                           throw new IllegalArgumentException(
+                                                   "Applicant not found with specified Profile and ReadingClub");
+                                       }
+                               );
+
+
+        }
 
         response.put("success", true);
         return response;
@@ -161,24 +175,34 @@ public class ReadingClubFacade {
     public Map<String, Boolean> acceptApplicants(Long clubId,
             ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
-
+        ReadingClub readingClub = readingClubRepository.findById(clubId).get();
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
         // 사용자가 해당 독서 모임의 관리자가 아님
         if (readingClubMembersRepository.findByIdAndAdmin(clubId, admin).isEmpty()) {
             response.put("success", false);
             return response;
         }
-//        for (Long applicantId : readingClubMapRequest.applicants()) {
-//            Profile applicant = profileService.findByKakaoId(applicantId);
-//            Optional<ReadingClubMembers> clubMapOptional = readingClubMembersRepository.findByIdAndApplicant(
-//                    clubId, applicant);
-//            if (clubMapOptional.isPresent()) {
-//                ReadingClubMembers clubMap = clubMapOptional.get();
-//                clubMap.setClubMember(applicant);
-////                clubMap.setClubApplicant(null);
-//                readingClubMembersRepository.save(clubMap);
-//            }
-//        }
+        for (Long applicantId : readingClubMapRequest.applicants()) {
+            Profile applicant = profileService.findByKakaoId(applicantId);
+
+            applicantRepository.findByApplicantAndReadingClub(applicantId, clubId)
+                               .ifPresentOrElse(applicantRequest -> {
+                                           ReadingClubMembers newMember = ReadingClubMembers.builder()
+                                                                                            .clubMember(
+                                                                                                    applicant)
+                                                                                            .readingClub(
+                                                                                                    readingClub)
+                                                                                            .build();
+                                           readingClubMembersRepository.save(newMember);
+                                       },
+                                       () -> {
+                                           throw new IllegalArgumentException(
+                                                   "Applicant not found with specified Profile and ReadingClub");
+                                       }
+                               );
+
+
+        }
 
         response.put("success", true);
         return response;
