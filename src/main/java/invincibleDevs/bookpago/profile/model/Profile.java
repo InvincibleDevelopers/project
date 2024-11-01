@@ -2,7 +2,7 @@ package invincibleDevs.bookpago.profile.model;
 
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.mapper.model.FollowingMap;
-import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
 import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.review.ReviewLike;
 import jakarta.persistence.CascadeType;
@@ -56,11 +56,11 @@ public class Profile {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE)
     private List<Review> reviewList;
 
-    @OneToMany(mappedBy = "clubAdmin") // BookClub의 admin 필드와 매핑
-    private Set<ReadingClubMap> managedClub; // 관리하는 독서 모임
+//    @OneToMany(mappedBy = "clubAdmin") // BookClub의 admin 필드와 매핑
+//    private Set<ReadingClubMembers> managedClub; // 관리하는 독서 모임
 
     @OneToMany(mappedBy = "clubMember")
-    private Set<ReadingClubMap> readingClubs; // 가입한 독서 모임
+    private Set<ReadingClubMembers> readingClubs; // 가입한 독서 모임
 
     @OneToMany(mappedBy = "follower", cascade = CascadeType.REMOVE)
     private Set<FollowingMap> followerMaps;

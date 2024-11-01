@@ -1,7 +1,12 @@
 package invincibleDevs.bookpago.readingClub.model;
 
-import jakarta.persistence.*;
-
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
@@ -31,5 +36,5 @@ public class ReadingClub {
 
 
     @OneToMany(mappedBy = "readingClub", cascade = CascadeType.REMOVE)
-    private Set<ReadingClubMap> clubMembers; // 독서 모임의 회원들 -> 이거갯수세면 몇명참여중 표시
+    private Set<ReadingClubMembers> clubMembers; // 독서 모임의 회원들 -> 이거갯수세면 몇명참여중 표시
 }

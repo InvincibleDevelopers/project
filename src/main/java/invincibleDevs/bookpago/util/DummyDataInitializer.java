@@ -7,8 +7,8 @@ import invincibleDevs.bookpago.book.BookRepository;
 import invincibleDevs.bookpago.profile.ProfileRepository;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
-import invincibleDevs.bookpago.readingClub.model.ReadingClubMap;
-import invincibleDevs.bookpago.readingClub.repository.ReadingClubMapRepository;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
+import invincibleDevs.bookpago.readingClub.repository.ReadingClubMembersRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubRepository;
 import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.review.ReviewRepository;
@@ -31,7 +31,7 @@ public class DummyDataInitializer {
     private final BookRepository bookRepository;
     private final ReviewRepository reviewRepository;
     private final ReadingClubRepository readingClubRepository;
-    private final ReadingClubMapRepository readingClubMapRepository;
+    private final ReadingClubMembersRepository readingClubMembersRepository;
 
     // Java Faker 인스턴스 생성
     private final Faker faker = new Faker(new Locale("ko"));
@@ -39,13 +39,13 @@ public class DummyDataInitializer {
     public DummyDataInitializer(UserRepository userRepository, ProfileRepository profileRepository,
             BookRepository bookRepository, ReviewRepository reviewRepository,
             ReadingClubRepository readingClubRepository,
-            ReadingClubMapRepository readingClubMapRepository) {
+            ReadingClubMembersRepository readingClubMembersRepository) {
         this.userRepository = userRepository;
         this.profileRepository = profileRepository;
         this.bookRepository = bookRepository;
         this.reviewRepository = reviewRepository;
         this.readingClubRepository = readingClubRepository;
-        this.readingClubMapRepository = readingClubMapRepository;
+        this.readingClubMembersRepository = readingClubMembersRepository;
     }
 
     @Bean
@@ -64,7 +64,8 @@ public class DummyDataInitializer {
             List<ReadingClub> readingClubs = generateReadingClubData(numberOfDummyData);
 //
 //            // 4. ReadingClubMap 데이터 생성
-            List<ReadingClubMap> readingClubMaps = generateReadingClubMapData(numberOfDummyData,
+            List<ReadingClubMembers> readingClubMembers = generateReadingClubMapData(
+                    numberOfDummyData,
                     readingClubs, profiles);
 //
 //            // 5. Review 데이터 생성
@@ -92,19 +93,21 @@ public class DummyDataInitializer {
         return reviews;
     }
 
-    private List<ReadingClubMap> generateReadingClubMapData(int numberOfDummyData,
+    private List<ReadingClubMembers> generateReadingClubMapData(int numberOfDummyData,
             List<ReadingClub> readingClubs, List<Profile> profiles) {
-        List<ReadingClubMap> readingClubMaps = new ArrayList<>();
+        List<ReadingClubMembers> readingClubMembersList = new ArrayList<>();
         for (int i = 1; i <= numberOfDummyData; i++) {
-            ReadingClubMap readingClubMap = ReadingClubMap.builder()
-                                                          .readingClub(readingClubs.get(i - 1))
-                                                          .clubAdmin(profiles.get(i - 1))
-                                                          .build();
+            ReadingClubMembers readingClubMembers = ReadingClubMembers.builder()
+                                                                      .readingClub(readingClubs.get(
+                                                                              i - 1))
+                                                                      .clubMember(
+                                                                              profiles.get(i - 1))
+                                                                      .build();
 
-            readingClubMaps.add(readingClubMap);
+            readingClubMembersList.add(readingClubMembers);
         }
-        readingClubMapRepository.saveAll(readingClubMaps);
-        return readingClubMaps;
+        readingClubMembersRepository.saveAll(readingClubMembersList);
+        return readingClubMembersList;
     }
 
     private List<ReadingClub> generateReadingClubData(int numberOfDummyData) {

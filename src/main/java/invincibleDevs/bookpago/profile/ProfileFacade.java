@@ -14,7 +14,7 @@ import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import invincibleDevs.bookpago.profile.response.ProfileResponse;
-import invincibleDevs.bookpago.readingClub.service.ReadingClubMapService;
+import invincibleDevs.bookpago.readingClub.service.ReadingClubMembersService;
 import invincibleDevs.bookpago.review.MyReviewDto;
 import invincibleDevs.bookpago.review.Review;
 import invincibleDevs.bookpago.review.ReviewDto;
@@ -38,7 +38,7 @@ public class ProfileFacade {
 
     private final ProfileService profileService;
     private final UserEntityService userEntityService;
-    private final ReadingClubMapService readingClubMapService;
+    private final ReadingClubMembersService readingClubMembersService;
     private final FollowingMapService followingMapService;
     private final S3Service s3Service;
     private final ReviewService reviewService;
@@ -87,7 +87,7 @@ public class ProfileFacade {
                         profile.getProfileImgUrl(),
                         Optional.ofNullable(bookService.getBookDtoList(profile.getWishIsbnList())),
                         Optional.ofNullable(
-                                readingClubMapService.getUserClubs(profile, page, size)),
+                                readingClubMembersService.getUserClubs(profile, page, size)),
                         reviewDtoOptional
                 )
         );
