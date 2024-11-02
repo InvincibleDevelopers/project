@@ -30,6 +30,7 @@ public class ReadingClub {
     private String description;
     private String time;
     private int repeatCycle;
+    private int memberCount;
 
     @ElementCollection
     private List<Integer> weekDay;
@@ -37,4 +38,12 @@ public class ReadingClub {
 
     @OneToMany(mappedBy = "readingClub", cascade = CascadeType.REMOVE)
     private Set<ReadingClubMembers> clubMembers; // 독서 모임의 회원들 -> 이거갯수세면 몇명참여중 표시
+
+    public void addMember() {
+        memberCount++;
+    }
+
+    public void removeMember() {
+        memberCount--;
+    }
 }

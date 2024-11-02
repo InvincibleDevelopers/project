@@ -11,7 +11,7 @@ public interface ReadingClubRepository extends JpaRepository<ReadingClub, Long> 
 //    @Query("SELECT rc FROM ReadingClub rc")
 //    Page<ReadingClub> findAll(Pageable pageable);
 
-    @Query(value = "SELECT rc FROM ReadingClub rc JOIN FETCH rc.weekDay",
+    @Query(value = "SELECT rc FROM ReadingClub rc JOIN FETCH rc.weekDay order by rc.id desc",
             countQuery = "SELECT COUNT(rc) FROM ReadingClub rc")
     Page<ReadingClub> findAllWithWeekDays(Pageable pageable);
 }

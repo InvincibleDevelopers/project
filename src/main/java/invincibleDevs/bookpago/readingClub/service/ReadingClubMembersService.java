@@ -145,12 +145,5 @@ public class ReadingClubMembersService {
 //        return applicantProfiles;
 //    }
 
-    public int getMemberCount(ReadingClub readingClub) {
-        // clubApplicant가 null인 경우만 멤버로 포함 (관리자와 정식 멤버)
-        return readingClubMembersRepository.findByClubId(readingClub.getId()).size();
 
-//        return (int) readingClub.getClubMembers().stream()
-//                                .filter(clubMap -> clubMap.getClubApplicant() == null)
-//                                .count();
-    }
 }

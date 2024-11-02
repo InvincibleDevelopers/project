@@ -43,8 +43,7 @@ public class ReadingClubFacade {
         List<ReadingClubDto> clubDtos = readingClubsPage.getContent().stream()
                                                         .map(readingClub -> new ReadingClubDto(
                                                                 readingClub.getId(),
-                                                                readingClubMembersService.getMemberCount(
-                                                                        readingClub),
+                                                                readingClub.getMemberCount(),
                                                                 readingClub.getClubName(),
                                                                 readingClub.getLocation(),
                                                                 readingClub.getDescription(),
@@ -66,7 +65,8 @@ public class ReadingClubFacade {
                         readingClub)); // 단일 ReadingClubMap 객체를 Set에 추가
 
         ReadingClubDto readingClubDto = new ReadingClubDto(
-                readingClub.getId(), readingClubMembersService.getMemberCount(readingClub),
+                readingClub.getId(),
+                readingClub.getMemberCount(),
                 readingClubRequest.clubName(), readingClubRequest.location(),
                 readingClubRequest.description(), readingClubRequest.time(),
                 readingClubRequest.repeatCycle(), readingClubRequest.weekDay()

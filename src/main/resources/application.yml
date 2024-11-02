@@ -16,7 +16,7 @@ spring:
     password: ENC(HUoombkibCSFNBT027KD0i5BkNgezljb)
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
   jwt:
     secret: ENC(dfLHZN5KMae06rwSnGLM22Zm0ds1lfP569o9GK890egyywcYzbVutIfU1rIxZh3AgKHc7MOnNAytOS3bmyjWWNNOQZsoiyhi) # JWT 암호화 키
