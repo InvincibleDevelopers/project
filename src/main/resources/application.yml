@@ -2,6 +2,11 @@ server:
   port: 8088
 
 spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
   servlet:
     multipart:
       enabled: true
@@ -62,3 +67,7 @@ api:
     password: ENC(kbZBGy6vnkj6dMSSD2tRJkYy7+i9ADYw)
   aladin:
     key: ENC(dx/ZzTPoJEJ3xxiCkcReqJ6tE0QGtnZyT24oNzQXMF8=)
+
+dummy:
+  data:
+    initialize: false

@@ -59,7 +59,8 @@ public class UserEntityService {
                     true,
                     Optional.ofNullable(userEntity.getKakaoId()),
                     Optional.ofNullable(userEntity.getNickname()),
-                    userEntity.getProfile().getProfileImgUrl()
+//                    userEntity.getProfile().getProfileImgUrl()
+                    "dddd"
             );
 
         } catch (CustomException e) {
@@ -109,7 +110,9 @@ public class UserEntityService {
             return new SignInResponse(true,
                     Optional.ofNullable(userEntity.getKakaoId()),
                     Optional.ofNullable(userEntity.getNickname()),
-                    userEntity.getProfile().getProfileImgUrl());
+//                    userEntity.getProfile().getProfileImgUrl());
+                    "ddd");
+
         } else {
             return new SignInResponse(false, Optional.empty(), Optional.empty(), null);
         }

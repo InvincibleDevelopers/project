@@ -1,5 +1,6 @@
 package invincibleDevs.bookpago.profile.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
@@ -9,6 +10,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,8 +37,9 @@ public class Profile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "kakaoId", referencedColumnName = "kakaoId")
+    @JsonBackReference
     // Profile 테이블의 kakao_id가 UserEntity의 kakaoId를 참조
     private UserEntity userEntity;
 

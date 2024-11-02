@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.profile;
 
 import invincibleDevs.bookpago.profile.model.Profile;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,4 +18,8 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
 
     Profile findByNickName(String nickname);
 
+    @Query("select p from Profile p join fetch p.userEntity where p.nickName like %:keyword%")
+    List<Profile> findByKeyword(@Param("keyword") String keyword);
+
+    
 }

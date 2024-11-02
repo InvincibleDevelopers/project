@@ -1,7 +1,6 @@
 package invincibleDevs.bookpago.readingClub.dto;
 
-import invincibleDevs.bookpago.readingClub.ProfileDTO;
-
+import invincibleDevs.bookpago.profile.ProfileDTO;
 import java.util.List;
 
 public record ReadingClubResponse(
@@ -17,4 +16,5 @@ public record ReadingClubResponse(
         List<ProfileDTO> memberList,
         List<ProfileDTO> applicantList
 ) {
+
 }

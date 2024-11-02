@@ -1,13 +1,10 @@
 package invincibleDevs.bookpago.Users.model;
 
-import invincibleDevs.bookpago.profile.model.Profile;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -45,8 +42,9 @@ public class UserEntity {
     private LocalDateTime created_at;
 
     // 연동 프로필
-    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
-    private Profile profile;
+//    @OneToOne(mappedBy = "userEntity", cascade = CascadeType.REMOVE)
+//    @JsonManagedReference
+//    private Profile profile;
 
 //    // 기본 생성자: Hibernate 사용을 위해 protected 또는 public으로 설정
 //    // 빌더 생성자

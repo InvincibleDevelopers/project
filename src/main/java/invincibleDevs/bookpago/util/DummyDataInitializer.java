@@ -20,10 +20,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnProperty(name = "dummy.data.initialize", havingValue = "true", matchIfMissing = false)
 public class DummyDataInitializer {
 
     private final UserRepository userRepository;

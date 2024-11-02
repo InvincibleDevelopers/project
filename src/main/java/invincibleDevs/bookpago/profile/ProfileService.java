@@ -188,4 +188,8 @@ public class ProfileService {
                                                 + kakaoId
                                                 + "- not found"));
     }
+
+    public List<Profile> findByKeyword(String keyword) {
+        return profileRepository.findByKeyword(keyword);
+    }
 }

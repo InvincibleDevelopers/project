@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -174,4 +175,16 @@ public class ProfileFacade {
     }
 
 
+    public List<ProfileDTO> getSearchedProfiles(String keyword) {
+        List<Profile> profileList = profileService.findByKeyword(keyword);
+
+        List<ProfileDTO> dtoList = profileList.stream()
+                                              .map(profile ->
+                                                      new ProfileDTO(profile.getId(),
+                                                              profile.getNickName(),
+                                                              profile.getProfileImgUrl()))
+                                              .collect(Collectors.toList());
+
+        return dtoList;
+    }
 }

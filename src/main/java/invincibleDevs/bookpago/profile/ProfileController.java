@@ -100,5 +100,11 @@ public class ProfileController {
         return ResponseEntity.ok(profileFacade.getMyWishBooks(kakaoId, lastBookId, size));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<ProfileDTO>> searchProfile(
+            @RequestParam(value = "keyword") String keyword) {
+        return ResponseEntity.ok(profileFacade.getSearchedProfiles(keyword));
+    }
+
 
 }
