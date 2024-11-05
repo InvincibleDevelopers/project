@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.util.List;
 import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,4 +38,7 @@ public class Review {
 
     @OneToMany
     private Set<ReviewLike> likes;
+
+    @OneToMany(mappedBy = "review")
+    private List<Comment> commentList;
 }

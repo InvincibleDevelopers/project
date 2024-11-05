@@ -59,8 +59,8 @@ public class Profile {
     @OneToMany(mappedBy = "profile", cascade = CascadeType.REMOVE)
     private List<Review> reviewList;
 
-//    @OneToMany(mappedBy = "clubAdmin") // BookClub의 admin 필드와 매핑
-//    private Set<ReadingClubMembers> managedClub; // 관리하는 독서 모임
+//    @OneToMany(mappedBy = "review")
+//    private List<Comment> commentList;
 
     @OneToMany(mappedBy = "clubMember")
     private Set<ReadingClubMembers> readingClubs; // 가입한 독서 모임

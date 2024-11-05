@@ -1,9 +1,12 @@
 package invincibleDevs.bookpago.review;
 
+import invincibleDevs.bookpago.profile.model.Profile;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,4 +23,15 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne
+    private Review review;
+
+    @ManyToOne
+    private Profile commentAuthor;
+
+    @Column(length = 500)
+    private String content;
+
+
 }
+
