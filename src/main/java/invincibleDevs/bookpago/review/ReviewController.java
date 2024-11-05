@@ -42,5 +42,29 @@ public class ReviewController {
         return ResponseEntity.ok(reviewFacade.addLikes(reviewLikeRequest));
     }
 
+    @PostMapping("/comment")
+    public ResponseEntity<?> addComment(
+            @ApiParam(value = "리뷰 커멘트")
+            @RequestBody CommentRequest commentRequest
+    ) {
+        return reviewFacade.addComment(commentRequest);
+    }
+
+    @PatchMapping("/comment")
+    public ResponseEntity<?> updateComment(
+            @ApiParam(value = "리뷰 커멘트 수정")
+            @RequestBody CommentRequest commentRequest
+    ) {
+        return reviewFacade.updateComment(commentRequest);
+    }
+
+    @DeleteMapping("/comment")
+    public ResponseEntity<?> deleteComment(
+            @ApiParam(value = "리뷰 커멘트 수정")
+            @RequestBody CommentRequest commentRequest
+    ) {
+        return reviewFacade.deleteComment(commentRequest);
+    }
+
 
 }
