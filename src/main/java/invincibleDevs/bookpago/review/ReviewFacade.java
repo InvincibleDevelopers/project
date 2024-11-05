@@ -1,10 +1,12 @@
 package invincibleDevs.bookpago.review;
 
+import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,7 @@ public class ReviewFacade {
     private final ReviewService reviewService;
     private final ReviewLikeService reviewLikeService;
     private final ProfileService profileService;
+    private final CommentService commentService;
 
     public List<ReviewDto> getReviews(Long kakaoId, Long bookIsbn, int page, int size) {
         // 리뷰 페이징 처리해서 가져오기
