@@ -4,7 +4,7 @@ import java.util.List;
 
 public record ReadingClubDto(
         Long id,
-        int members,
+        int memberCount,
         String clubName,
         String location,
         String description,

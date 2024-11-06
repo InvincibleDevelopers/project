@@ -30,6 +30,7 @@ public class ReadingClubService {
                                              .time(readingClubRequest.time())
                                              .repeatCycle(readingClubRequest.repeatCycle())
                                              .weekDay(readingClubRequest.weekDay())
+                                             .memberCount(0)
                                              .build();
         readingClub.addMember();
         return readingClubRepository.save(readingClub);

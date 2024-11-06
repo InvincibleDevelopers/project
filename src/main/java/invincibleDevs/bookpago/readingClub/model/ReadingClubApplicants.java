@@ -16,14 +16,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor // 기본 생성자 추가
 @AllArgsConstructor // 모든 필드를 포함한 생성자 추가
-public class Applicant {
+public class ReadingClubApplicants {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    private Profile applicant;
+    private Profile clubApplicant;
 
     @ManyToOne
     private ReadingClub readingClub;

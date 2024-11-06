@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.readingClub.repository;
 
 import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.readingClub.model.ReadingClubApplicants;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
 import java.util.List;
 import java.util.Optional;
@@ -25,18 +26,9 @@ public interface ReadingClubMembersRepository extends JpaRepository<ReadingClubM
     Optional<ReadingClubMembers> findByIdAndMember(@Param("clubId") Long clubId,
             @Param("profile") Profile profile);
 
-    // 특정 독서 모임(clubId)에서 특정 프로필이 clubApplicant로 있는지 확인
-//    @Query("SELECT rc FROM ReadingClubMembers rc WHERE rc.readingClub.id = :clubId AND rc.clubApplicant = :profile")
-//    Optional<ReadingClubMembers> findByIdAndApplicant(@Param("clubId") Long clubId,
-//            @Param("profile") Profile profile);
-
     // 특정 독서 모임(clubId)에서 멤버 리스트 조회
     @Query("SELECT rc FROM ReadingClubMembers rc WHERE rc.readingClub.id = :clubId AND rc.clubMember IS NOT NULL")
     List<ReadingClubMembers> findMembersByClubId(@Param("clubId") Long clubId);
-
-//    // 특정 독서 모임(clubId)에서 대기자 리스트 조회
-//    @Query("SELECT rc FROM ReadingClubMembers rc WHERE rc.readingClub.id = :clubId AND rc.clubApplicant IS NOT NULL")
-//    List<ReadingClubMembers> findApplicantsByClubId(@Param("clubId") Long clubId);
 
     // 특정 독서 모임(clubId)에서 관리자 조회
     @Query("SELECT rc FROM ReadingClubMembers rc WHERE rc.readingClub.id = :clubId AND rc.isAdmin = true")

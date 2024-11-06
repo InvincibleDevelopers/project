@@ -46,12 +46,12 @@ public class ReadingClubController {
         }
     }
 
-//    @GetMapping("/clubs/{clubId}")
-//    public ResponseEntity<?> getTargetClub(
-//            @PathVariable("clubId") Long clubId
-//    ) {
-//        return ResponseEntity.ok(readingClubFacade.getClub(clubId));
-//    }
+    @GetMapping("/clubs/{clubId}")
+    public ResponseEntity<?> getTargetClub(
+            @PathVariable("clubId") Long clubId
+    ) {
+        return ResponseEntity.ok(readingClubFacade.getClub(clubId));
+    }
 
     @PostMapping("/clubs/{clubId}/members")
     public ResponseEntity<?> joinClub(

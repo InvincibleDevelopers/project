@@ -4,10 +4,10 @@ import invincibleDevs.bookpago.readingClub.ProfileDTO;
 
 import java.util.List;
 
-public record ReadingClubResponse(
+public record ReadingClubDetailDto(
         Long id,
         Long adminId,
-        int members,
+        int memberCount,
         String clubName,
         String location,
         String description,
