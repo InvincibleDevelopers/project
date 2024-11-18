@@ -1,5 +1,6 @@
 package invincibleDevs.bookpago.readingClub.service;
 
+import invincibleDevs.bookpago.common.Location;
 import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
@@ -45,7 +46,8 @@ public class ReadingClubFacade {
                                                                 readingClub.getId(),
                                                                 readingClub.getMemberCount(),
                                                                 readingClub.getClubName(),
-                                                                readingClub.getLocation(),
+                                                                readingClub.getLocation().getX(),
+                                                                readingClub.getLocation().getY(),
                                                                 readingClub.getDescription(),
                                                                 readingClub.getTime(),
                                                                 readingClub.getRepeatCycle(),
@@ -67,7 +69,8 @@ public class ReadingClubFacade {
         ReadingClubDto readingClubDto = new ReadingClubDto(
                 readingClub.getId(),
                 readingClub.getMemberCount(),
-                readingClubRequest.clubName(), readingClubRequest.location(),
+                readingClubRequest.clubName(), readingClub.getLocation().getX(),
+                readingClub.getLocation().getY(),
                 readingClubRequest.description(), readingClubRequest.time(),
                 readingClubRequest.repeatCycle(), readingClubRequest.weekDay()
         );
@@ -211,5 +214,10 @@ public class ReadingClubFacade {
     public Page<ReadingClubDto> getUserClubs(Long kakaoId, int page, int size) {
         Profile user = profileService.findByKakaoId(kakaoId);
         return readingClubMembersService.getUserClubs(user, page, size);
+    }
+
+    public List<ReadingClubDto> getNearByClubs(double latitude, double longitude) {
+        Location location = new Location(latitude, longitude);
+        return readingClubService.findStoresListByLocation(location);
     }
 }

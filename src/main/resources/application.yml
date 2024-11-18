@@ -21,8 +21,9 @@ spring:
     password: ENC(HUoombkibCSFNBT027KD0i5BkNgezljb)
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: true
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect # 위도 경도 계산을 위해 추가
   jwt:
     secret: ENC(dfLHZN5KMae06rwSnGLM22Zm0ds1lfP569o9GK890egyywcYzbVutIfU1rIxZh3AgKHc7MOnNAytOS3bmyjWWNNOQZsoiyhi) # JWT 암호화 키
     # JWT 암호화 키

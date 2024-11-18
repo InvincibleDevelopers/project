@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.readingClub.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
@@ -26,7 +28,10 @@ public class ReadingClub {
     private Long id;
 
     private String clubName;
-    private String location;
+
+    @Column(columnDefinition = "GEOMETRY")
+    private Point location;
+
     private String description;
     private String time;
     private int repeatCycle;

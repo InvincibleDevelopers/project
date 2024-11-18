@@ -4,6 +4,7 @@ import com.github.javafaker.Faker;
 import invincibleDevs.bookpago.Users.model.UserEntity;
 import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.book.BookRepository;
+import invincibleDevs.bookpago.common.GeometryUtil;
 import invincibleDevs.bookpago.profile.ProfileRepository;
 import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import org.locationtech.jts.geom.Point;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -129,9 +131,14 @@ public class DummyDataInitializer {
         for (int i = 1; i <= numberOfDummyData; i++) {
             String clubName = "Club" + i;
 
+            // 위도와 경도를 기반으로 Point 생성
+            double latitude = 47.785834 + (i * 0.1);
+            double longitude = -102.406417 - (i * 0.1);
+            Point location = GeometryUtil.createPoint(latitude, longitude);
+
             ReadingClub readingClub = ReadingClub.builder()
                                                  .clubName(clubName)
-                                                 .location("location " + i)
+                                                 .location(location)
                                                  .description("club description " + i)
                                                  .time("meeting time " + i)
                                                  .repeatCycle(3)

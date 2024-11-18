@@ -3,6 +3,7 @@ package invincibleDevs.bookpago.readingClub.controller;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
 import invincibleDevs.bookpago.readingClub.service.ReadingClubFacade;
+import invincibleDevs.bookpago.readingClub.service.ReadingClubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReadingClubController {
 
     private final ReadingClubFacade readingClubFacade;
+    private final ReadingClubService readingClubService;
 
     @GetMapping("/clubs")
     public ResponseEntity<?> getClubs(
@@ -126,5 +128,24 @@ public class ReadingClubController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @GetMapping("/clubs/nearby")
+    public ResponseEntity<?> getNearByClubs(
+            @RequestParam(name = "latitude") double latitude,
+            @RequestParam(name = "longitude") double longitude
+    ) {
+        return ResponseEntity.ok(readingClubFacade.getNearByClubs(latitude, longitude));
+//        try {
+//
+//        } catch (Exception e) {
+//
+//        }
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+
+        return ResponseEntity.ok(readingClubService.testSort());
     }
 }

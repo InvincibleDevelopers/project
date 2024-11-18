@@ -6,7 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-public interface ReadingClubRepository extends JpaRepository<ReadingClub, Long> {
+public interface ReadingClubRepository extends JpaRepository<ReadingClub, Long>,
+        ReadingClubCustomRepository {
 
 //    @Query("SELECT rc FROM ReadingClub rc")
 //    Page<ReadingClub> findAll(Pageable pageable);
@@ -14,4 +15,5 @@ public interface ReadingClubRepository extends JpaRepository<ReadingClub, Long> 
     @Query(value = "SELECT rc FROM ReadingClub rc JOIN FETCH rc.weekDay order by rc.id desc",
             countQuery = "SELECT COUNT(rc) FROM ReadingClub rc")
     Page<ReadingClub> findAllWithWeekDays(Pageable pageable);
+
 }

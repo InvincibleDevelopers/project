@@ -5,7 +5,8 @@ import java.util.List;
 public record ReadingClubRequest(
         Long kakaoId,
         String clubName,
-        String location,
+        double latitude,
+        double longitude,
         String description,
         String time,
         int repeatCycle,
