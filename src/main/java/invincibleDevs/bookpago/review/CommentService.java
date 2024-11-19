@@ -1,7 +1,7 @@
 package invincibleDevs.bookpago.review;
 
 import invincibleDevs.bookpago.common.exception.CustomException;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

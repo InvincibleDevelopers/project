@@ -1,7 +1,7 @@
 package invincibleDevs.bookpago.readingClub.service;
 
 import invincibleDevs.bookpago.profile.ProfileDTO;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;

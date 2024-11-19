@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.Users.service;
+package invincibleDevs.bookpago.Users;
 
 import com.nimbusds.jose.shaded.gson.JsonObject;
 import com.nimbusds.jose.shaded.gson.JsonParser;
@@ -6,12 +6,10 @@ import invincibleDevs.bookpago.Users.dto.request.KakaoJoinRequest;
 import invincibleDevs.bookpago.Users.dto.request.KakaoSignInRequest;
 import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;
-import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.Users.repository.UserRepository;
 import invincibleDevs.bookpago.common.JWTUtil;
 import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.ProfileRepository;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

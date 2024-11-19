@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.common;
 
-import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.Users.UserEntity;
 import java.util.ArrayList;
 import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;

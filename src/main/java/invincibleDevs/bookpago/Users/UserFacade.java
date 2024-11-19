@@ -1,10 +1,9 @@
-package invincibleDevs.bookpago.Users.facade;
+package invincibleDevs.bookpago.Users;
 
 import invincibleDevs.bookpago.Users.dto.request.KakaoJoinRequest;
 import invincibleDevs.bookpago.Users.dto.request.KakaoSignInRequest;
 import invincibleDevs.bookpago.Users.dto.response.SignInResponse;
 import invincibleDevs.bookpago.Users.dto.response.SignUpResponse;
-import invincibleDevs.bookpago.Users.service.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

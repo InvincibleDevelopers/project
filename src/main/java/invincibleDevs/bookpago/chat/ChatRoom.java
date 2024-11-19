@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.chat;
 
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

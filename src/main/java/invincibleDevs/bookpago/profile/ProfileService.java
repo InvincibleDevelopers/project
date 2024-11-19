@@ -1,10 +1,9 @@
 package invincibleDevs.bookpago.profile;
 
-import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.Users.repository.UserRepository;
+import invincibleDevs.bookpago.Users.UserEntity;
+import invincibleDevs.bookpago.Users.UserRepository;
 import invincibleDevs.bookpago.common.Utils;
 import invincibleDevs.bookpago.common.exception.CustomException;
-import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;

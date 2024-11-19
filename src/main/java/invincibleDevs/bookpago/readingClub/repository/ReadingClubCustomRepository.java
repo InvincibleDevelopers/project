@@ -7,5 +7,8 @@ import java.util.List;
 public interface ReadingClubCustomRepository {
 
     List<ReadingClub> findByLocation(Location northeast, Location southwest);
+
+    List<ReadingClub> findByLocationOrderByDistance(Location northeast, Location southwest,
+            int page, int size, Location location);
 }
 

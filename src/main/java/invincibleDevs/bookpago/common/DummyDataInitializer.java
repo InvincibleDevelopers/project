@@ -1,12 +1,11 @@
-package invincibleDevs.bookpago.util;
+package invincibleDevs.bookpago.common;
 
 import com.github.javafaker.Faker;
-import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.Users.repository.UserRepository;
+import invincibleDevs.bookpago.Users.UserEntity;
+import invincibleDevs.bookpago.Users.UserRepository;
 import invincibleDevs.bookpago.book.BookRepository;
-import invincibleDevs.bookpago.common.GeometryUtil;
 import invincibleDevs.bookpago.profile.ProfileRepository;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMembersRepository;

@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.readingClub.repository;
 
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
 import java.util.List;
 import java.util.Optional;

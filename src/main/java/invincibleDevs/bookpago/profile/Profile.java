@@ -1,7 +1,7 @@
-package invincibleDevs.bookpago.profile.model;
+package invincibleDevs.bookpago.profile;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import invincibleDevs.bookpago.Users.model.UserEntity;
+import invincibleDevs.bookpago.Users.UserEntity;
 import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
 import invincibleDevs.bookpago.review.Review;

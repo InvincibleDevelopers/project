@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.readingClub.controller;
+package invincibleDevs.bookpago.readingClub;
 
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
@@ -133,19 +133,12 @@ public class ReadingClubController {
     @GetMapping("/clubs/nearby")
     public ResponseEntity<?> getNearByClubs(
             @RequestParam(name = "latitude") double latitude,
-            @RequestParam(name = "longitude") double longitude
+            @RequestParam(name = "longitude") double longitude,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size
     ) {
-        return ResponseEntity.ok(readingClubFacade.getNearByClubs(latitude, longitude));
-//        try {
-//
-//        } catch (Exception e) {
-//
-//        }
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> test() {
-
-        return ResponseEntity.ok(readingClubService.testSort());
+        return ResponseEntity.ok(
+                readingClubFacade.getNearByClubs(latitude, longitude,
+                        page, size));
     }
 }

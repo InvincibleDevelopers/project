@@ -1,4 +1,4 @@
-package invincibleDevs.bookpago.Users.model;
+package invincibleDevs.bookpago.Users;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

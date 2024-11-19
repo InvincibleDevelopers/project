@@ -2,7 +2,7 @@ package invincibleDevs.bookpago.mapper.service;
 
 import invincibleDevs.bookpago.mapper.model.FollowingMap;
 import invincibleDevs.bookpago.mapper.repository.FollowingMapRepository;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.profile.response.FollowingListDto;
 import java.util.List;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.common;
 
-import invincibleDevs.bookpago.Users.service.UserEntityService;
+import invincibleDevs.bookpago.Users.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +15,7 @@ import java.util.Iterator;
 @ResponseBody
 @RequiredArgsConstructor
 public class MainController {
+
     private final UserEntityService userEntityService;
 //    @GetMapping("/")
 //    public String mainP() {
@@ -51,14 +52,13 @@ public class MainController {
         }
 
         // 사용자 이름과 역할 정보를 포함한 메시지 생성
-        String message = "Main Controller: " + username + " - Role: " + (role != null ? role : "No Role");
+        String message =
+                "Main Controller: " + username + " - Role: " + (role != null ? role : "No Role");
         System.out.println("=====================tetst=========================");
-
 
         // 메시지를 담아 200 OK 응답 반환
         return ResponseEntity.ok(message);
     }
-
 
 
 }

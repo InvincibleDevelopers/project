@@ -1,14 +1,13 @@
 package invincibleDevs.bookpago.profile;
 
-import invincibleDevs.bookpago.Users.model.UserEntity;
-import invincibleDevs.bookpago.Users.service.UserEntityService;
+import invincibleDevs.bookpago.Users.UserEntity;
+import invincibleDevs.bookpago.Users.UserEntityService;
 import invincibleDevs.bookpago.book.BookDTO;
 import invincibleDevs.bookpago.book.BookDetailDTO;
 import invincibleDevs.bookpago.book.BookService;
 import invincibleDevs.bookpago.common.S3Service;
 import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.mapper.service.FollowingMapService;
-import invincibleDevs.bookpago.profile.model.Profile;
 import invincibleDevs.bookpago.profile.request.FollowRequest;
 import invincibleDevs.bookpago.profile.request.ProfileRequest;
 import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;

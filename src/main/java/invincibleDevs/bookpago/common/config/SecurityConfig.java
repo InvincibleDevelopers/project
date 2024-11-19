@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.common.config;
 
-import invincibleDevs.bookpago.Users.repository.UserRepository;
+import invincibleDevs.bookpago.Users.UserRepository;
 import invincibleDevs.bookpago.common.CustomOAuth2UserService;
 import invincibleDevs.bookpago.common.CustomUserDetailsService;
 import invincibleDevs.bookpago.common.JWTFilter;

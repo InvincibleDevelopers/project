@@ -2,7 +2,7 @@ package invincibleDevs.bookpago.review;
 
 import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.ProfileService;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

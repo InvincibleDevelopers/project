@@ -1,8 +1,8 @@
 package invincibleDevs.bookpago.readingClub.service;
 
-import invincibleDevs.bookpago.common.Location;
+import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.ProfileService;
-import invincibleDevs.bookpago.profile.model.Profile;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
@@ -24,6 +24,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -216,8 +218,14 @@ public class ReadingClubFacade {
         return readingClubMembersService.getUserClubs(user, page, size);
     }
 
-    public List<ReadingClubDto> getNearByClubs(double latitude, double longitude) {
-        Location location = new Location(latitude, longitude);
-        return readingClubService.findStoresListByLocation(location);
+    public ResponseEntity<?> getNearByClubs(double latitude, double longitude, int page, int size) {
+        try {
+            return ResponseEntity.ok(
+                    readingClubService.findClubsListByLocationOrderbyDistance(latitude, longitude,
+                            page,
+                            size));
+        } catch (CustomException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 }

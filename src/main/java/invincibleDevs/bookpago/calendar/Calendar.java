@@ -1,6 +1,6 @@
 //package invincibleDevs.bookpago.calendar;
 //
-//import invincibleDevs.bookpago.profile.model.Profile;
+//import invincibleDevs.bookpago.profile.Profile;
 //import jakarta.persistence.*;
 //import lombok.AllArgsConstructor;
 //import lombok.Builder;
