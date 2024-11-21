@@ -39,6 +39,7 @@ public class ReadingClubMembersService {
                     readingClub.getClubName(),
                     readingClub.getLocation().getX(),
                     readingClub.getLocation().getY(),
+                    readingClub.getAddress(),
                     readingClub.getDescription(),
                     readingClub.getTime(),
                     readingClub.getRepeatCycle(),
@@ -172,5 +173,11 @@ public class ReadingClubMembersService {
                                            .map(ReadingClubMembers::isAdmin)
                                            .orElse(false);
 
+    }
+
+    public ReadingClubMembers getAdminProfile(Long clubId) {
+        return readingClubMembersRepository.findAdminByClubId(clubId)
+                                           .orElseThrow(
+                                                   () -> new CustomException("not found member."));
     }
 }

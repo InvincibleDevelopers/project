@@ -4,6 +4,7 @@ import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.profile.ProfileDTO;
 import invincibleDevs.bookpago.profile.ProfileService;
+import invincibleDevs.bookpago.readingClub.ApplicantService;
 import invincibleDevs.bookpago.readingClub.ClubWithMemberDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
@@ -11,7 +12,6 @@ import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
 import invincibleDevs.bookpago.readingClub.model.Applicant;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
 import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
-import invincibleDevs.bookpago.readingClub.repository.ApplicantRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMembersRepository;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubRepository;
 import java.util.HashMap;
@@ -37,7 +37,8 @@ public class ReadingClubFacade {
     private final ProfileService profileService;
     private final ReadingClubRepository readingClubRepository;
     private final ReadingClubMembersRepository readingClubMembersRepository;
-    private final ApplicantRepository applicantRepository;
+    private final ApplicantService applicantService;
+//    private final ApplicantRepository applicantRepository;
 
     public Page<ReadingClubDto> getClubs(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -50,6 +51,7 @@ public class ReadingClubFacade {
                                                                 readingClub.getClubName(),
                                                                 readingClub.getLocation().getX(),
                                                                 readingClub.getLocation().getY(),
+                                                                readingClub.getAddress(),
                                                                 readingClub.getDescription(),
                                                                 readingClub.getTime(),
                                                                 readingClub.getRepeatCycle(),
@@ -72,7 +74,7 @@ public class ReadingClubFacade {
                 readingClub.getId(),
                 readingClub.getMemberCount(),
                 readingClubRequest.clubName(), readingClub.getLocation().getX(),
-                readingClub.getLocation().getY(),
+                readingClub.getLocation().getY(), readingClub.getAddress(),
                 readingClubRequest.description(), readingClubRequest.time(),
                 readingClubRequest.repeatCycle(), readingClubRequest.weekDay()
         );
@@ -96,8 +98,7 @@ public class ReadingClubFacade {
                                               .applicant(applicant)
                                               .readingClub(readingClub)
                                               .build();
-
-        applicantRepository.save(applicantRequest);
+        applicantService.createApplicant(applicantRequest);
 
         response.put("success", true);
         return response;
@@ -159,16 +160,17 @@ public class ReadingClubFacade {
             return response;
         }
         for (Long applicantId : readingClubMapRequest.applicants()) {
-            Profile applicant = profileService.findByKakaoId(applicantId);
+            Profile profile = profileService.findByKakaoId(applicantId);
 
-            applicantRepository.findByApplicantAndReadingClub(applicantId, clubId)
-                               .ifPresentOrElse(
-                                       applicantRepository::delete,
-                                       () -> {
-                                           throw new IllegalArgumentException(
-                                                   "Applicant not found with specified Profile and ReadingClub");
-                                       }
-                               );
+            applicantService.findByApplicantAndReadingClub(applicantId, clubId)
+                            .ifPresentOrElse(
+                                    applicant -> applicantService.delete(profile), // 람다로 직접 전달
+                                    () -> {
+                                        throw new IllegalArgumentException(
+                                                "Applicant not found with specified Profile and ReadingClub"
+                                        );
+                                    }
+                            );
 
 
         }
@@ -190,21 +192,21 @@ public class ReadingClubFacade {
         for (Long applicantId : readingClubMapRequest.applicants()) {
             Profile applicant = profileService.findByKakaoId(applicantId);
 
-            applicantRepository.findByApplicantAndReadingClub(applicantId, clubId)
-                               .ifPresentOrElse(applicantRequest -> {
-                                           ReadingClubMembers newMember = ReadingClubMembers.builder()
-                                                                                            .clubMember(
-                                                                                                    applicant)
-                                                                                            .readingClub(
-                                                                                                    readingClub)
-                                                                                            .build();
-                                           readingClubMembersRepository.save(newMember);
-                                       },
-                                       () -> {
-                                           throw new IllegalArgumentException(
-                                                   "Applicant not found with specified Profile and ReadingClub");
-                                       }
-                               );
+            applicantService.findByApplicantAndReadingClub(applicantId, clubId)
+                            .ifPresentOrElse(applicantRequest -> {
+                                        ReadingClubMembers newMember = ReadingClubMembers.builder()
+                                                                                         .clubMember(
+                                                                                                 applicant)
+                                                                                         .readingClub(
+                                                                                                 readingClub)
+                                                                                         .build();
+                                        readingClubMembersRepository.save(newMember);
+                                    },
+                                    () -> {
+                                        throw new IllegalArgumentException(
+                                                "Applicant not found with specified Profile and ReadingClub");
+                                    }
+                            );
 
 
         }
@@ -239,9 +241,13 @@ public class ReadingClubFacade {
         List<Long> memberProfileIdList = readingClubMembersService.getMemberProfileIdList(clubId,
                 profile.getId());
         boolean isAdmin = readingClubMembersService.isAdmin(profile.getId(), clubId);
+        ReadingClubMembers adminMember = readingClubMembersService.getAdminProfile(clubId);
         List<ProfileDTO> memberProfileList = profileService.getProfileDtoList(memberProfileIdList);
-        ClubWithMemberDto clubWithMemberDto = new ClubWithMemberDto(readingClubDto,
-                memberProfileList, isAdmin);
+
+        ClubWithMemberDto clubWithMemberDto = new ClubWithMemberDto(isAdmin,
+                adminMember.getClubMember().getUserEntity().getKakaoId(),
+                readingClubDto, memberProfileList,
+                applicantService.getApplicants(clubId));
         return clubWithMemberDto;
     }
 }

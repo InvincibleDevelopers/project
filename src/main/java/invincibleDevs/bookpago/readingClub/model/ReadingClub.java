@@ -31,6 +31,7 @@ public class ReadingClub {
 
     @Column(columnDefinition = "GEOMETRY")
     private Point location;
+    private String address;
 
     private String description;
     private String time;

@@ -7,6 +7,7 @@ public record ReadingClubRequest(
         String clubName,
         double latitude,
         double longitude,
+        String address,
         String description,
         String time,
         int repeatCycle,
