@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -190,5 +191,21 @@ public class ProfileService {
 
     public List<Profile> findByKeyword(String keyword) {
         return profileRepository.findByKeyword(keyword);
+    }
+
+    public List<ProfileDTO> getProfileDtoList(List<Long> memberProfileIdList) {
+        List<Profile> getProfilesByIdList = profileRepository.findByIdIn(memberProfileIdList)
+                                                             .orElseThrow(() -> new CustomException(
+                                                                     "not found Profiles."));
+
+        List<ProfileDTO> profileDTOList = getProfilesByIdList.stream()
+                                                             .map(profile -> new ProfileDTO(
+                                                                     profile.getUserEntity()
+                                                                            .getKakaoId(),
+                                                                     profile.getNickName(),
+                                                                     profile.getProfileImgUrl())
+                                                             )
+                                                             .collect(Collectors.toList());
+        return profileDTOList;
     }
 }

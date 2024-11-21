@@ -27,6 +27,32 @@ public class ReadingClubService {
                                     .orElse(null);
     }
 
+    public ReadingClubDto getClub(Long clubId) {
+        ReadingClub readingClub = readingClubRepository.findById(clubId)
+                                                       .orElseThrow(() -> new CustomException(
+                                                               "Not Found Club."));
+//        Optional<ReadingClubMembers> adminOptional = readingClubMembersRepository.findAdminByClubId(
+//                clubId);
+//        Long adminId = 0L;
+//        if (adminOptional.isPresent()) {
+//            adminId = adminOptional.get().getClubMember().getUserEntity().getKakaoId();
+//        }
+
+        return new ReadingClubDto(
+                readingClub.getId(),
+                readingClub.getMemberCount(),
+                readingClub.getClubName(),
+                readingClub.getLocation().getY(),
+                readingClub.getLocation().getX(),
+                readingClub.getDescription(),
+                readingClub.getTime(),
+                readingClub.getRepeatCycle(),
+                readingClub.getWeekDay()
+//                readingClubMembersService.getMemberProfiles(clubId),
+//                readingClubMembersService.getApplicantProfiles(clubId)
+        );
+    }
+
     public ReadingClub createClub(ReadingClubRequest readingClubRequest,
             Set<ReadingClubMembers> members) {
         // Point 객체 생성

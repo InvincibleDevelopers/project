@@ -1,8 +1,10 @@
 package invincibleDevs.bookpago.readingClub.service;
 
 import invincibleDevs.bookpago.common.exception.CustomException;
-import invincibleDevs.bookpago.profile.ProfileService;
 import invincibleDevs.bookpago.profile.Profile;
+import invincibleDevs.bookpago.profile.ProfileDTO;
+import invincibleDevs.bookpago.profile.ProfileService;
+import invincibleDevs.bookpago.readingClub.ClubWithMemberDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
@@ -24,8 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -218,14 +218,30 @@ public class ReadingClubFacade {
         return readingClubMembersService.getUserClubs(user, page, size);
     }
 
-    public ResponseEntity<?> getNearByClubs(double latitude, double longitude, int page, int size) {
+    public Map<String, Object> getNearByClubs(double latitude, double longitude, int page,
+            int size) {
         try {
-            return ResponseEntity.ok(
-                    readingClubService.findClubsListByLocationOrderbyDistance(latitude, longitude,
-                            page,
-                            size));
+            List<ReadingClubDto> clubs = readingClubService.findClubsListByLocationOrderbyDistance(
+                    latitude, longitude, page, size);
+            return Map.of("content", clubs);
+//            return readingClubService.findClubsListByLocationOrderbyDistance(latitude, longitude,
+//                    page,
+//                    size);
+
         } catch (CustomException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            throw new CustomException(e.getMessage());
         }
+    }
+
+    public ClubWithMemberDto getClub(Long clubId, Long kakaoId) {
+        ReadingClubDto readingClubDto = readingClubService.getClub(clubId);
+        Profile profile = profileService.findByKakaoId(kakaoId);
+        List<Long> memberProfileIdList = readingClubMembersService.getMemberProfileIdList(clubId,
+                profile.getId());
+        boolean isAdmin = readingClubMembersService.isAdmin(profile.getId(), clubId);
+        List<ProfileDTO> memberProfileList = profileService.getProfileDtoList(memberProfileIdList);
+        ClubWithMemberDto clubWithMemberDto = new ClubWithMemberDto(readingClubDto,
+                memberProfileList, isAdmin);
+        return clubWithMemberDto;
     }
 }

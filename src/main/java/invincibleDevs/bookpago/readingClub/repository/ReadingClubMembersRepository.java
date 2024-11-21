@@ -44,5 +44,10 @@ public interface ReadingClubMembersRepository extends JpaRepository<ReadingClubM
 
     // 특정 독서 모임(clubId)에서 전체 멤버 조회
     @Query("SELECT rc FROM ReadingClubMembers rc WHERE rc.readingClub.id = :clubId")
-    List<ReadingClubMembers> findByClubId(@Param("clubId") Long clubId);
+    Optional<List<ReadingClubMembers>> findAllByClubId(@Param("clubId") Long clubId);
+
+    // 특정 클럽 ID와 멤버 ID로 조회
+    Optional<ReadingClubMembers> findByClubMember_IdAndReadingClub_Id(Long clubId,
+            Long clubMemberId);
+
 }

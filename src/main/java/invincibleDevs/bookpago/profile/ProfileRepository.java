@@ -20,5 +20,5 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     @Query("select p from Profile p join fetch p.userEntity where p.nickName like %:keyword%")
     List<Profile> findByKeyword(@Param("keyword") String keyword);
 
-
+    Optional<List<Profile>> findByIdIn(List<Long> ids);
 }

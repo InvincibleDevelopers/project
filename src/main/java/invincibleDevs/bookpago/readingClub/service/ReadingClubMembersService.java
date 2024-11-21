@@ -1,6 +1,6 @@
 package invincibleDevs.bookpago.readingClub.service;
 
-import invincibleDevs.bookpago.profile.ProfileDTO;
+import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubDto;
 import invincibleDevs.bookpago.readingClub.model.ReadingClub;
@@ -8,7 +8,7 @@ import invincibleDevs.bookpago.readingClub.model.ReadingClubMembers;
 import invincibleDevs.bookpago.readingClub.repository.ReadingClubMembersRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -95,12 +95,29 @@ public class ReadingClubMembersService {
         return readingClubMembersRepository.save(readingClubMembers);
     }
 
-    public List<ProfileDTO> getMemberProfiles(Long clubId) {
-        List<ProfileDTO> memberProfiles = new ArrayList<>();
+    public List<Long> getMemberProfileIdList(Long clubId,
+            Long profileId) { //g해당카카오아이디 admin에잇는지;
+        List<ReadingClubMembers> memberProfileList = readingClubMembersRepository.findAllByClubId(
+                                                                                         clubId)
+                                                                                 .orElseThrow(
+                                                                                         () -> new CustomException(
+                                                                                                 "not found members."));
 
+        List<Long> memberProfileIdList;
+        memberProfileIdList = readingClubMembersRepository.findAllByClubId(clubId)
+                                                          .orElseThrow(
+                                                                  () -> new CustomException(
+                                                                          "not found members."))
+                                                          .stream()
+                                                          .map(readingClubMembers -> readingClubMembers.getClubMember()
+                                                                                                       .getId())
+                                                          .collect(Collectors.toList());
+
+        return memberProfileIdList;
         // 관리자 정보를 맴버 리스트에 추가
-        Optional<ReadingClubMembers> adminMapOptional = readingClubMembersRepository.findAdminByClubId(
-                clubId);
+//        Optional<ReadingClubMembers
+//                > adminMapOptional = readingClubMembersRepository.findAdminByClubId(
+//                clubId);
 //        if (adminMapOptional.isPresent()) {
 //            Profile adminProfile = adminMapOptional.get().getClubAdmin();
 //            ProfileDTO adminDto = new ProfileDTO(
@@ -112,19 +129,19 @@ public class ReadingClubMembersService {
 //        }
 
         // 맴버 정보를 맴버 리스트에 추가
-        List<ReadingClubMembers> memberMaps = readingClubMembersRepository.findMembersByClubId(
-                clubId);
-        for (ReadingClubMembers memberMap : memberMaps) {
-            Profile memberProfile = memberMap.getClubMember();
-            ProfileDTO memberDto = new ProfileDTO(
-                    memberProfile.getUserEntity().getKakaoId(),
-                    memberProfile.getNickName(),
-                    memberProfile.getProfileImgUrl()
-            );
-            memberProfiles.add(memberDto);
-        }
+//        List<ReadingClubMembers> memberMaps = readingClubMembersRepository.findMembersByClubId(
+//                clubId);
+//        for (ReadingClubMembers memberMap : memberMaps) {
+//            Profile memberProfile = memberMap.getClubMember();
+//            ProfileDTO memberDto = new ProfileDTO(
+//                    memberProfile.getUserEntity().getKakaoId(),
+//                    memberProfile.getNickName(),
+//                    memberProfile.getProfileImgUrl()
+//            );
+//            memberProfiles.add(memberDto);
+//        }
 
-        return memberProfiles;
+//        return memberProfiles;
     }
 
 //    public List<ProfileDTO> getApplicantProfiles(Long clubId) {
@@ -147,4 +164,13 @@ public class ReadingClubMembersService {
 //    }
 
 
+    public boolean isAdmin(Long profileId, Long clubId) {
+        System.out.println(profileId);
+        System.out.println(clubId);
+
+        return readingClubMembersRepository.findByClubMember_IdAndReadingClub_Id(profileId, clubId)
+                                           .map(ReadingClubMembers::isAdmin)
+                                           .orElse(false);
+
+    }
 }

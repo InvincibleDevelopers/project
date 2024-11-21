@@ -3,7 +3,6 @@ package invincibleDevs.bookpago.readingClub;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubMapRequest;
 import invincibleDevs.bookpago.readingClub.dto.ReadingClubRequest;
 import invincibleDevs.bookpago.readingClub.service.ReadingClubFacade;
-import invincibleDevs.bookpago.readingClub.service.ReadingClubService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class ReadingClubController {
 
     private final ReadingClubFacade readingClubFacade;
-    private final ReadingClubService readingClubService;
 
     @GetMapping("/clubs")
     public ResponseEntity<?> getClubs(
@@ -48,12 +46,13 @@ public class ReadingClubController {
         }
     }
 
-//    @GetMapping("/clubs/{clubId}")
-//    public ResponseEntity<?> getTargetClub(
-//            @PathVariable("clubId") Long clubId
-//    ) {
-//        return ResponseEntity.ok(readingClubFacade.getClub(clubId));
-//    }
+    @GetMapping("/clubs/{clubId}")
+    public ResponseEntity<?> getTargetClub(
+            @PathVariable("clubId") Long clubId,
+            @RequestParam(name = "kakaoId") Long kakaoId
+    ) {
+        return ResponseEntity.ok(readingClubFacade.getClub(clubId, kakaoId));
+    }
 
     @PostMapping("/clubs/{clubId}/members")
     public ResponseEntity<?> joinClub(
