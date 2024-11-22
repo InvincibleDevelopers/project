@@ -65,6 +65,7 @@ public class ReadingClubService {
                                              .clubName(readingClubRequest.clubName())
                                              .description(readingClubRequest.description())
                                              .location(location)
+                                             .address(readingClubRequest.address())
                                              .time(readingClubRequest.time())
                                              .repeatCycle(readingClubRequest.repeatCycle())
                                              .weekDay(readingClubRequest.weekDay())

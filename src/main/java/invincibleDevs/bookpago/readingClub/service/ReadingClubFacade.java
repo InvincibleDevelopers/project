@@ -223,7 +223,10 @@ public class ReadingClubFacade {
         List<Long> memberProfileIdList = readingClubMembersService.getMemberProfileIdList(clubId,
                 profile.getId());
         boolean isAdmin = readingClubMembersService.isAdmin(profile.getId(), clubId);
+        System.out.println("^^^^^^^^^^^^^^^^^^^^");
+        System.out.println(isAdmin);
         ReadingClubMembers adminMember = readingClubMembersService.getAdminProfile(clubId);
+        System.out.println(adminMember.getClubMember().getId());
         List<ProfileDTO> memberProfileList = profileService.getProfileDtoList(memberProfileIdList);
 
         ClubWithMemberDto clubWithMemberDto = new ClubWithMemberDto(isAdmin,
