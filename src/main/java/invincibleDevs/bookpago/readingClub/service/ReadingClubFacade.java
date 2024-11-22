@@ -38,7 +38,6 @@ public class ReadingClubFacade {
     private final ReadingClubRepository readingClubRepository;
     private final ReadingClubMembersRepository readingClubMembersRepository;
     private final ApplicantService applicantService;
-//    private final ApplicantRepository applicantRepository;
 
     public Page<ReadingClubDto> getClubs(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
@@ -160,19 +159,9 @@ public class ReadingClubFacade {
             return response;
         }
         for (Long applicantId : readingClubMapRequest.applicants()) {
-            Profile profile = profileService.findByKakaoId(applicantId);
-
-            applicantService.findByApplicantAndReadingClub(applicantId, clubId)
-                            .ifPresentOrElse(
-                                    applicant -> applicantService.delete(profile), // 람다로 직접 전달
-                                    () -> {
-                                        throw new IllegalArgumentException(
-                                                "Applicant not found with specified Profile and ReadingClub"
-                                        );
-                                    }
-                            );
-
-
+            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
+                    clubId);
+            applicantService.delete(applicant);
         }
 
         response.put("success", true);
@@ -190,25 +179,18 @@ public class ReadingClubFacade {
             return response;
         }
         for (Long applicantId : readingClubMapRequest.applicants()) {
-            Profile applicant = profileService.findByKakaoId(applicantId);
+            Profile applicantProfile = profileService.findByKakaoId(applicantId);
 
-            applicantService.findByApplicantAndReadingClub(applicantId, clubId)
-                            .ifPresentOrElse(applicantRequest -> {
-                                        ReadingClubMembers newMember = ReadingClubMembers.builder()
-                                                                                         .clubMember(
-                                                                                                 applicant)
-                                                                                         .readingClub(
-                                                                                                 readingClub)
-                                                                                         .build();
-                                        readingClubMembersRepository.save(newMember);
-                                    },
-                                    () -> {
-                                        throw new IllegalArgumentException(
-                                                "Applicant not found with specified Profile and ReadingClub");
-                                    }
-                            );
-
-
+            ReadingClubMembers newMember = ReadingClubMembers.builder()
+                                                             .clubMember(
+                                                                     applicantProfile)
+                                                             .readingClub(
+                                                                     readingClub)
+                                                             .build();
+            readingClubMembersRepository.save(newMember);
+            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
+                    clubId);
+            applicantService.delete(applicant);
         }
 
         response.put("success", true);

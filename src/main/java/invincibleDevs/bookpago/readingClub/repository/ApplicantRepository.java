@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.readingClub.repository;
 
 import invincibleDevs.bookpago.readingClub.model.Applicant;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,8 +9,18 @@ import org.springframework.data.repository.query.Param;
 
 public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
 
-    // 특정 프로필과 리딩클럽을 기준으로 Applicant 조회
-    @Query("SELECT a FROM Applicant a WHERE a.applicant.id = :profileId AND a.readingClub.id = :readingClubId")
-    Optional<Applicant> findByApplicantAndReadingClub(@Param("profile") Long profileId,
-            @Param("readingClub") Long readingClubId);
+    // ReadingClub ID로 Applicant 목록 조회
+    Optional<List<Applicant>> findByReadingClub_Id(Long clubId);
+
+//    Optional<Applicant> findByApplicantAndReadingClub(Long applicantId, Long clubId);
+
+    @Query("SELECT a FROM Applicant a WHERE a.applicant.id = :applicantId AND a.readingClub.id = :clubId")
+    Optional<Applicant> findByApplicantAndReadingClub(@Param("applicantId") Long applicantId,
+            @Param("clubId") Long clubId);
+
+    @Query("SELECT a FROM Applicant a JOIN FETCH a.applicant WHERE a.readingClub.id = :readingClubId")
+    Optional<List<Applicant>> findApplicantsWithProfileByReadingClubId(
+            @Param("readingClubId") Long readingClubId);
+
+
 }

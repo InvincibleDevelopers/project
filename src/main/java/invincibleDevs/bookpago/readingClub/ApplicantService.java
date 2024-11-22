@@ -3,6 +3,7 @@ package invincibleDevs.bookpago.readingClub;
 import invincibleDevs.bookpago.common.exception.CustomException;
 import invincibleDevs.bookpago.profile.ProfileDTO;
 import invincibleDevs.bookpago.readingClub.model.Applicant;
+import invincibleDevs.bookpago.readingClub.repository.ApplicantRepository;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,7 +18,11 @@ public class ApplicantService {
 
     public List<ProfileDTO> getApplicants(Long clubId) {
         // Applicant 리스트 조회
-        List<Applicant> applicants = applicantRepository.findByReadingClub_Id(clubId)
+//        List<Applicant> applicants = applicantRepository.findByReadingClub_Id(clubId)
+//                                                        .orElse(Collections.emptyList());
+
+        List<Applicant> applicants = applicantRepository.findApplicantsWithProfileByReadingClubId(
+                                                                clubId)
                                                         .orElse(Collections.emptyList());
 
         return applicants.stream()
@@ -39,9 +44,12 @@ public class ApplicantService {
 
     public Applicant findByApplicantAndReadingClub(Long applicantId, Long clubId) {
         return applicantRepository.findByApplicantAndReadingClub(applicantId, clubId)
-                                  .orElseThrow(() -> new CustomException("not found applicant."));
+                                  .orElseThrow(() -> new CustomException(
+                                          "Applicant not found for applicantId: " + applicantId
+                                                  + " and clubId: " + clubId));
     }
 
-    public void delete(Object o) {
+    public void delete(Applicant applicant) {
+        applicantRepository.delete(applicant);
     }
 }
