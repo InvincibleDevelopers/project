@@ -82,7 +82,7 @@ public class ReadingClubController {
     public ResponseEntity<?> banishClub(
             @PathVariable("clubId") Long clubId,
             @RequestBody ReadingClubMapRequest readingClubMapRequest
-    ) {
+    ) { //뭔기능이지?
         try {
             return ResponseEntity.ok(readingClubFacade.banishClub(clubId, readingClubMapRequest));
         } catch (Exception e) {

@@ -52,4 +52,9 @@ public class ApplicantService {
     public void delete(Applicant applicant) {
         applicantRepository.delete(applicant);
     }
+
+    public Applicant findById(Long applicantId) {
+        return applicantRepository.findById(applicantId)
+                                  .orElseThrow(() -> new CustomException("not found applicant."));
+    }
 }

@@ -126,7 +126,7 @@ public class ReadingClubFacade {
     }
 
     public Map<String, Boolean> banishClub(Long clubId,
-            ReadingClubMapRequest readingClubMapRequest) {
+            ReadingClubMapRequest readingClubMapRequest) { //멤버 강퇴기능?
         Map<String, Boolean> response = new HashMap<>();
 
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
@@ -179,17 +179,17 @@ public class ReadingClubFacade {
             return response;
         }
         for (Long applicantId : readingClubMapRequest.applicants()) {
-            Profile applicantProfile = profileService.findByKakaoId(applicantId);
+            Applicant applicant = applicantService.findById(applicantId);
 
             ReadingClubMembers newMember = ReadingClubMembers.builder()
                                                              .clubMember(
-                                                                     applicantProfile)
+                                                                     applicant.getApplicant())
                                                              .readingClub(
                                                                      readingClub)
                                                              .build();
             readingClubMembersRepository.save(newMember);
-            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
-                    clubId);
+//            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
+//                    clubId);
             applicantService.delete(applicant);
         }
 
