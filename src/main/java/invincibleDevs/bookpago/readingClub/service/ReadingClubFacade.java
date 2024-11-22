@@ -85,19 +85,47 @@ public class ReadingClubFacade {
         Map<String, Boolean> response = new HashMap<>();
 
         ReadingClub readingClub = readingClubService.findById(clubId);
-        Profile applicant = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
-        // 이미 독서 모임에 존재하므로 가입 실패
-        if (readingClubMembersRepository.findByIdAndAdmin(clubId, applicant).isPresent()
-                || readingClubMembersRepository.findByIdAndMember(clubId, applicant).isPresent()) {
-            response.put("success", false);
-            return response;
-        }
+//        List<Long> applicantKakaoIdList = readingClubMapRequest.applicants().stream()
+//                .forEach(applicantKakaoId ->
+//                        Profile applicant = profileService.findByKakaoId(applicantKakaoID)  );
+//
+//        Profile applicant = profileService.findByKakaoId(readingClubMapRequest.applicants());
+//        // 이미 독서 모임에 존재하므로 가입 실패
+//        if (readingClubMembersRepository.findByIdAndAdmin(clubId, applicant).isPresent()
+//                || readingClubMembersRepository.findByIdAndMember(clubId, applicant).isPresent()) {
+//            response.put("success", false);
+//            return response;
+//        }
 
-        Applicant applicantRequest = Applicant.builder()
-                                              .applicant(applicant)
-                                              .readingClub(readingClub)
-                                              .build();
-        applicantService.createApplicant(applicantRequest);
+        // applicants()에서 각 kakaoId로 Profile 리스트 생성
+        List<Profile> applicantProfiles = readingClubMapRequest.applicants().stream()
+                                                               .map(profileService::findByKakaoId) // 각 kakaoId로 Profile 객체를 조회
+                                                               .collect(Collectors.toList());
+
+// 가입 실패 여부 검사
+        for (Profile applicant : applicantProfiles) {
+            boolean isAlreadyInClub =
+                    readingClubMembersRepository.findByIdAndAdmin(clubId, applicant).isPresent() ||
+                            readingClubMembersRepository.findByIdAndMember(clubId, applicant)
+                                                        .isPresent();
+
+            if (isAlreadyInClub) {
+                response.put("success", false);
+                return response;
+            }
+
+            Applicant applicantRequest = Applicant.builder()
+                                                  .applicant(applicant)
+                                                  .readingClub(readingClub)
+                                                  .build();
+            applicantService.createApplicant(applicantRequest);
+        }
+//
+//        Applicant applicantRequest = Applicant.builder()
+//                                              .applicant(applicant)
+//                                              .readingClub(readingClub)
+//                                              .build();
+//        applicantService.createApplicant(applicantRequest);
 
         response.put("success", true);
         return response;
@@ -135,7 +163,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long memberId : readingClubMapRequest.members()) {
+        for (Long memberId : readingClubMapRequest.members().get()) {
             Profile member = profileService.findByKakaoId(memberId);
             Optional<ReadingClubMembers> clubMapOptional = readingClubMembersRepository.findByIdAndMember(
                     clubId, member);
@@ -158,9 +186,11 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long applicantId : readingClubMapRequest.applicants()) {
-            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
-                    clubId);
+        for (Long applicantKakaoId : readingClubMapRequest.applicants()) {
+            Profile applicantProfile = profileService.findByKakaoId(applicantKakaoId);
+            Applicant applicant = applicantService.findByApplicant(applicantProfile);
+//            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
+//                    clubId);
             applicantService.delete(applicant);
         }
 
@@ -171,19 +201,26 @@ public class ReadingClubFacade {
     public Map<String, Boolean> acceptApplicants(Long clubId,
             ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
-        ReadingClub readingClub = readingClubRepository.findById(clubId).get();
+//        ReadingClub readingClub = readingClubRepository.findById(clubId).get();
+        ReadingClub readingClub = readingClubService.findById(clubId);
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
         // 사용자가 해당 독서 모임의 관리자가 아님
         if (readingClubMembersRepository.findByIdAndAdmin(clubId, admin).isEmpty()) {
             response.put("success", false);
             return response;
         }
-        for (Long applicantId : readingClubMapRequest.applicants()) {
-            Applicant applicant = applicantService.findById(applicantId);
+        System.out.println("^^^^^^^^^^^^");
+        System.out.println(clubId);
+        System.out.println(readingClubMapRequest.applicants());
+        List<Applicant> applicants = applicantService.findByReadingClubId(clubId);
+
+        for (Long applicantKakaoId : readingClubMapRequest.applicants()) {
+            Profile applicantProfile = profileService.findByKakaoId(applicantKakaoId);
+            Applicant applicant = applicantService.findByApplicant(applicantProfile);
 
             ReadingClubMembers newMember = ReadingClubMembers.builder()
                                                              .clubMember(
-                                                                     applicant.getApplicant())
+                                                                     applicantProfile)
                                                              .readingClub(
                                                                      readingClub)
                                                              .build();

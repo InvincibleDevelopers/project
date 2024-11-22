@@ -182,8 +182,10 @@ public class ProfileService {
     }
 
     public Profile findByKakaoId(Long kakaoId) {
+        System.out.println("**********");
+        System.out.println(kakaoId);
         return profileRepository.findByUserEntityUserKakaoId(kakaoId)
-                                .orElseThrow(() -> new NoSuchElementException(
+                                .orElseThrow(() -> new CustomException(
                                         "Profile with username :"
                                                 + kakaoId
                                                 + "- not found"));

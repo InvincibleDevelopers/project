@@ -24,7 +24,7 @@ public class ReadingClubService {
 
     public ReadingClub findById(Long clubId) {
         return readingClubRepository.findById(clubId)
-                                    .orElse(null);
+                                    .orElseThrow(() -> new CustomException("not found club."));
     }
 
     public ReadingClubDto getClub(Long clubId) {

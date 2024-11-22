@@ -1,5 +1,6 @@
 package invincibleDevs.bookpago.readingClub.repository;
 
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.readingClub.model.Applicant;
 import java.util.List;
 import java.util.Optional;
@@ -23,4 +24,5 @@ public interface ApplicantRepository extends JpaRepository<Applicant, Long> {
             @Param("readingClubId") Long readingClubId);
 
 
+    Optional<Applicant> findByApplicant(Profile applicantProfile);
 }

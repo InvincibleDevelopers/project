@@ -1,6 +1,7 @@
 package invincibleDevs.bookpago.readingClub;
 
 import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.Profile;
 import invincibleDevs.bookpago.profile.ProfileDTO;
 import invincibleDevs.bookpago.readingClub.model.Applicant;
 import invincibleDevs.bookpago.readingClub.repository.ApplicantRepository;
@@ -56,5 +57,15 @@ public class ApplicantService {
     public Applicant findById(Long applicantId) {
         return applicantRepository.findById(applicantId)
                                   .orElseThrow(() -> new CustomException("not found applicant."));
+    }
+
+    public List<Applicant> findByReadingClubId(Long clubId) {
+        return applicantRepository.findByReadingClub_Id(clubId)
+                                  .orElseThrow(() -> new CustomException("해당 클럽의 신청자가 없습니다."));
+    }
+
+    public Applicant findByApplicant(Profile applicantProfile) {
+        return applicantRepository.findByApplicant(applicantProfile)
+                                  .orElseThrow(() -> new CustomException("해당 카카오 아이디의 신청자가 없습니다."));
     }
 }
