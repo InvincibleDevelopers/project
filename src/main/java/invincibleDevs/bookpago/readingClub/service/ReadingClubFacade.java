@@ -85,48 +85,23 @@ public class ReadingClubFacade {
         Map<String, Boolean> response = new HashMap<>();
 
         ReadingClub readingClub = readingClubService.findById(clubId);
-//        List<Long> applicantKakaoIdList = readingClubMapRequest.applicants().stream()
-//                .forEach(applicantKakaoId ->
-//                        Profile applicant = profileService.findByKakaoId(applicantKakaoID)  );
-//
-//        Profile applicant = profileService.findByKakaoId(readingClubMapRequest.applicants());
-//        // 이미 독서 모임에 존재하므로 가입 실패
-//        if (readingClubMembersRepository.findByIdAndAdmin(clubId, applicant).isPresent()
-//                || readingClubMembersRepository.findByIdAndMember(clubId, applicant).isPresent()) {
-//            response.put("success", false);
-//            return response;
-//        }
+        Profile applicantProfile = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
 
-        // applicants()에서 각 kakaoId로 Profile 리스트 생성
-        List<Profile> applicantProfiles = readingClubMapRequest.applicants().stream()
-                                                               .map(profileService::findByKakaoId) // 각 kakaoId로 Profile 객체를 조회
-                                                               .collect(Collectors.toList());
+        // 가입 여부 검사
+        boolean isAlreadyInClub =
+                readingClubMembersRepository.findByIdAndMember(clubId, applicantProfile)
+                                            .isPresent();
 
-// 가입 실패 여부 검사
-        for (Profile applicant : applicantProfiles) {
-            boolean isAlreadyInClub =
-                    readingClubMembersRepository.findByIdAndAdmin(clubId, applicant).isPresent() ||
-                            readingClubMembersRepository.findByIdAndMember(clubId, applicant)
-                                                        .isPresent();
-
-            if (isAlreadyInClub) {
-                response.put("success", false);
-                return response;
-            }
-
-            Applicant applicantRequest = Applicant.builder()
-                                                  .applicant(applicant)
-                                                  .readingClub(readingClub)
-                                                  .build();
-            applicantService.createApplicant(applicantRequest);
+        if (isAlreadyInClub) {
+            response.put("success", false);
+            return response;
         }
-//
-//        Applicant applicantRequest = Applicant.builder()
-//                                              .applicant(applicant)
-//                                              .readingClub(readingClub)
-//                                              .build();
-//        applicantService.createApplicant(applicantRequest);
 
+        Applicant applicantRequest = Applicant.builder()
+                                              .applicant(applicantProfile)
+                                              .readingClub(readingClub)
+                                              .build();
+        applicantService.createApplicant(applicantRequest);
         response.put("success", true);
         return response;
     }
@@ -135,9 +110,9 @@ public class ReadingClubFacade {
             ReadingClubMapRequest readingClubMapRequest) {
         Map<String, Boolean> response = new HashMap<>();
 
-        Profile user = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
+        Profile memberProfile = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
         Optional<ReadingClubMembers> clubMapOptional = readingClubMembersRepository.findByIdAndMember(
-                clubId, user);
+                clubId, memberProfile);
         // 독서 모임의 멤버나 대기자가 아님
 //        if (clubMapOptional.isEmpty()) {
 //            clubMapOptional = readingClubMembersRepository.findByIdAndApplicant(clubId, user);
@@ -154,7 +129,7 @@ public class ReadingClubFacade {
     }
 
     public Map<String, Boolean> banishClub(Long clubId,
-            ReadingClubMapRequest readingClubMapRequest) { //멤버 강퇴기능?
+            ReadingClubMapRequest readingClubMapRequest) { //멤버 강퇴 기능
         Map<String, Boolean> response = new HashMap<>();
 
         Profile admin = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
@@ -186,7 +161,7 @@ public class ReadingClubFacade {
             response.put("success", false);
             return response;
         }
-        for (Long applicantKakaoId : readingClubMapRequest.applicants()) {
+        for (Long applicantKakaoId : readingClubMapRequest.applicants().get()) {
             Profile applicantProfile = profileService.findByKakaoId(applicantKakaoId);
             Applicant applicant = applicantService.findByApplicant(applicantProfile);
 //            Applicant applicant = applicantService.findByApplicantAndReadingClub(applicantId,
@@ -214,7 +189,7 @@ public class ReadingClubFacade {
         System.out.println(readingClubMapRequest.applicants());
         List<Applicant> applicants = applicantService.findByReadingClubId(clubId);
 
-        for (Long applicantKakaoId : readingClubMapRequest.applicants()) {
+        for (Long applicantKakaoId : readingClubMapRequest.applicants().get()) {
             Profile applicantProfile = profileService.findByKakaoId(applicantKakaoId);
             Applicant applicant = applicantService.findByApplicant(applicantProfile);
 

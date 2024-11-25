@@ -54,6 +54,9 @@ public class ReadingClubController {
         return ResponseEntity.ok(readingClubFacade.getClub(clubId, kakaoId));
     }
 
+    /*
+     클럽 가입 신청
+     */
     @PostMapping("/clubs/{clubId}/members")
     public ResponseEntity<?> joinClub(
             @PathVariable("clubId") Long clubId,
@@ -66,6 +69,9 @@ public class ReadingClubController {
         }
     }
 
+    /*
+     클럽 나가기
+     */
     @DeleteMapping("/clubs/{clubId}/members")
     public ResponseEntity<?> leaveClub(
             @PathVariable("clubId") Long clubId,
@@ -78,17 +84,24 @@ public class ReadingClubController {
         }
     }
 
+    /*
+     관리자 추방하기
+     */
     @DeleteMapping("/clubs/{clubId}/admin")
     public ResponseEntity<?> banishClub(
             @PathVariable("clubId") Long clubId,
             @RequestBody ReadingClubMapRequest readingClubMapRequest
-    ) { //뭔기능이지?
+    ) {
         try {
             return ResponseEntity.ok(readingClubFacade.banishClub(clubId, readingClubMapRequest));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /*
+     관리자 신청자 거절
+     */
 
     @DeleteMapping("/clubs/{clubId}/applicants")
     public ResponseEntity<?> rejectApplicants(
@@ -102,6 +115,10 @@ public class ReadingClubController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /*
+     관리자 신청자 수락
+     */
 
     @PostMapping("/clubs/{clubId}/applicants")
     public ResponseEntity<?> acceptApplicants(
