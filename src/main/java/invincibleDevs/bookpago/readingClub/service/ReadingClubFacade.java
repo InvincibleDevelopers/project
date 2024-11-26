@@ -111,18 +111,25 @@ public class ReadingClubFacade {
         Map<String, Boolean> response = new HashMap<>();
 
         Profile memberProfile = profileService.findByKakaoId(readingClubMapRequest.kakaoId());
-        Optional<ReadingClubMembers> clubMapOptional = readingClubMembersRepository.findByIdAndMember(
+        Optional<ReadingClubMembers> clubMember = readingClubMembersRepository.findByIdAndMember(
                 clubId, memberProfile);
+
+        Applicant applicant;
+        //ㅅㅂ applicant에잇으면 그거하고, 없으면 멤버에서삭제;
         // 독서 모임의 멤버나 대기자가 아님
-//        if (clubMapOptional.isEmpty()) {
-//            clubMapOptional = readingClubMembersRepository.findByIdAndApplicant(clubId, user);
-//        }
-        if (clubMapOptional.isEmpty()) {
-            response.put("success", false);
+        if (clubMember.isEmpty()) {
+            applicant = applicantService.findByApplicantAndReadingClub(memberProfile.getId(),
+                    clubId);
+            applicantService.delete(applicant);
+            response.put("success", true);
             return response;
         }
+//        if (applicant.isEmpty()) {
+//            response.put("success", false);
+//            return response;
+//        }
 
-        readingClubMembersRepository.delete(clubMapOptional.get());
+        readingClubMembersRepository.delete(clubMember.get());
 
         response.put("success", true);
         return response;

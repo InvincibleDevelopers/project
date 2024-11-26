@@ -70,7 +70,7 @@ public class ReadingClubController {
     }
 
     /*
-     클럽 나가기
+     클럽 나가기 또는 신청취소 둘다 해야함
      */
     @DeleteMapping("/clubs/{clubId}/members")
     public ResponseEntity<?> leaveClub(
