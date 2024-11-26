@@ -2,19 +2,55 @@ server:
   port: 8088
 
 spring:
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB   # 최대 파일 크기 50MB로 설정
+      max-request-size: 100MB  # 최대 요청 크기 100MB로 설정
   application:
     name: bookpago
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url : ENC(vwbq49qSwwAfDE4Y8Hsnur2rqNEoL/rjfvSuhDVHR0bXXIHJaLscf6K4xsVVgKW3qKxhL/QNw10r26XMYTlkDVBiAlg8nTtMDUe8mD+vgdabpXG3YhbCJ43lTLyfJL2uXlSWKKq6QXbcr0Rr/Sp0tsjf1ceMP4sreNAJG8r1SsTVDu1vHvCbW7zoNTVbHqRR)
+    url: ENC(vwbq49qSwwAfDE4Y8Hsnur2rqNEoL/rjfvSuhDVHR0bXXIHJaLscf6K4xsVVgKW3qKxhL/QNw10r26XMYTlkDVBiAlg8nTtMDUe8mD+vgdabpXG3YhbCJ43lTLyfJL2uXlSWKKq6QXbcr0Rr/Sp0tsjf1ceMP4sreNAJG8r1SsTVDu1vHvCbW7zoNTVbHqRR)
     username: ENC(ApYTQ697hMbKF0+zSy0qow==)
     password: ENC(HUoombkibCSFNBT027KD0i5BkNgezljb)
   jpa:
     hibernate:
       ddl-auto: update
     show-sql: true
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect # 위도 경도 계산을 위해 추가
   jwt:
-    secret: "aldkjdqijvnbvnfivjmkgasdnbkdfngjfjcmdkfglvldabcascadasdasdas" # JWT 암호화 키
+    secret: ENC(dfLHZN5KMae06rwSnGLM22Zm0ds1lfP569o9GK890egyywcYzbVutIfU1rIxZh3AgKHc7MOnNAytOS3bmyjWWNNOQZsoiyhi) # JWT 암호화 키
+    # JWT 암호화 키
+  ai:
+    openai:
+      api-key: ENC(pTgIYkqmnW5SqcSKMH+PsOpn99Ri7+zYvKEE5F3oJGX0eBi6XvEdI3xWksFXVaMr+Alx8IB02YJgx/FjaneMpX7SEOvCoL4m8qW9IhwIaJnjJTjjRLN1bIlRgtJjy8rXsyEsN0O8wGjGTtbUywoXl0ubZfuJoGLFCPH/tDkGQbMkhrterIJtVjBEuGLzzE41dEp/spVPjPQPdn/xzBiVPNEbhtSWvsQSDsCjhg13rHM=)
+      model: "gpt-3.5-turbo"
+      max_tokens: 300
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ENC(T/ewgTqotRvwoJuFST+Z2mthZsQh5ygww2ZNLkbLPLFpGQZ7ZMywuoAyT6q3y/5L)
+            #            client-secret: 제품 설정 -> 카카오 로그인 -> 보안 -> Client Secret
+            redirect-uri: http://52.79.225.186/kakaoOauth
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            client-name: Kakao
+            scope:
+              - profile_nickname
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
 
 cloud:
   aws:
@@ -25,3 +61,14 @@ cloud:
       static: us-east-1
     s3:
       bucket: invincibledevs
+
+api:
+  naver:
+    id: ENC(E2ZAeEFIGfWn8SAf1IqqLLuKDTDaFF6VjOpV+b0IQuo=)
+    password: ENC(kbZBGy6vnkj6dMSSD2tRJkYy7+i9ADYw)
+  aladin:
+    key: ENC(dx/ZzTPoJEJ3xxiCkcReqJ6tE0QGtnZyT24oNzQXMF8=)
+
+dummy:
+  data:
+    initialize: false

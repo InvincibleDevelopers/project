@@ -1,0 +1,213 @@
+package invincibleDevs.bookpago.profile;
+
+import invincibleDevs.bookpago.Users.UserEntity;
+import invincibleDevs.bookpago.Users.UserRepository;
+import invincibleDevs.bookpago.common.Utils;
+import invincibleDevs.bookpago.common.exception.CustomException;
+import invincibleDevs.bookpago.profile.request.FollowRequest;
+import invincibleDevs.bookpago.profile.request.ProfileRequest;
+import invincibleDevs.bookpago.profile.request.UpdateProfileRequest;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+public class ProfileService {
+
+    private final ProfileRepository profileRepository;
+    private final UserRepository userRepository;
+
+    public Profile findProfilebyUser(UserEntity userEntity) {
+        Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
+                                           .orElseThrow(() -> new NoSuchElementException(
+                                                   "Profile with username :"
+                                                           + userEntity.getKakaoId()
+                                                           + "- not found"));
+        System.out.println(profile.getNickName());
+        return profile;
+    }
+
+    public boolean isMyProfile(ProfileRequest profileRequest, Profile profile) {
+        String username = Utils.getAuthenticatedUsername();
+
+        if (profile.getUserEntity().getKakaoId().equals(username)) {
+            return true;
+        } else {
+            // 두 사용자 이름이 일치하지 않을 때의 로직
+            return false;
+        }
+    }
+
+    public Profile getProfile(ProfileRequest profileRequest) {
+        try {
+            UserEntity userEntity = userRepository.findByKakaoId(
+                    profileRequest.kakaoId()); //요청프로필
+            Profile profile = findProfilebyUser(userEntity);
+            return profile;
+        } catch (CustomException e) {
+            throw e;
+        }
+    }
+
+    public ResponseEntity<?> updateProfileImage(String url,
+            UpdateProfileRequest updateProfileRequest) {
+        try {
+            UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
+
+            Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
+                                               .orElseThrow(() -> new NoSuchElementException(
+                                                       "Profile with username :"
+                                                               + userEntity.getKakaoId()
+                                                               + "- not found"));
+
+            Profile updateProfile = profile.toBuilder()
+                                           .profileImgUrl(url)
+                                           .build();
+
+            profileRepository.save(updateProfile);
+            return ResponseEntity.ok("update image success.");
+        } catch (CustomException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("update image Failed.");
+        }
+    }
+
+    public ResponseEntity<?> updateNicknameAndIntroduction(
+            UpdateProfileRequest updateProfileRequest) {
+        try {
+            UserEntity userEntity = userRepository.findByKakaoId(updateProfileRequest.kakaoId());
+
+            Profile profile = profileRepository.findByUserEntityId(userEntity.getId())
+                                               .orElseThrow(() -> new NoSuchElementException(
+                                                       "Profile with username :"
+                                                               + updateProfileRequest.kakaoId()
+                                                               + "- not found"));
+            Profile updateProfile = profile.toBuilder()
+                                           .nickName(updateProfileRequest.nickname().
+                                                                         orElseThrow(
+                                                                                 () -> new IllegalArgumentException(
+                                                                                         "변경값 필수")))
+                                           .introduce(updateProfileRequest.introduce()
+                                                                          .orElseThrow(
+                                                                                  () -> new IllegalArgumentException(
+                                                                                          "변경 소개글 필수")))
+                                           .build();
+            profileRepository.save(updateProfile);
+            return ResponseEntity.ok("success.");
+
+        } catch (CustomException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("failed.");
+        }
+    }
+
+    public Map<Profile, Profile> setFollowingMap(FollowRequest followRequest) {
+        try {
+            Map<Profile, Profile> followingMap = new HashMap<>();
+
+            // 예시: 팔로우하는 사용자와 팔로우되는 사용자 프로필을 생성합니다.
+//            UserEntity userEntity = userRepository.findByUsername(followRequest.follower());
+//            UserEntity targetUserEntity = userRepository.findByUsername(followRequest.followee());
+            Profile follower = profileRepository.findByUserEntityUserKakaoId(
+                                                        followRequest.followerKakaoId())
+                                                .orElseThrow(() -> new NoSuchElementException(
+                                                        "프로필을 찾을 수 없음"));
+
+            Profile followee = profileRepository.findByUserEntityUserKakaoId(
+                                                        followRequest.followeeKakaoId())
+                                                .orElseThrow(() -> new NoSuchElementException(
+                                                        "프로필을 찾을 수 없음"));
+
+            followingMap.put(follower, followee);
+            return followingMap;
+
+//            String username = Utils.getAuthenticatedUsername();
+//            UserEntity userEntity = userRepository.findByUsername(username);
+
+//        followingMapService.savefollowingMap(follower, followee);
+        } catch (CustomException e) {
+            throw e;
+        }
+
+    }
+
+    public Profile findByNickname(String nickname) {
+        Profile profile = profileRepository.findByNickName(nickname);
+        return profile;
+
+    }
+
+    public String addWishBook(Long kakaoId, Long isbn) {
+        Profile profile = profileRepository.findByUserEntityUserKakaoId(kakaoId)
+                                           .orElseThrow();
+        if (existsIsbnInWishList(profile.getUserEntity().getKakaoId(), isbn)) {
+            // wishIsbnList에서 isbn 삭제
+            List<Long> wishIsbnList = profile.getWishIsbnList();
+            wishIsbnList.remove(isbn);
+
+            // 변경된 wishIsbnList를 가진 Profile 저장
+            profileRepository.save(profile);
+            return "Remove WishBook";
+        }
+        List<Long> updateWishBookList = new ArrayList<>(profile.getWishIsbnList());
+        updateWishBookList.add(isbn);
+        Profile updateProfile = profile.toBuilder()
+                                       .wishIsbnList(updateWishBookList)
+                                       .userEntity(profile.getUserEntity())
+                                       .build();
+        profileRepository.save(updateProfile);
+        //개븅신같네? 유저엔티티ㅣ먼저수정하고 저장한담에저장해야댐?
+        return "Add WishBook";
+    }
+
+    public boolean existsIsbnInWishList(Long kakaoId, Long isbn) {
+        Optional<Profile> profileOpt = profileRepository.findByUserEntityUserKakaoId(kakaoId);
+
+        if (profileOpt.isPresent()) {
+            Profile profile = profileOpt.get();
+            List<Long> wishIsbnList = profile.getWishIsbnList();
+
+            // wishIsbnList에 해당 isbn이 존재하는지 확인
+            return wishIsbnList.contains(isbn);
+        }
+
+        return false;
+    }
+
+    public Profile findByKakaoId(Long kakaoId) {
+        System.out.println("**********");
+        System.out.println(kakaoId);
+        return profileRepository.findByUserEntityUserKakaoId(kakaoId)
+                                .orElseThrow(() -> new CustomException(
+                                        "Profile with username :"
+                                                + kakaoId
+                                                + "- not found"));
+    }
+
+    public List<Profile> findByKeyword(String keyword) {
+        return profileRepository.findByKeyword(keyword);
+    }
+
+    public List<ProfileDTO> getProfileDtoList(List<Long> memberProfileIdList) {
+        List<Profile> getProfilesByIdList = profileRepository.findByIdIn(memberProfileIdList)
+                                                             .orElseThrow(() -> new CustomException(
+                                                                     "not found Profiles."));
+
+        List<ProfileDTO> profileDTOList = getProfilesByIdList.stream()
+                                                             .map(profile -> new ProfileDTO(
+                                                                     profile.getUserEntity()
+                                                                            .getKakaoId(),
+                                                                     profile.getNickName(),
+                                                                     profile.getProfileImgUrl())
+                                                             )
+                                                             .collect(Collectors.toList());
+        return profileDTOList;
+    }
+}
