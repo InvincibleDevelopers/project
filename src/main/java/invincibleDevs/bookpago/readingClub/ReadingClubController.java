@@ -125,12 +125,10 @@ public class ReadingClubController {
             @PathVariable("clubId") Long clubId,
             @RequestBody ReadingClubMapRequest readingClubMapRequest
     ) {
-        try {
-            return ResponseEntity.ok(
-                    readingClubFacade.acceptApplicants(clubId, readingClubMapRequest));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+
+        return ResponseEntity.ok(
+                readingClubFacade.acceptApplicants(clubId, readingClubMapRequest));
+
     }
 
     @GetMapping("/clubs/users/{kakaoId}")

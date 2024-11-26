@@ -198,7 +198,9 @@ public class ReadingClubFacade {
 
         for (Long applicantKakaoId : readingClubMapRequest.applicants().get()) {
             Profile applicantProfile = profileService.findByKakaoId(applicantKakaoId);
-            Applicant applicant = applicantService.findByApplicant(applicantProfile);
+            Applicant applicant = applicantService.findByApplicantAndReadingClub(
+                    applicantProfile.getId(), clubId);
+            System.out.println("여기통과?");
 
             ReadingClubMembers newMember = ReadingClubMembers.builder()
                                                              .clubMember(
