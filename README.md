@@ -14,28 +14,6 @@
 
 <br/>
 
-
-### 주요기술
-
-```
-typescript
-react-native v0.75
-react-query v5.56
-react-native-navigation v6.1
-react-native-dotenv
-
-react-native-async-storage
-react-native-encrypted-storage
-react-native-seoul/kakao-login
-axios
-dayjs
-tiptap-editor
-react-daum-postcode
-react-native-image-picker
-```
-
-<br/>
-
 ### 주요화면
 
 <img src="https://github.com/InvincibleDevelopers/bookpago-app/blob/main/docs/%EC%A3%BC%EC%9A%94%ED%99%94%EB%A9%B4.png?raw=true"/>
